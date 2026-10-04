@@ -1,0 +1,16 @@
+# Personal song files: lyrics, tabs and record figures stay out of the repo
+songs/
+
+# Build output and dependencies
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+
+# Local settings and secrets
+.env*
+.claude/settings.local.json
+
+# OS
+.DS_Store
