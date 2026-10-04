@@ -14,7 +14,7 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 ### Project
 
-- Unit tests for the chart format, theory, patterns, timeline and transport.
+- Unit tests for the chart format, theory, patterns, timeline, transport and storage.
 - Set up the repo for publishing on GitHub: README, this changelog, decision notes, a milestone review template, and `.gitignore` rules that keep personal song files out of the repo.
 - `CLAUDE.md` lists which doc each kind of change updates, so the docs stay current with the code.
 - Product brief draft 4: written in my own voice, adds future users as a second audience, and moves accounts, a server and sharing from "Not doing" to "Not yet".

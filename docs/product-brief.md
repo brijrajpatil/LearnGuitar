@@ -202,7 +202,7 @@ Data flows one way: song, then timeline, then audio and screen.
 | `core/timeline` | Turns a song, the chosen parts and levels, and settings into one timed list of events: clicks, strums, picks, lead notes, chord changes, lyric syllables, section starts, pattern-change warnings |
 | `audio` | Lookahead scheduler, instruments (click, acoustic, electric, overdrive), the mixer, and input for recording |
 | `practice` | Transport (stopped, count-in, playing, looping), speed trainer, drills, gap click |
-| `data` | Storage in IndexedDB behind a small interface, plus export, import and backup |
+| `data` | Storage in IndexedDB behind a small interface, plus export, import and backup, and the one-time import from the prototype |
 | `ui` | Play mode (chord, strum strip, tab and lyric views), setup, library, editor, progress |
 
 Audio and the play screen both read the timeline's event list, so what you see can't drift from what you hear. New features such as a drill, the sing layout or strum timing feedback are new readers of the same list.
