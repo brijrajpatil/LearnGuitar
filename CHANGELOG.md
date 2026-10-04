@@ -4,6 +4,14 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 ## Unreleased
 
+### Changed
+
+- The prototype moved to `prototype/index.html` ([decision 0008](docs/decisions/0008-prototype-folder-and-data-import.md)).
+
+### Added
+
+- The prototype has a Download backup button in its editor, which saves its charts, tempos and patterns as a file for the app.
+
 ### Project
 
 - Set up the repo for publishing on GitHub: README, this changelog, decision notes, a milestone review template, and `.gitignore` rules that keep personal song files out of the repo.

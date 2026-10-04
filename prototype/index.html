@@ -384,6 +384,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   <div class="d-actions">
     <button class="btn primary" id="edApply">Apply (Ctrl/Cmd+Enter)</button>
     <span class="spacer"></span>
+    <button class="btn" id="edBackup" title="Download all your charts, tempos and patterns as a file, to import into the new app">Download backup</button>
     <button class="btn" id="edReset">Reset to original</button>
     <button class="btn danger" id="edDelete">Delete song</button>
   </div>
@@ -433,7 +434,7 @@ simplify Bm = Em         chord used when Simplify chords is on</pre>
 <div id="toast" role="status"></div>
 
 <!-- Optional personal songs, git-ignored. When the file is missing the browser logs one error and the app runs without it. -->
-<script src="songs/personal.js"></script>
+<script src="../songs/personal.js"></script>
 <script>
 (function () {
 'use strict';
@@ -1801,6 +1802,24 @@ function deleteSong() {
   toast('Song deleted');
 }
 
+// Everything this player saved, as one file the rebuilt app can import.
+function downloadBackup() {
+  const data = {};
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('strumpractice.v1.')) data[k] = localStorage.getItem(k);
+    }
+  } catch (e) { toast('This browser blocked reading saved data.'); return; }
+  const file = { format: 'song-practice-prototype-backup', version: 1, exportedAt: new Date().toISOString(), localStorage: data };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(file, null, 2)], { type: 'application/json' }));
+  a.download = 'song-practice-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast('Backup downloaded. Import it in the new app from its menu.');
+}
+
 /* ================= custom patterns ================= */
 
 function openPatModal(prefill) {
@@ -1914,6 +1933,7 @@ function bind() {
   ta.addEventListener('keyup', caretLine);
   $('#edApply').addEventListener('click', applyEditor);
   $('#edClose').addEventListener('click', closeEditor);
+  $('#edBackup').addEventListener('click', downloadBackup);
   $('#edReset').addEventListener('click', resetChart);
   $('#edDelete').addEventListener('click', deleteSong);
   $('#edMsg').addEventListener('click', e => { const b = e.target.closest('.errline'); if (b) gotoLine(+b.dataset.line); });

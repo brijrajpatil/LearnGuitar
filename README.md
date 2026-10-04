@@ -28,7 +28,7 @@ Songs and settings are saved in your browser. Nothing is sent anywhere.
 
 ## Run it
 
-Download or clone the repo and open `index.html` in Chrome or Safari. There's nothing to install and no build step. It opens on Amazing Grace, a public domain hymn in 3/4 with easy open chords.
+Download or clone the repo and open `prototype/index.html` in Chrome or Safari. There's nothing to install and no build step. It opens on Amazing Grace, a public domain hymn in 3/4 with easy open chords.
 
 To keep your own charts out of git, put them in `songs/personal.js`. The `songs/` folder is git-ignored, and the app loads the file when it exists:
 

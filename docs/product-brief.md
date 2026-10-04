@@ -263,3 +263,4 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 - 2026-10-04: The design system is shadcn/ui on React Aria Components, styled with Tailwind CSS v4, with the app's own tokens for play mode. See [decision 0001](decisions/0001-design-system.md).
 - 2026-10-04: The built-in demo song is Amazing Grace, a public domain hymn. My own songs, starting with Let Down, load from a git-ignored `songs/personal.js`. See [decision 0006](decisions/0006-public-domain-demo-song.md).
 - 2026-10-04: No license for now. The code is all rights reserved: anyone can read it on GitHub, but reusing it needs my permission.
+- 2026-10-04: The prototype moves to `prototype/`, and the app imports what it saved. See [decision 0008](decisions/0008-prototype-folder-and-data-import.md).

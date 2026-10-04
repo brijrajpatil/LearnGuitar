@@ -10,6 +10,7 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0004](0004-public-repo-and-future-users.md) | Public repo, built for future users too | Accepted, 2026-10-04 |
 | [0005](0005-typescript-pwa.md) | Rebuild as a TypeScript PWA | Accepted, 2026-10-04 |
 | [0006](0006-public-domain-demo-song.md) | A public domain demo song, and personal songs outside the repo | Accepted, 2026-10-04 |
+| [0008](0008-prototype-folder-and-data-import.md) | The prototype moves to its own folder, and its data is imported | Accepted, 2026-10-04 |
 
 ## Writing a note
 
