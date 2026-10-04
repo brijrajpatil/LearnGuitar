@@ -6,15 +6,30 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 ### Changed
 
+- The player is rebuilt as a TypeScript web app (milestone 1). It does everything the prototype did, from the same charts, and installs as an app that works offline.
+- A new look: a light, monochrome theme in neutral greys, with the Geist typeface ([decisions 0009](docs/decisions/0009-birch-light-theme-and-session-modes.md) and [0010](docs/decisions/0010-monochrome-theme-and-geist.md)). Black marks the beat you're on, where you are in the song, progress and Play. Red appears only on errors.
+- The play screen asks what you're practising: Learn a section, Build speed or Play the song. Each mode shows only the controls it needs.
+- Tempo is now Speed, shown with its share of the record, for example "70 BPM, 88% of the record". Quick picks set 60%, 75%, 90% or the record's speed, and a short note explains how to use speed to learn.
+- Everything follows browser zoom and window size. The page scrolls instead of cutting things off, and Play stays at the bottom of the window when there's room.
+- Fewer things on screen: Simplify chords and the volumes moved to Practice settings in the menu, Level sits beside the strum pattern it changes, and the banner and status rows are merged into the rest.
+- The prototype's Mode (Beginner, Arranged, Record) is called Level, as in the product brief.
+- The chart editor opens beside the play screen instead of over it, so the chords stay visible while you edit.
+- Reset to original and Delete song ask for confirmation in a dialog.
+- Songs and settings are stored in IndexedDB.
 - The prototype moved to `prototype/index.html` ([decision 0008](docs/decisions/0008-prototype-folder-and-data-import.md)).
 
 ### Added
 
+- A "How to practise" note beside the modes, which walks through Learn a section, Build speed and Play the song in order.
+- Build speed shows where it started, its goal, and a progress bar.
+- The app imports what the prototype saved: by itself on first run when it opens at the prototype's old address, or from a backup file through Import prototype backup in its menu.
 - The prototype has a Download backup button in its editor, which saves its charts, tempos and patterns as a file for the app.
 
 ### Project
 
-- Unit tests for the chart format, theory, patterns, timeline, transport and storage.
+- Unit tests for the chart format, theory, patterns, timeline, transport, storage and practice modes, and browser tests for the main flows.
+- A theme test that checks the contrast rules on every run, and a layout test across zoom levels from 100% to 400% and window widths from 360 to 1920 px.
+- The prototype's timing check is an automated test: it plays for two minutes and fails on any late audio event or drift.
 - Set up the repo for publishing on GitHub: README, this changelog, decision notes, a milestone review template, and `.gitignore` rules that keep personal song files out of the repo.
 - `CLAUDE.md` lists which doc each kind of change updates, so the docs stay current with the code.
 - Product brief draft 4: written in my own voice, adds future users as a second audience, and moves accounts, a server and sharing from "Not doing" to "Not yet".

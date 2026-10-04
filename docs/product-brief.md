@@ -136,6 +136,8 @@ Lyrics
 
 Practice tools
 
+- Three modes on the play screen, each showing only its controls: Learn a section (loop it), Build speed (loop it and speed up each time through), and Play the song. Built in milestone 1 (see [decision 0009](decisions/0009-birch-light-theme-and-session-modes.md)).
+- Speed shown against the record's speed, with quick picks and a note on how to use it.
 - Section loop with a speed trainer that steps up after clean passes.
 - Chord change drill. The app lists every change in the song (A to E, E to F#m and so on), most frequent first. You pick one, loop it in time, and count clean changes per minute.
 - Gap click. The click plays for a few bars, then drops out for a few, to check that you hold the tempo yourself.
@@ -203,6 +205,7 @@ Data flows one way: song, then timeline, then audio and screen.
 | `audio` | Lookahead scheduler, instruments (click, acoustic, electric, overdrive), the mixer, and input for recording |
 | `practice` | Transport (stopped, count-in, playing, looping), speed trainer, drills, gap click |
 | `data` | Storage in IndexedDB behind a small interface, plus export, import and backup, and the one-time import from the prototype |
+| `app` | Connects the modules: loads saved data, holds the app's state, and saves changes |
 | `ui` | Play mode (chord, strum strip, tab and lyric views), setup, library, editor, progress |
 
 Audio and the play screen both read the timeline's event list, so what you see can't drift from what you hear. New features such as a drill, the sing layout or strum timing feedback are new readers of the same list.
@@ -231,14 +234,14 @@ Extension points, each an interface:
 - Unit tests for the text parser, theory and timeline. Browser tests for the main flows.
 - The timing check from the current player becomes an automated test: play a song for two minutes and fail on any late audio event or drift.
 - Proposed: GitHub Actions runs the tests on every push, and the main branch deploys to GitHub Pages.
-- Keyboard first, high contrast dark theme, large type.
+- Keyboard first, a high contrast light theme, and large type that follows browser zoom.
 
 ## Milestones
 
 Each milestone ends with a week of practice and a review: what I used, what got in the way, what to change.
 
 0. Prototype. Done 2026-10-04. The single-file player in `index.html`, built around Let Down, with Amazing Grace as the public built-in demo.
-1. Foundation. Project setup, the modules above, and the current player rebuilt on them, with Amazing Grace built in and my songs imported. Done when it matches the current player, timing test included. Not started.
+1. Foundation. Project setup, the modules above, and the current player rebuilt on them, with Amazing Grace built in and my songs imported. Done when it matches the current player, timing test included. Built 2026-10-04 and in its week of practice. The milestone 1 review closes it.
 2. Library, capo and lyrics. Multiple songs, song setup (capo, tuning, guitar, amp notes, source links), import and export, resume where you stopped. Lyrics entry with tap to sync, lyrics in play mode, and the sing layout. Add my next songs.
 3. Levels and progress. Per-part ladders, marking passes clean, the trainer stepping up on clean passes, the session log and song page.
 4. Rhythm technique. Chord change drill, gap click, faint arrows for missed strums, sixteenth and triplet grid, pattern grid editor.
@@ -264,4 +267,9 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 - 2026-10-04: The design system is shadcn/ui on React Aria Components, styled with Tailwind CSS v4, with the app's own tokens for play mode. See [decision 0001](decisions/0001-design-system.md).
 - 2026-10-04: The built-in demo song is Amazing Grace, a public domain hymn. My own songs, starting with Let Down, load from a git-ignored `songs/personal.js`. See [decision 0006](decisions/0006-public-domain-demo-song.md).
 - 2026-10-04: No license for now. The code is all rights reserved: anyone can read it on GitHub, but reusing it needs my permission.
+- 2026-10-04: Milestone 1 built. Strum patterns get their own module, `core/pattern`, and the `app` module connects the others.
+- 2026-10-04: Proposed shadcn's Luma style and the Inter font, to confirm in the milestone 1 review. See [decision 0007](decisions/0007-luma-style-and-inter.md).
 - 2026-10-04: The prototype moves to `prototype/`, and the app imports what it saved. See [decision 0008](decisions/0008-prototype-folder-and-data-import.md).
+- 2026-10-04: The modes are called levels in the app, as in this brief.
+- 2026-10-04: After reviewing the rebuild, the look changes to Birch: a light theme with one accent, Lexend, and sizes that follow browser zoom. The play screen gets three practice modes, and speed is shown against the record. This replaces the proposed Luma and Inter look. See [decision 0009](decisions/0009-birch-light-theme-and-session-modes.md).
+- 2026-10-04: The look goes monochrome, in neutral greys with black for emphasis and red only for errors, and the font changes to Geist. Color comes later. See [decision 0010](decisions/0010-monochrome-theme-and-geist.md).

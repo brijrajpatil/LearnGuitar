@@ -1,6 +1,6 @@
 # 0001. Design system: shadcn/ui on React Aria, with Tailwind CSS v4
 
-Status: Accepted
+Status: Accepted. Rule 5 (dark first), the play-mode colors and the contrast rules are superseded by [0009](0009-birch-light-theme-and-session-modes.md).
 Date: 2026-10-04
 
 ## Context

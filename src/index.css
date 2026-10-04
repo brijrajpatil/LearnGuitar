@@ -1,0 +1,163 @@
+/* Scan only src/ for class names, so prose in the docs never adds CSS. */
+@import "tailwindcss" source(".");
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+
+/*
+ * The app's one token file (decisions 0001, 0009 and 0010). Components use these
+ * tokens, never raw colors or one-off sizes. The theme is monochrome: neutral greys,
+ * black for emphasis ("now" and "progress"), and red only for errors.
+ *
+ * Contrast rules, checked by src/ui/tokens.test.ts:
+ * - play-mode text at least 7:1, or 4.5:1 for large text
+ * - graphics that carry meaning at least 3:1
+ * - other text at least 4.5:1
+ *
+ * Every size is in rem, so browser zoom scales everything. Stage type also follows its
+ * card's width (cqi), between a rem floor and ceiling.
+ */
+
+@custom-variant dark (&:is(.dark *));
+/* Windows tall enough to pin the transport bar without covering the page. */
+@custom-variant tall (@media (min-height: 28rem));
+
+@theme inline {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: var(--font-sans);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Play mode. */
+  --color-dim: var(--dim);
+  --color-tint: var(--tint);
+  --color-emphasis: var(--emphasis);
+  --color-emphasis-foreground: var(--emphasis-foreground);
+  --color-slot: var(--slot);
+  --color-diagram-line: var(--diagram-line);
+  --color-diagram-string: var(--diagram-string);
+  --color-editor-gutter: var(--editor-gutter);
+  --color-error-line: var(--error-line);
+}
+
+@theme {
+  /* Stage type: a rem floor and ceiling, following the card's width in between. */
+  --text-stage-chord: clamp(4rem, 1.5rem + 26cqi, 11rem);
+  --text-stage-chord--line-height: 1;
+  --text-stage-next: clamp(2.5rem, 1rem + 20cqi, 6.5rem);
+  --text-stage-next--line-height: 1;
+  --text-stage-section: 1.75rem;
+  --text-stage-section--line-height: 1.15;
+  --text-stage-countdown: 1.375rem;
+  --text-stage-slot: 1.125rem;
+
+  /* Stage spacing and radius. */
+  --radius-slot: 0.875rem;
+  --spacing-slot: 5.5rem;
+  --spacing-slot-lg: 7rem;
+  --spacing-strum-symbol: 2.75rem;
+  --spacing-strum-symbol-lg: 3.5rem;
+  --spacing-diagram: 18rem;
+  --spacing-map: 1.25rem;
+  --spacing-editor: min(36rem, 94vw);
+  --container-app: 112rem;
+
+  /* Motion. */
+  --animate-soon: soon 0.5s ease-out;
+
+  @keyframes soon {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in oklch, var(--emphasis) 35%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 1rem color-mix(in oklch, var(--emphasis) 0%, transparent);
+    }
+  }
+}
+
+/*
+ * Emphasis: the lit beat, the playhead, progress and the Play button. Flat black for
+ * now. Color or a gradient can come back later through --emphasis and --emphasis-image.
+ */
+@utility bg-emphasis {
+  background-color: var(--emphasis);
+  background-image: var(--emphasis-image);
+}
+
+/* The app's one theme: monochrome (decision 0010). */
+:root {
+  --background: #fafafa;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #171717;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #0a0a0a;
+  --muted: #f5f5f5;
+  --muted-foreground: #525252;
+  --accent: #f0f0f0;
+  --accent-foreground: #0a0a0a;
+  --destructive: #dc2626;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #171717;
+  --radius: 0.625rem;
+
+  --emphasis: #171717;
+  --emphasis-image: none;
+  --emphasis-foreground: #ffffff;
+  --dim: #8c8c8c;
+  --tint: #f5f5f5;
+  --slot: #f5f5f5;
+  --diagram-line: #737373;
+  --diagram-string: #525252;
+  --editor-gutter: #f5f5f5;
+  --error-line: #fee2e2;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: light;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  /* Important in the base layer beats the components' outline-none. */
+  :focus-visible,
+  [data-focus-visible] {
+    outline: 2px solid var(--ring) !important;
+    outline-offset: 2px;
+  }
+}

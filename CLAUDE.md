@@ -21,7 +21,7 @@ Update the docs in the same change as the code. A change is not done until its d
 | A choice with alternatives worth remembering (stack, data format, storage, a scope cut) | A new note in `docs/decisions/`, and add it to the index there |
 | Milestone status | The status line in the README and the milestone list in the brief |
 | The end of a milestone | A review in `docs/reviews/`, using the template there |
-| How to run, build or test | The README's "Run it" section |
+| How to run, build or test | The README's "Run it" section, and the Code section here |
 | The chart format | The in-app help in the editor, and the README example |
 
 Never rewrite an accepted decision note. Write a new one that supersedes it, and mark the old one superseded.
@@ -35,11 +35,15 @@ Never rewrite an accepted decision note. Write a new one that supersedes it, and
 
 ## Code
 
-- Current code: `prototype/index.html`, a single-file prototype with no build step. It runs from `file://`.
-- The rebuild, a TypeScript PWA with Vite and React, is in progress in `src/` (see the brief's Architecture section and `docs/decisions/0005-typescript-pwa.md`). `src/core`, `src/audio` and `src/practice` never import React or anything from `src/ui`. `npm test` runs the unit tests, and `npm run lint` and `npm run typecheck` the checks.
+- The app is a TypeScript PWA built with Vite and React, in `src/`. The brief's Architecture section describes the modules. `src/core`, `src/audio` and `src/practice` never import React or anything from `src/ui`.
+- The single-file prototype is in `prototype/index.html`. Leave it as it is, apart from fixes the owner asks for, until milestone 1's review retires it.
+- Follow the design system in `docs/decisions/0001-design-system.md`, `0009-birch-light-theme-and-session-modes.md` and `0010-monochrome-theme-and-geist.md`. Shared components are in `src/ui/components` (shadcn, Luma style, React Aria base). Colors, stage type sizes and spacing are tokens in `src/index.css`. Components contain no raw hex values or one-off pixel sizes.
+- The theme is monochrome. Emphasis (`bg-emphasis`) means "now" or "progress" and nothing else, and red (`destructive`) means an error or a destructive action. Don't add colors: color comes back through the `--emphasis` tokens, with a new decision note first.
+- Size everything in rem, never `vh` or px font sizes, so browser zoom works. `npm test` checks the theme's contrast and `tests/e2e/layout.spec.ts` checks zoom and widths. Both must pass.
+- Add shadcn components with `npx shadcn@latest add <name>`. Variants the app needs go into the copied component file.
 - Keep the chart text format backwards compatible. Songs already saved must keep loading.
-- The app stores edits, tempos and pattern choices per song id in localStorage. Never change or drop a song's id, or the owner loses that data.
-- To test over HTTP (as on GitHub Pages), serve the folder with `python3 -m http.server 8642` and open `http://localhost:8642/prototype/`.
+- The app stores edits, tempos and pattern choices per song id in IndexedDB. Never change or drop a song's id, or the owner loses that data.
+- `npm run dev` serves the app at `http://localhost:8642`, with `songs/` and `prototype/` too. `npm test` runs the unit tests, `npm run test:e2e` the browser tests (flows, layout and timing), `npm run lint` and `npm run typecheck` the checks. Run all four before saying a change works.
 - In the browser console, `window.__practice.sync()` reports timing stats for the audio scheduler.
 
 ## Commits

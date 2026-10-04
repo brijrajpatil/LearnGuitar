@@ -2,7 +2,7 @@
 
 A guitar practice app for learning songs you can sing along to. It plays your guitar part and a click, shows the chord you're on and the one coming next, and takes each song from easy chords up to the way it's played on the record.
 
-It's a working prototype that I use for my own practice. I'm now rebuilding it as an installable web app ([milestone 1 of 6](docs/product-brief.md#milestones)).
+Status: milestone 1 of 6 is built and in its week of practice ([milestones](docs/product-brief.md#milestones)). The app is now a TypeScript web app you can install, rebuilt from a single-file prototype that's kept in [`prototype/`](prototype/).
 
 ## Why I'm building it
 
@@ -14,23 +14,48 @@ The [product brief](docs/product-brief.md) has the full problem, goals, features
 
 ## What it does now
 
+- Asks what you're practising and shows only what that needs. Learn a section loops one part. Build speed loops it and speeds up a little each time through, up to your goal. Play the song plays it start to end.
 - Plays a synthesized acoustic guitar part and a click in time, with a one-bar count-in.
 - Shows the current and next chord with diagrams, and counts down the beats to the next change.
-- A strum strip shows each down, up and missed strum as it plays, and a banner warns before the pattern changes.
+- A strum strip shows each down, up and missed strum as it plays, and warns a bar before the pattern changes.
 - Three levels for every song. Beginner strums one downstroke per beat. Arranged uses each section's own pattern. Record plays the figure from the record where the chart has one.
 - Simplify chords swaps hard shapes for easier ones, for example F#m for a four-string version.
-- Loops a section, and a speed trainer adds a few BPM on each pass up to a target.
+- Speed shows the BPM and how it compares with the record ("88% of the record"), with quick picks from 60% to the record's speed.
 - A song map along the bottom: click a bar to jump to it, or a section name to loop it.
 - Songs are text charts you write in the built-in editor, with errors marked by line. Custom strum and pick patterns can be any length and run on across bar lines.
-- Works from the keyboard: Space plays and pauses, the arrow keys change section and tempo, L loops.
+- Works from the keyboard: Space plays and pauses, the arrow keys change section and speed, L loops the section. A foot pedal that sends these keys works too.
+- A light, monochrome theme, sized in rem so it follows browser zoom, and laid out for screens from a phone to a large monitor.
+- Installs as an app from Chrome or Safari and works offline.
 
-Songs and settings are saved in your browser. Nothing is sent anywhere.
+Songs and settings are saved in your browser on this device. Nothing is sent anywhere.
 
 ## Run it
 
-Download or clone the repo and open `prototype/index.html` in Chrome or Safari. There's nothing to install and no build step. It opens on Amazing Grace, a public domain hymn in 3/4 with easy open chords.
+You need [Node.js](https://nodejs.org) 22 or later.
 
-To keep your own charts out of git, put them in `songs/personal.js`. The `songs/` folder is git-ignored, and the app loads the file when it exists:
+```bash
+npm install
+```
+
+```bash
+npm run dev
+```
+
+Then open <http://localhost:8642>. It opens on Amazing Grace, a public domain hymn in 3/4 with easy open chords.
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Runs the app with live reload |
+| `npm run build` | Type-checks and builds the installable app into `dist/` |
+| `npm run preview` | Serves the built app, offline support included |
+| `npm test` | Unit tests for the chart format, theory, timeline, transport, storage, practice modes and theme contrast |
+| `npm run test:e2e` | Browser tests in Chrome: the main flows, layout at zoom levels from 100% to 400%, and a 20-second timing check |
+| `npm run test:timing` | The full two-minute timing check |
+| `npm run lint` | ESLint |
+
+The prototype still works without any of this: open `prototype/index.html` in a browser. It has a Download backup button in its editor. To bring what you saved there into the app, choose Import prototype backup in the app's menu. If you used the prototype from `http://localhost:8642`, the app imports it by itself the first time it opens.
+
+To keep your own charts out of git, put them in `songs/personal.js`. The `songs/` folder is git-ignored. The local dev and preview servers serve it, and a deployed build never includes it:
 
 ```js
 window.PERSONAL_SONGS = [
@@ -68,9 +93,27 @@ The full reference is in the app: Edit chart, then Chart format.
 
 The app never fetches lyrics or tabs. Anything like that in a chart is what you typed from your own sources ([why](docs/decisions/0003-lyrics-and-tabs-are-user-entered.md)).
 
+## How it's built
+
+A TypeScript web app built with Vite and React, installable as a PWA. The interface uses [shadcn/ui](https://ui.shadcn.com) on React Aria Components with Tailwind CSS v4 ([decision 0001](docs/decisions/0001-design-system.md)). The look is a light, monochrome theme with the Geist typeface. Its colors, type sizes and spacing come from one token file, `src/index.css`, and a test checks their contrast ([decisions 0009](docs/decisions/0009-birch-light-theme-and-session-modes.md) and [0010](docs/decisions/0010-monochrome-theme-and-geist.md)). Songs and settings are stored in IndexedDB.
+
+Data flows one way: song, then timeline, then audio and screen. The music and audio code has no React in it, so it can be tested on its own.
+
+| Folder | What it holds |
+|---|---|
+| `src/core/` | The chart format, chords and voicings, patterns, and the timeline that turns a song and your settings into timed events |
+| `src/audio/` | The Web Audio engine: a synthesized acoustic guitar, the click, and a lookahead scheduler |
+| `src/practice/` | The transport: count-in, playback, loops and the speed trainer |
+| `src/data/` | Storage, built-in songs, personal songs and the import from the prototype |
+| `src/app/` | Connects the modules and holds the app's state |
+| `src/ui/` | React screens and the shadcn components |
+| `tests/e2e/` | Browser tests, including the timing check |
+
+The [product brief's architecture section](docs/product-brief.md#architecture) has the reasoning.
+
 ## Where it's going
 
-1. Foundation: rebuild the prototype as a TypeScript PWA, with tests.
+1. Foundation: rebuild the prototype as a TypeScript PWA, with tests. Built, now in its week of practice.
 2. A song library, capo and lyrics with tap to sync.
 3. Levels per part, marking passes clean, and a practice log.
 4. Rhythm technique: chord change drill, gap click, sixteenth notes and triplets.
