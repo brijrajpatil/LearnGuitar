@@ -1,6 +1,6 @@
 # Song Practice: working notes for Claude
 
-A guitar practice app for learning songs from easy chords up to the recorded version. Read `docs/product-brief.md` before any product or architecture decision.
+A guitar practice app for learning songs from easy chords up to the recorded version. Read `docs/product/product-brief.md` before any product or architecture decision.
 
 ## Who reads this repo
 
@@ -17,10 +17,10 @@ Update the docs in the same change as the code. A change is not done until its d
 | When you change | Update |
 |---|---|
 | Anything a user can see or do | `CHANGELOG.md` under Unreleased, and the README's feature list if it changes what the app does |
-| Scope, goals, users, principles or milestones | `docs/product-brief.md`, plus a line in its decision log |
-| A choice with alternatives worth remembering (stack, data format, storage, a scope cut) | A new note in `docs/decisions/`, and add it to the index there |
+| Scope, goals, users, principles or milestones | `docs/product/product-brief.md`, plus a line in its decision log |
+| A choice with alternatives worth remembering (stack, data format, storage, a scope cut) | A new note in `docs/decisions/`, and add it to the index there with its area (product, design or tech) |
 | Milestone status | The status line in the README and the milestone list in the brief |
-| The end of a milestone | A review in `docs/reviews/`, using the template there |
+| The end of a milestone | A review in `docs/product/reviews/`, using the template there |
 | How to run, build or test | The README's "Run it" section, and the Code section here |
 | The chart format | The in-app help in the editor, and the README example |
 

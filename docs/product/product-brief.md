@@ -1,6 +1,6 @@
 # Product brief
 
-Draft 4, 2026-10-04. This is the reference for why the app exists, who it's for and what it does. When a decision changes it, the decision goes in the log at the end. Decisions whose reasons need more than a line also get a note in [`decisions/`](decisions/).
+Draft 4, 2026-10-04. This is the reference for why the app exists, who it's for and what it does. When a decision changes it, the decision goes in the log at the end. Decisions whose reasons need more than a line also get a note in [`decisions/`](../decisions/).
 
 In this brief, "I" is me, the person building the app and its first user. "You" is whoever is playing.
 
@@ -136,7 +136,7 @@ Lyrics
 
 Practice tools
 
-- Three modes on the play screen, each showing only its controls: Learn a section (loop it), Build speed (loop it and speed up each time through), and Play the song. Built in milestone 1 (see [decision 0009](decisions/0009-birch-light-theme-and-session-modes.md)).
+- Three modes on the play screen, each showing only its controls: Learn a section (loop it), Build speed (loop it and speed up each time through), and Play the song. Built in milestone 1 (see [decision 0009](../decisions/0009-birch-light-theme-and-session-modes.md)).
 - Speed shown against the record's speed, with quick picks and a note on how to use it.
 - Section loop with a speed trainer that steps up after clean passes.
 - Chord change drill. The app lists every change in the song (A to E, E to F#m and so on), most frequent first. You pick one, loop it in time, and count clean changes per minute.
@@ -189,7 +189,7 @@ A TypeScript web app, installable as a PWA and working offline. One codebase run
 
 Native apps would mean one for macOS and one for Android, or a cross-platform framework with its own audio code. If the app later needs a desktop window or direct file access, the same web app can be wrapped with Tauri, which builds for both macOS and Android.
 
-Stack: TypeScript, Vite, React for the UI, Vitest and Playwright for tests. The design system is shadcn/ui on React Aria Components with Tailwind CSS v4 ([decision 0001](decisions/0001-design-system.md)). The music and audio code is plain TypeScript with no React imports, so the UI library can change without touching it.
+Stack: TypeScript, Vite, React for the UI, Vitest and Playwright for tests. The design system is shadcn/ui on React Aria Components with Tailwind CSS v4 ([decision 0001](../decisions/0001-design-system.md)). The music and audio code is plain TypeScript with no React imports, so the UI library can change without touching it.
 
 ### Modules
 
@@ -226,9 +226,9 @@ Extension points, each an interface:
 ### Engineering practices
 
 - Git from the first commit, with small commits under my own Git identity. The commit history is public.
-- Docs change in the same commit as the code. [`CLAUDE.md`](../CLAUDE.md) lists which doc each kind of change updates.
-- [`CHANGELOG.md`](../CHANGELOG.md) gets an entry for every change a user can see.
-- Each decision with alternatives worth remembering gets a note in [`decisions/`](decisions/) with its reason.
+- Docs change in the same commit as the code. [`CLAUDE.md`](../../CLAUDE.md) lists which doc each kind of change updates.
+- [`CHANGELOG.md`](../../CHANGELOG.md) gets an entry for every change a user can see.
+- Each decision with alternatives worth remembering gets a note in [`decisions/`](../decisions/) with its reason.
 - Each milestone ends with a written review in [`reviews/`](reviews/).
 - Song files with lyrics, tabs or record figures stay out of the repository, in a git-ignored `songs/` folder.
 - Unit tests for the text parser, theory and timeline. Browser tests for the main flows.
@@ -260,18 +260,18 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 
 ## Decision log
 
-- 2026-10-04: Lyrics are in scope, entered by the player. This replaces the earlier rule that kept lyrics out of the player. The app still never fetches lyrics or tabs. See [decision 0003](decisions/0003-lyrics-and-tabs-are-user-entered.md).
+- 2026-10-04: Lyrics are in scope, entered by the player. This replaces the earlier rule that kept lyrics out of the player. The app still never fetches lyrics or tabs. See [decision 0003](../decisions/0003-lyrics-and-tabs-are-user-entered.md).
 - 2026-10-04: Lead guitar parts are in scope, as their own parts with their own levels.
-- 2026-10-04: The repo is public, and the app is built for other users later as well as for me. Accounts, a server and sharing move from Not doing to Not yet. See [decision 0004](decisions/0004-public-repo-and-future-users.md).
-- 2026-10-04: The app is rebuilt as a TypeScript PWA for the Mac and the Android tablet from one codebase, using Vite and React. See [decision 0005](decisions/0005-typescript-pwa.md).
-- 2026-10-04: The design system is shadcn/ui on React Aria Components, styled with Tailwind CSS v4, with the app's own tokens for play mode. See [decision 0001](decisions/0001-design-system.md).
-- 2026-10-04: The built-in demo song is Amazing Grace, a public domain hymn. My own songs, starting with Let Down, load from a git-ignored `songs/personal.js`. See [decision 0006](decisions/0006-public-domain-demo-song.md).
+- 2026-10-04: The repo is public, and the app is built for other users later as well as for me. Accounts, a server and sharing move from Not doing to Not yet. See [decision 0004](../decisions/0004-public-repo-and-future-users.md).
+- 2026-10-04: The app is rebuilt as a TypeScript PWA for the Mac and the Android tablet from one codebase, using Vite and React. See [decision 0005](../decisions/0005-typescript-pwa.md).
+- 2026-10-04: The design system is shadcn/ui on React Aria Components, styled with Tailwind CSS v4, with the app's own tokens for play mode. See [decision 0001](../decisions/0001-design-system.md).
+- 2026-10-04: The built-in demo song is Amazing Grace, a public domain hymn. My own songs, starting with Let Down, load from a git-ignored `songs/personal.js`. See [decision 0006](../decisions/0006-public-domain-demo-song.md).
 - 2026-10-04: No license for now. The code is all rights reserved: anyone can read it on GitHub, but reusing it needs my permission.
 - 2026-10-04: Milestone 1 built. Strum patterns get their own module, `core/pattern`, and the `app` module connects the others.
-- 2026-10-04: Proposed shadcn's Luma style and the Inter font, to confirm in the milestone 1 review. See [decision 0007](decisions/0007-luma-style-and-inter.md).
-- 2026-10-04: The prototype moves to `prototype/`, and the app imports what it saved. See [decision 0008](decisions/0008-prototype-folder-and-data-import.md).
+- 2026-10-04: Proposed shadcn's Luma style and the Inter font, to confirm in the milestone 1 review. See [decision 0007](../decisions/0007-luma-style-and-inter.md).
+- 2026-10-04: The prototype moves to `prototype/`, and the app imports what it saved. See [decision 0008](../decisions/0008-prototype-folder-and-data-import.md).
 - 2026-10-04: The modes are called levels in the app, as in this brief.
-- 2026-10-04: After reviewing the rebuild, the look changes to Birch: a light theme with one accent, Lexend, and sizes that follow browser zoom. The play screen gets three practice modes, and speed is shown against the record. This replaces the proposed Luma and Inter look. See [decision 0009](decisions/0009-birch-light-theme-and-session-modes.md).
-- 2026-10-04: The look goes monochrome, in neutral greys with black for emphasis and red only for errors, and the font changes to Geist. Color comes later. See [decision 0010](decisions/0010-monochrome-theme-and-geist.md).
-- 2026-10-04: The play screen fits in the window, like a desktop app. The chord cards take the height left over, and when it can't all fit, the middle scrolls while Play stays at the bottom. See [decision 0011](decisions/0011-play-screen-fits-the-window.md).
-- 2026-10-04: The code moves into `app/` and the docs group into product, design and decisions, so the repo's front page leads with the product. See [decision 0012](decisions/0012-repo-layout.md).
+- 2026-10-04: After reviewing the rebuild, the look changes to Birch: a light theme with one accent, Lexend, and sizes that follow browser zoom. The play screen gets three practice modes, and speed is shown against the record. This replaces the proposed Luma and Inter look. See [decision 0009](../decisions/0009-birch-light-theme-and-session-modes.md).
+- 2026-10-04: The look goes monochrome, in neutral greys with black for emphasis and red only for errors, and the font changes to Geist. Color comes later. See [decision 0010](../decisions/0010-monochrome-theme-and-geist.md).
+- 2026-10-04: The play screen fits in the window, like a desktop app. The chord cards take the height left over, and when it can't all fit, the middle scrolls while Play stays at the bottom. See [decision 0011](../decisions/0011-play-screen-fits-the-window.md).
+- 2026-10-04: The code moves into `app/` and the docs group into product, design and decisions, so the repo's front page leads with the product. See [decision 0012](../decisions/0012-repo-layout.md).

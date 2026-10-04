@@ -2,7 +2,7 @@
 
 A guitar practice app for learning songs you can sing along to. It plays your guitar part and a click, shows the chord you're on and the one coming next, and takes each song from easy chords up to the way it's played on the record.
 
-Status: milestone 1 of 6 is built and in its week of practice ([milestones](docs/product-brief.md#milestones)). The app is now a TypeScript web app you can install, rebuilt from a single-file prototype that's kept in [`prototype/`](prototype/).
+Status: milestone 1 of 6 is built and in its week of practice ([milestones](docs/product/product-brief.md#milestones)). The app is now a TypeScript web app you can install, rebuilt from a single-file prototype that's kept in [`prototype/`](prototype/).
 
 ## Why I'm building it
 
@@ -10,7 +10,7 @@ I'm a self-taught guitarist. YouTube tutorials show the chords and the strum, bu
 
 I wanted one screen that plays only my part with a click, slows down when I need it to, and has a simpler version of every part as a step toward the recorded one. I'm the first user. Once it works well for me, I want other guitarists to use it too.
 
-The [product brief](docs/product-brief.md) has the full problem, goals, features and plan.
+The [product brief](docs/product/product-brief.md) has the full problem, goals, features and plan.
 
 ## What it does now
 
@@ -113,7 +113,7 @@ Data flows one way: song, then timeline, then audio and screen. The music and au
 | `app/src/ui/` | React screens and the shadcn components |
 | `app/tests/e2e/` | Browser tests, including the timing check |
 
-The [product brief's architecture section](docs/product-brief.md#architecture) has the reasoning.
+The [product brief's architecture section](docs/product/product-brief.md#architecture) has the reasoning.
 
 ## Where it's going
 
@@ -128,9 +128,9 @@ Each milestone ends with a week of real practice and a written review before the
 
 ## Project docs
 
-- [Product brief](docs/product-brief.md): problem, users, goals, features, architecture and milestones
+- [Product brief](docs/product/product-brief.md): problem, users, goals, features, architecture and milestones
 - [Decisions](docs/decisions/): what was decided and why
-- [Milestone reviews](docs/reviews/): what happened after each milestone, and what changed
+- [Milestone reviews](docs/product/reviews/): what happened after each milestone, and what changed
 - [Changelog](CHANGELOG.md): what changed in the app
 
 ## License
