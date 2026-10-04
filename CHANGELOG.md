@@ -29,6 +29,7 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 - The app's code moved into `app/`, so the repo's front page shows the README and docs first. Run npm commands from `app/` ([decision 0012](docs/decisions/0012-repo-layout.md)).
 - The docs are grouped by area. The product brief and the milestone reviews are in `docs/product/`, the decisions index shows each note's area, and `docs/README.md` gives a reading order.
+- A design system doc in `docs/design/` describes the current tokens, contrast, components and play screen, with screenshots. The README keeps the product story and a quick start, and the developer guide moved to `app/README.md`.
 - Unit tests for the chart format, theory, patterns, timeline, transport, storage and practice modes, and browser tests for the main flows.
 - A theme test that checks the contrast rules on every run, and a layout test across zoom levels from 100% to 400% and window widths from 360 to 1920 px.
 - The prototype's timing check is an automated test: it plays for two minutes and fails on any late audio event or drift.

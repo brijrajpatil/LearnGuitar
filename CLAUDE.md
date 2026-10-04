@@ -19,9 +19,10 @@ Update the docs in the same change as the code. A change is not done until its d
 | Anything a user can see or do | `CHANGELOG.md` under Unreleased, and the README's feature list if it changes what the app does |
 | Scope, goals, users, principles or milestones | `docs/product/product-brief.md`, plus a line in its decision log |
 | A choice with alternatives worth remembering (stack, data format, storage, a scope cut) | A new note in `docs/decisions/`, and add it to the index there with its area (product, design or tech) |
+| Tokens, shared components or the play screen's layout | `docs/design/design-system.md`, and its screenshots in `docs/design/images/` when the screen changes visibly |
 | Milestone status | The status line in the README and the milestone list in the brief |
 | The end of a milestone | A review in `docs/product/reviews/`, using the template there |
-| How to run, build or test | The README's "Run it" section, and the Code section here |
+| How to run, build or test | `app/README.md`, the README's "Run it" quick start if the first steps change, and the Code section here |
 | The chart format | The in-app help in the editor, and the README example |
 
 Never rewrite an accepted decision note. Write a new one that supersedes it, and mark the old one superseded.
@@ -38,7 +39,7 @@ Never rewrite an accepted decision note. Write a new one that supersedes it, and
 - The app is in `app/`, and npm commands run from there. Code paths in this section (`src/`, `tests/`) are inside `app/`. The repo layout is in `docs/decisions/0012-repo-layout.md`.
 - The app is a TypeScript PWA built with Vite and React, in `src/`. The brief's Architecture section describes the modules. `src/core`, `src/audio` and `src/practice` never import React or anything from `src/ui`.
 - The single-file prototype is in `prototype/index.html`. Leave it as it is, apart from fixes the owner asks for, until milestone 1's review retires it.
-- Follow the design system in `docs/decisions/0001-design-system.md`, `0009-birch-light-theme-and-session-modes.md`, `0010-monochrome-theme-and-geist.md` and `0011-play-screen-fits-the-window.md`. Shared components are in `src/ui/components` (shadcn, Luma style, React Aria base). Colors, stage type sizes and spacing are tokens in `src/index.css`. Components contain no raw hex values or one-off pixel sizes.
+- Follow the design system in `docs/design/design-system.md`. Decisions 0001, 0009, 0010 and 0011 in `docs/decisions/` have the reasons behind it. Shared components are in `src/ui/components` (shadcn, Luma style, React Aria base). Colors, stage type sizes and spacing are tokens in `src/index.css`. Components contain no raw hex values or one-off pixel sizes.
 - The theme is monochrome. Emphasis (`bg-emphasis`) means "now" or "progress" and nothing else, and red (`destructive`) means an error or a destructive action. Don't add colors: color comes back through the `--emphasis` tokens, with a new decision note first.
 - Size everything in rem, never `vh` or px font sizes, so browser zoom works. The one exception is the app shell's height (`h-dvh`), which makes the play screen fit the window. Window-height variants (`fit`, `short`, `roomy`) are in `src/index.css`. `npm test` checks the theme's contrast. `tests/e2e/layout.spec.ts` checks zoom levels and window sizes, including Chrome's page area on real laptops, and that laptop-sized windows show everything without scrolling. Both must pass.
 - Add shadcn components with `npx shadcn@latest add <name>`. Variants the app needs go into the copied component file.

@@ -2,6 +2,8 @@
 
 A guitar practice app for learning songs you can sing along to. It plays your guitar part and a click, shows the chord you're on and the one coming next, and takes each song from easy chords up to the way it's played on the record.
 
+![The play screen during Amazing Grace: the chord to play now and the next one with diagrams, the strum strip with the current beat filled black, the song map and the Play bar.](docs/design/images/play-screen.png)
+
 Status: milestone 1 of 6 is built and in its week of practice ([milestones](docs/product/product-brief.md#milestones)). The app is now a TypeScript web app you can install, rebuilt from a single-file prototype that's kept in [`prototype/`](prototype/).
 
 ## Why I'm building it
@@ -31,7 +33,7 @@ Songs and settings are saved in your browser on this device. Nothing is sent any
 
 ## Run it
 
-You need [Node.js](https://nodejs.org) 22 or later. The app is in the `app/` folder, and every command runs from there.
+You need [Node.js](https://nodejs.org) 22 or later. The app is in the `app/` folder.
 
 ```bash
 cd app
@@ -45,33 +47,7 @@ npm install
 npm run dev
 ```
 
-Then open <http://localhost:8642>. It opens on Amazing Grace, a public domain hymn in 3/4 with easy open chords.
-
-| Command | What it does |
-|---|---|
-| `npm run dev` | Runs the app with live reload |
-| `npm run build` | Type-checks and builds the installable app into `app/dist/` |
-| `npm run preview` | Serves the built app, offline support included |
-| `npm test` | Unit tests for the chart format, theory, timeline, transport, storage, practice modes and theme contrast |
-| `npm run test:e2e` | Browser tests in Chrome: the main flows, layout at zoom levels from 100% to 400%, and a 20-second timing check |
-| `npm run test:timing` | The full two-minute timing check |
-| `npm run lint` | ESLint |
-
-The prototype still works without any of this: open `prototype/index.html` in a browser. It has a Download backup button in its editor. To bring what you saved there into the app, choose Import prototype backup in the app's menu. `npm run dev` also serves it at <http://localhost:8642/prototype/>. If you used the prototype from that address, the app imports it by itself the first time it opens.
-
-To keep your own charts out of git, put them in `songs/personal.js` at the repo root. The `songs/` folder is git-ignored. The local dev and preview servers serve it, and a deployed build never includes it:
-
-```js
-window.PERSONAL_SONGS = [
-  { id: 'my-song', chart: `title: My song
-tempo: 90
-
-[Verse 1] pattern=C
-G | C | Em | D` },
-];
-```
-
-Keep each `id` the same once you've used a song. The app saves your edits and tempos under it.
+Then open <http://localhost:8642>. It opens on Amazing Grace, a public domain hymn in 3/4 with easy open chords. The [app's README](app/README.md) lists every command, how to add your own songs and how to bring over the prototype's data.
 
 ## Writing a song chart
 
@@ -99,21 +75,9 @@ The app never fetches lyrics or tabs. Anything like that in a chart is what you 
 
 ## How it's built
 
-A TypeScript web app built with Vite and React, installable as a PWA. The interface uses [shadcn/ui](https://ui.shadcn.com) on React Aria Components with Tailwind CSS v4 ([decision 0001](docs/decisions/0001-design-system.md)). The look is a light, monochrome theme with the Geist typeface. Its colors, type sizes and spacing come from one token file, `app/src/index.css`, and a test checks their contrast ([decisions 0009](docs/decisions/0009-birch-light-theme-and-session-modes.md) and [0010](docs/decisions/0010-monochrome-theme-and-geist.md)). Songs and settings are stored in IndexedDB.
+A TypeScript web app built with Vite and React, installable as a PWA. The interface uses [shadcn/ui](https://ui.shadcn.com) on React Aria Components with Tailwind CSS v4 ([decision 0001](docs/decisions/0001-design-system.md)). The look is a light, monochrome theme with the Geist typeface. Its colors, type sizes and spacing come from one token file, and a test checks their contrast. The [design system](docs/design/design-system.md) describes the tokens, the components and the play screen. Songs and settings are stored in IndexedDB.
 
-Data flows one way: song, then timeline, then audio and screen. The music and audio code has no React in it, so it can be tested on its own.
-
-| Folder | What it holds |
-|---|---|
-| `app/src/core/` | The chart format, chords and voicings, patterns, and the timeline that turns a song and your settings into timed events |
-| `app/src/audio/` | The Web Audio engine: a synthesized acoustic guitar, the click, and a lookahead scheduler |
-| `app/src/practice/` | The transport: count-in, playback, loops and the speed trainer |
-| `app/src/data/` | Storage, built-in songs, personal songs and the import from the prototype |
-| `app/src/app/` | Connects the modules and holds the app's state |
-| `app/src/ui/` | React screens and the shadcn components |
-| `app/tests/e2e/` | Browser tests, including the timing check |
-
-The [product brief's architecture section](docs/product/product-brief.md#architecture) has the reasoning.
+Data flows one way: song, then timeline, then audio and screen. The music and audio code has no React in it, so it can be tested on its own. The [app's README](app/README.md#code-map) maps the code, and the [product brief's architecture section](docs/product/product-brief.md#architecture) has the reasoning.
 
 ## Where it's going
 
@@ -126,12 +90,15 @@ The [product brief's architecture section](docs/product/product-brief.md#archite
 
 Each milestone ends with a week of real practice and a written review before the next one starts.
 
-## Project docs
+## What's in this repo
 
-- [Product brief](docs/product/product-brief.md): problem, users, goals, features, architecture and milestones
-- [Decisions](docs/decisions/): what was decided and why
-- [Milestone reviews](docs/product/reviews/): what happened after each milestone, and what changed
-- [Changelog](CHANGELOG.md): what changed in the app
+| Path | What it holds |
+|---|---|
+| [`app/`](app/) | The web app: code, tests and build setup |
+| [`docs/`](docs/) | The product brief, the design system, decision notes and milestone reviews. The [docs guide](docs/README.md) says what to read first |
+| [`prototype/`](prototype/) | The single-file prototype the app was rebuilt from |
+| [`CHANGELOG.md`](CHANGELOG.md) | What changed in the app |
+| [`CLAUDE.md`](CLAUDE.md) | Working notes for Claude Code, the AI coding assistant used on this project |
 
 ## License
 
