@@ -6,8 +6,8 @@ import { SpeedControl } from "@/ui/play/SpeedControl"
 import { TrainerControl } from "@/ui/play/TrainerControl"
 
 /**
- * Play and the controls for the current mode. When the window has room, it stays at
- * the bottom of it, so Play and Speed are always in reach.
+ * Play and the controls for the current mode. It's the last row of the window, so Play
+ * and Speed are always in reach.
  */
 export function TransportBar() {
   const app = useController()
@@ -18,10 +18,10 @@ export function TransportBar() {
   const looped = view.loop ? song.sections[view.loop.section]?.name : null
 
   return (
-    // Pinned when the window is at least 28rem tall. Shorter (a phone sideways, or 400% zoom),
-    // it sits at the end of the page instead of covering it.
-    <section aria-label="Playback" className="border-t border-border bg-card tall:sticky tall:bottom-0 tall:z-10">
-      <div className="mx-auto flex max-w-app flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3 sm:px-6">
+    // In windows under 22rem tall (a phone sideways, or 400% zoom), the whole page scrolls
+    // and this sits at the end of it instead of covering the screen.
+    <section aria-label="Playback" className="shrink-0 border-t border-border bg-card">
+      <div className="mx-auto flex max-w-app flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3 short:py-2 sm:px-6">
         <div className="flex items-center gap-2">
           <TooltipTrigger>
             <Button variant="outline" size="icon-lg" aria-label="Previous section" onPress={() => t.prevSection()}>

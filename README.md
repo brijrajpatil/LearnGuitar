@@ -24,7 +24,7 @@ The [product brief](docs/product-brief.md) has the full problem, goals, features
 - A song map along the bottom: click a bar to jump to it, or a section name to loop it.
 - Songs are text charts you write in the built-in editor, with errors marked by line. Custom strum and pick patterns can be any length and run on across bar lines.
 - Works from the keyboard: Space plays and pauses, the arrow keys change section and speed, L loops the section. A foot pedal that sends these keys works too.
-- A light, monochrome theme, sized in rem so it follows browser zoom, and laid out for screens from a phone to a large monitor.
+- A light, monochrome theme. The play screen fits in the window like a desktop app, follows browser zoom, and is laid out for screens from a phone to a large monitor.
 - Installs as an app from Chrome or Safari and works offline.
 
 Songs and settings are saved in your browser on this device. Nothing is sent anywhere.

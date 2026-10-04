@@ -1,6 +1,6 @@
 # 0009. Birch: a light theme, session modes, and a layout that scales
 
-Status: Accepted. The color and type sections are superseded by [0010](0010-monochrome-theme-and-geist.md).
+Status: Accepted. The color and type sections are superseded by [0010](0010-monochrome-theme-and-geist.md), and the layout and scaling section by [0011](0011-play-screen-fits-the-window.md).
 Date: 2026-10-04
 
 Supersedes [0007](0007-luma-style-and-inter.md), and the parts of [0001](0001-design-system.md) on dark first (rule 5), play-mode colors and the contrast wording. 0001's component choices (shadcn/ui on React Aria, Tailwind CSS v4) stand.

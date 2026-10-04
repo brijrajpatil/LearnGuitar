@@ -125,7 +125,7 @@ export function ChartEditor() {
   return (
     <aside
       aria-label="Chart editor"
-      className="flex h-svh w-editor shrink-0 flex-col gap-2.5 border-l border-border bg-card px-4 py-3.5"
+      className="flex h-dvh w-editor shrink-0 flex-col gap-2.5 border-l border-border bg-card px-4 py-3.5"
       onKeyDown={(e) => {
         if (e.key === "Escape") close()
       }}

@@ -9,8 +9,9 @@ import { StrumCard } from "@/ui/play/StrumCard"
 import { TransportBar } from "@/ui/play/TransportBar"
 
 /**
- * The play screen. The page scrolls when the window is short or zoomed in, and the
- * transport bar stays pinned to the bottom, so nothing is ever cut off.
+ * The play screen fills the window, with Play as its last row (decision 0011). The chord
+ * cards take the height the other rows leave. When even their smallest size doesn't fit,
+ * the middle scrolls and Play stays put. Very short windows scroll the whole page.
  */
 export function App() {
   const app = useController()
@@ -22,16 +23,19 @@ export function App() {
   }
 
   return (
-    <div className="flex min-h-svh">
+    <div className="flex min-h-svh fit:h-dvh fit:min-h-0">
       <div className="flex min-w-0 flex-1 flex-col">
-        <main className="mx-auto flex w-full max-w-app flex-1 flex-col gap-4 px-4 pt-4 pb-6 select-none sm:px-6">
-          <Header />
-          <PositionLine />
-          <div className="flex flex-1 flex-col">
-            <ChordCards />
+        {/* Relative, so screen-reader-only labels scroll inside it instead of extending the page. */}
+        <main className="relative flex flex-1 flex-col fit:min-h-0 fit:overflow-y-auto">
+          <div className="mx-auto flex w-full max-w-app flex-1 flex-col gap-4 px-4 pt-4 pb-6 select-none short:gap-3 short:pt-3 short:pb-4 sm:px-6 [&>*]:shrink-0">
+            <Header />
+            <PositionLine />
+            <div className="flex min-h-stage flex-1 flex-col max-sm:min-h-stage-stacked">
+              <ChordCards />
+            </div>
+            <StrumCard />
+            <SongMap />
           </div>
-          <StrumCard />
-          <SongMap />
         </main>
         <TransportBar />
       </div>

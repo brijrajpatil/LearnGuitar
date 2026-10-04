@@ -65,7 +65,7 @@ export function StrumCard() {
   if (pattern.runsOn && pattern.steps.length % arr.slotsPerBar !== 0) notes.push("runs on across bars")
 
   return (
-    <Card aria-label="Strum" role="region" className="gap-3 px-5 py-4">
+    <Card aria-label="Strum" role="region" className="gap-3 px-5 py-4 short:gap-2 short:py-3">
       <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2">
         <p className="min-w-0 truncate">
           <span className="text-muted-foreground">Strum </span>
@@ -137,7 +137,7 @@ export function StrumCard() {
               key={k}
               aria-current={lit || undefined}
               className={cn(
-                "flex h-slot flex-col items-center justify-between rounded-slot bg-slot pt-1.5 pb-2.5 lg:h-slot-lg",
+                "flex h-slot flex-col items-center justify-between rounded-slot bg-slot pt-1.5 pb-2.5 short:h-slot-sm short:pb-2 roomy:h-slot-lg",
                 lit && "bg-emphasis"
               )}
             >
@@ -162,7 +162,7 @@ export function StrumCard() {
                   lit ? "text-emphasis-foreground" : counting ? "text-dim" : stepColor(step, silent)
                 )}
               >
-                <StepSymbol step={step} silent={silent} className="h-strum-symbol lg:h-strum-symbol-lg" />
+                <StepSymbol step={step} silent={silent} className="h-strum-symbol short:h-strum-symbol-sm roomy:h-strum-symbol-lg" />
               </span>
             </li>
           )

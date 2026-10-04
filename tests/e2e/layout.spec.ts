@@ -2,19 +2,31 @@ import { expect, test } from "@playwright/test"
 import { openApp } from "./helpers"
 
 // Browser zoom Z on a window W x H gives a CSS viewport of W/Z x H/Z at a device scale
-// of Z, which is what these sizes reproduce. Zoom on a 1440x900 laptop window first,
-// then common window widths at 100%.
+// of Z, which is what these sizes reproduce. Laptop sizes are Chrome's page area: the
+// screen minus the menu bar, tabs, toolbar and bookmarks bar.
 const ZOOMS = [1, 1.25, 1.5, 2, 3, 4]
+const zoomed = (name: string, width: number, height: number, zooms: number[]) =>
+  zooms.map((z) => ({ name: `${name} at ${z * 100}%`, width: Math.round(width / z), height: Math.round(height / z), scale: z }))
+
 const SIZES = [
-  ...ZOOMS.map((z) => ({ name: `${z * 100}% zoom`, width: Math.round(1440 / z), height: Math.round(900 / z), scale: z })),
-  { name: "phone", width: 360, height: 740, scale: 1 },
-  { name: "tablet portrait", width: 768, height: 1024, scale: 1 },
-  { name: "small laptop", width: 1280, height: 720, scale: 1 },
-  { name: "large screen", width: 1920, height: 1080, scale: 1 },
+  ...zoomed("a 1440x900 window", 1440, 900, ZOOMS),
+  ...zoomed('MacBook Air 13"', 1470, 785, [1, 1.25, 1.5, 2]),
+  { name: 'MacBook Air 15"', width: 1710, height: 940, scale: 1 },
+  { name: "a 1366x768 laptop", width: 1366, height: 625, scale: 1 },
+  { name: "a small laptop window", width: 1280, height: 720, scale: 1 },
+  { name: "a large screen", width: 1920, height: 1080, scale: 1 },
+  { name: "a tablet held upright", width: 768, height: 1024, scale: 1 },
+  { name: "a phone", width: 360, height: 740, scale: 1 },
 ]
 
+const REM = 16
+// Decision 0011: windows at least this big show the whole play screen without scrolling.
+const ONE_VIEW = { width: 64 * REM, height: 37.5 * REM }
+// Windows at least this tall keep Play on screen. Shorter, the whole page scrolls.
+const FIT_HEIGHT = 22 * REM
+
 for (const size of SIZES) {
-  test(`fits at ${size.name} (${size.width}x${size.height})`, async ({ browser }) => {
+  test(`fits ${size.name} (${size.width}x${size.height})`, async ({ browser }) => {
     const page = await browser.newPage({ viewport: { width: size.width, height: size.height }, deviceScaleFactor: size.scale })
     await openApp(page)
 
@@ -24,6 +36,12 @@ for (const size of SIZES) {
         const b = el.getBoundingClientRect()
         return b.left >= -1 && b.right <= innerWidth + 1 && b.width > 0
       }
+      const regions = ["Now", "Next", "Strum", "Song map", "Playback"]
+      const below = regions.filter((name) => {
+        const el = document.querySelector(`[aria-label="${name}"]`)
+        return !el || el.getBoundingClientRect().bottom > innerHeight + 1
+      })
+      const main = document.querySelector("main")!
       const play = [...document.querySelectorAll("button")].find((b) => b.textContent?.trim() === "Play")
       const pb = play?.getBoundingClientRect()
       const checks = {
@@ -38,40 +56,64 @@ for (const size of SIZES) {
       }
       return {
         sideways: document.documentElement.scrollWidth - innerWidth,
-        playOnScreen: !!pb && pb.top >= 0 && pb.bottom <= innerHeight && inside(play!),
+        pageScrolls: document.documentElement.scrollHeight > innerHeight + 1,
+        middleScrolls: main.scrollHeight > main.clientHeight + 1,
+        below,
+        playOnScreen: !!pb && pb.top >= 0 && pb.bottom <= innerHeight + 1 && inside(play!),
         checks,
-        canScroll: getComputedStyle(document.documentElement).overflowY !== "hidden" && getComputedStyle(document.body).overflowY !== "hidden",
         bodyPx: parseFloat(getComputedStyle(document.body).fontSize),
       }
     })
 
     expect(r.sideways, "no sideways scrolling").toBeLessThanOrEqual(0)
-    // The bar is pinned in windows at least 28rem (448 px) tall. Shorter, it's at the end of the page.
-    if (size.height >= 448) expect(r.playOnScreen, "Play is on screen without scrolling").toBe(true)
-    else {
-      const play = page.getByRole("button", { name: "Play", exact: true })
+    for (const [name, ok] of Object.entries(r.checks)) expect(ok, `${name} fits the width`).toBe(true)
+    expect(r.bodyPx).toBe(16)
+
+    if (size.width >= ONE_VIEW.width && size.height >= ONE_VIEW.height) {
+      expect(r.pageScrolls, "the page doesn't scroll").toBe(false)
+      expect(r.middleScrolls, "the middle doesn't scroll").toBe(false)
+      expect(r.below, "every part of the play screen is in the window").toEqual([])
+    }
+
+    const play = page.getByRole("button", { name: "Play", exact: true })
+    const map = page.getByRole("navigation", { name: "Song map" })
+    if (size.height >= FIT_HEIGHT) {
+      expect(r.pageScrolls, "only the middle scrolls, never the whole page").toBe(false)
+      expect(r.playOnScreen, "Play is on screen without scrolling").toBe(true)
+      // Whatever doesn't fit scrolls into view inside the window, and Play stays put.
+      await map.scrollIntoViewIfNeeded()
+      await expect(map, "the song map is reachable by scrolling").toBeInViewport()
+      await expect(play, "Play stays on screen").toBeInViewport({ ratio: 1 })
+    } else {
+      expect(r.pageScrolls, "the page scrolls").toBe(true)
       await play.scrollIntoViewIfNeeded()
       await expect(play, "Play is reachable by scrolling").toBeInViewport()
     }
-    for (const [name, ok] of Object.entries(r.checks)) expect(ok, `${name} fits the width`).toBe(true)
-    expect(r.canScroll, "the page can scroll").toBe(true)
-    expect(r.bodyPx).toBe(16)
     await page.close()
   })
 }
 
-test("chord text grows with zoom instead of staying the same size", async ({ browser }) => {
-  const onScreen: number[] = []
-  for (const z of ZOOMS) {
-    const page = await browser.newPage({ viewport: { width: Math.round(1440 / z), height: Math.round(900 / z) }, deviceScaleFactor: z })
-    await openApp(page)
-    const css = await page
-      .getByRole("region", { name: "Now" })
-      .locator(".text-stage-chord")
-      .evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
-    onScreen.push(css * z)
-    await page.close()
-  }
-  for (let i = 1; i < onScreen.length; i++) expect(onScreen[i], `zoom ${ZOOMS[i] * 100}%`).toBeGreaterThanOrEqual(onScreen[i - 1] - 1)
-  expect(onScreen[onScreen.length - 1]).toBeGreaterThan(onScreen[0])
-})
+// Zooming in makes the chord text bigger on screen. In a window that fits, the header,
+// strum card and Play bar grow too and leave the chords less room, so the chord can't
+// grow at every step. It's never smaller than at 100%, and it's bigger at 400%.
+for (const [name, width, height] of [
+  ["a 1440x900 window", 1440, 900],
+  ['MacBook Air 13"', 1470, 785],
+] as const) {
+  test(`chord text on ${name} is never smaller than at 100% zoom`, async ({ browser }) => {
+    const onScreen: number[] = []
+    for (const z of ZOOMS) {
+      const page = await browser.newPage({ viewport: { width: Math.round(width / z), height: Math.round(height / z) }, deviceScaleFactor: z })
+      await openApp(page)
+      const css = await page
+        .getByRole("region", { name: "Now" })
+        .locator(".font-semibold")
+        .first()
+        .evaluate((el) => parseFloat(getComputedStyle(el).fontSize))
+      onScreen.push(css * z)
+      await page.close()
+    }
+    for (let i = 1; i < onScreen.length; i++) expect(onScreen[i], `zoom ${ZOOMS[i] * 100}%`).toBeGreaterThanOrEqual(onScreen[0] - 1)
+    expect(onScreen[onScreen.length - 1]).toBeGreaterThan(onScreen[0])
+  })
+}

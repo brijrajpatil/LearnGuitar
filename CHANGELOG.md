@@ -10,7 +10,7 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 - A new look: a light, monochrome theme in neutral greys, with the Geist typeface ([decisions 0009](docs/decisions/0009-birch-light-theme-and-session-modes.md) and [0010](docs/decisions/0010-monochrome-theme-and-geist.md)). Black marks the beat you're on, where you are in the song, progress and Play. Red appears only on errors.
 - The play screen asks what you're practising: Learn a section, Build speed or Play the song. Each mode shows only the controls it needs.
 - Tempo is now Speed, shown with its share of the record, for example "70 BPM, 88% of the record". Quick picks set 60%, 75%, 90% or the record's speed, and a short note explains how to use speed to learn.
-- Everything follows browser zoom and window size. The page scrolls instead of cutting things off, and Play stays at the bottom of the window when there's room.
+- The play screen fits in the window and follows browser zoom ([decision 0011](docs/decisions/0011-play-screen-fits-the-window.md)). On a laptop at 100% or 125% zoom everything is in view without scrolling. When it can't all fit, the middle scrolls and Play stays at the bottom.
 - Fewer things on screen: Simplify chords and the volumes moved to Practice settings in the menu, Level sits beside the strum pattern it changes, and the banner and status rows are merged into the rest.
 - The prototype's Mode (Beginner, Arranged, Record) is called Level, as in the product brief.
 - The chart editor opens beside the play screen instead of over it, so the chords stay visible while you edit.
