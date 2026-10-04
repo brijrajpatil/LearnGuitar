@@ -1,6 +1,7 @@
 import { useAppState, useController } from "@/ui/hooks/use-app"
 import { useShortcuts } from "@/ui/hooks/use-shortcuts"
 import { ChartEditor } from "@/ui/editor/ChartEditor"
+import { LibraryPage } from "@/ui/library/LibraryPage"
 import { ChordCards } from "@/ui/play/ChordCards"
 import { Header } from "@/ui/play/Header"
 import { PositionLine } from "@/ui/play/PositionLine"
@@ -15,12 +16,14 @@ import { TransportBar } from "@/ui/play/TransportBar"
  */
 export function App() {
   const app = useController()
-  const { ready, editorOpen } = useAppState()
+  const { ready, editorOpen, libraryOpen } = useAppState()
   useShortcuts(app)
 
   if (!ready) {
     return <main className="grid min-h-svh place-items-center text-muted-foreground">Loading your songs…</main>
   }
+
+  if (libraryOpen) return <LibraryPage />
 
   return (
     <div className="flex min-h-svh fit:h-dvh fit:min-h-0">

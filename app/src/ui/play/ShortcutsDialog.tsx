@@ -6,8 +6,9 @@ const SHORTCUTS: [string, string][] = [
   ["← →", "Previous or next section"],
   ["↑ ↓", "Speed up or down 1 BPM, or 5 with Shift"],
   ["L", "Loop this section, or play the whole song again"],
+  ["/", "Open the library and search it"],
   ["⌘ Enter", "Apply chart edits (Ctrl+Enter on Windows)"],
-  ["Esc", "Close the editor or a dialog"],
+  ["Esc", "Close the editor, a dialog or the library"],
 ]
 
 /** The keyboard shortcuts. A foot pedal that sends these keys works too. */

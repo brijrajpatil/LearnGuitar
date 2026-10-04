@@ -45,7 +45,7 @@ for (const size of SIZES) {
       const play = [...document.querySelectorAll("button")].find((b) => b.textContent?.trim() === "Play")
       const pb = play?.getBoundingClientRect()
       const checks = {
-        song: inside(document.querySelector('[aria-label="Song"]')),
+        song: inside(document.querySelector('[data-slot="song-button"]')),
         modes: inside(document.querySelector('[aria-label="What are you practising?"]')),
         now: inside(document.querySelector('[aria-label="Now"]')),
         next: inside(document.querySelector('[aria-label="Next"]')),
@@ -88,6 +88,46 @@ for (const size of SIZES) {
       expect(r.pageScrolls, "the page scrolls").toBe(true)
       await play.scrollIntoViewIfNeeded()
       await expect(play, "Play is reachable by scrolling").toBeInViewport()
+    }
+    await page.close()
+  })
+}
+
+// The library page (decision 0014): nothing sideways, the filters and list fit the width,
+// and in windows that fit, only the list scrolls.
+for (const size of SIZES) {
+  test(`the library fits ${size.name} (${size.width}x${size.height})`, async ({ browser }) => {
+    const page = await browser.newPage({ viewport: { width: size.width, height: size.height }, deviceScaleFactor: size.scale })
+    await openApp(page)
+    await page.keyboard.press("/")
+    await expect(page.getByRole("main", { name: "Library" })).toBeVisible()
+
+    const r = await page.evaluate(() => {
+      const inside = (el: Element | null) => {
+        if (!el) return false
+        const b = el.getBoundingClientRect()
+        return b.left >= -1 && b.right <= innerWidth + 1 && b.width > 0
+      }
+      const first = document.querySelector('[role="listbox"][aria-label="Songs"] [role="option"]')
+      return {
+        sideways: document.documentElement.scrollWidth - innerWidth,
+        pageScrolls: document.documentElement.scrollHeight > innerHeight + 1,
+        firstSongInView: !!first && first.getBoundingClientRect().bottom <= innerHeight + 1,
+        checks: {
+          search: inside(document.querySelector('[aria-label="Search songs"]')),
+          collection: inside(document.querySelector('[aria-label="Collection"]')),
+          difficulty: inside(document.querySelector('[data-slot="select-trigger"][aria-label="Difficulty"]')),
+          list: inside(document.querySelector('[aria-label="Songs"]')),
+          firstSong: inside(first),
+        },
+      }
+    })
+
+    expect(r.sideways, "no sideways scrolling").toBeLessThanOrEqual(0)
+    for (const [name, ok] of Object.entries(r.checks)) expect(ok, `${name} fits the width`).toBe(true)
+    if (size.height >= FIT_HEIGHT) {
+      expect(r.pageScrolls, "only the list scrolls, never the whole page").toBe(false)
+      expect(r.firstSongInView, "the first song is in the window").toBe(true)
     }
     await page.close()
   })

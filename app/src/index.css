@@ -185,4 +185,13 @@
     outline: 2px solid var(--ring) !important;
     outline-offset: 2px;
   }
+  /* A field in an input group, like the library's search: the outline goes around the
+     whole group, with its icon, instead of the bare input inside it. */
+  [data-slot="input-group-control"]:focus-visible {
+    outline: none !important;
+  }
+  [data-slot="input-group"]:has([data-slot="input-group-control"]:focus-visible) {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
 }

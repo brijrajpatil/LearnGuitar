@@ -25,6 +25,8 @@ export function useShortcuts(app: AppController): void {
   useEffect(() => {
     const t = app.transport
     const onKeyDown = (e: KeyboardEvent) => {
+      // The library page has its own keys.
+      if (app.getState().libraryOpen) return
       if (isTyping(e.target) || inOverlay(e.target)) return
       if (e.metaKey || e.ctrlKey || e.altKey) return
       if (e.key.startsWith("Arrow") && keyboardWidget(e.target)) return
@@ -50,6 +52,9 @@ export function useShortcuts(app: AppController): void {
         case "L":
           app.toggleLoop()
           break
+        case "/":
+          app.openLibrary()
+          break
         default:
           handled = false
       }
@@ -60,6 +65,7 @@ export function useShortcuts(app: AppController): void {
     }
     // Stop the Space key-up from pressing whichever button has focus.
     const onKeyUp = (e: KeyboardEvent) => {
+      if (app.getState().libraryOpen) return
       if ((e.key === " " || e.key === "Spacebar") && !isTyping(e.target) && !inOverlay(e.target)) {
         e.preventDefault()
         e.stopPropagation()

@@ -28,13 +28,14 @@ export const sync = (page: Page) =>
 /** A menu button found by its label. Its accessible name also includes the chosen value. */
 export const picker = (page: Page, label: string) => page.locator(`[data-slot="select-trigger"][aria-label="${label}"]`)
 
-export const songPicker = (page: Page) => picker(page, "Song")
+/** The song title in the header, which opens the library. */
+export const songButton = (page: Page) => page.locator('[data-slot="song-button"]')
 
 /** Opens the app on Amazing Grace and waits for it to load. */
 export async function openApp(page: Page) {
   await page.goto("/")
   await expect(page.getByRole("region", { name: "Now" })).toBeVisible()
-  await expect(songPicker(page)).toContainText("Amazing Grace")
+  await expect(songButton(page)).toContainText("Amazing Grace")
 }
 
 /** Replaces the chart in the editor and applies it. */

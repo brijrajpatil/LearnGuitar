@@ -26,8 +26,9 @@ The [product brief](docs/product/product-brief.md) has the full problem, goals, 
 - Simplify chords swaps hard shapes for easier ones, for example F#m for a four-string version.
 - Speed shows the BPM and how it compares with the record ("88% of the record"), with quick picks from 60% to the record's speed.
 - A song map along the bottom: click a bar to jump to it, or a section name to loop it.
+- A library page lists every song with its chords and difficulty. Search it by title, artist or chord, and filter it by collection and difficulty.
 - Songs are text charts you write in the built-in editor, with errors marked by line. Custom strum and pick patterns can be any length and run on across bar lines.
-- Works from the keyboard: Space plays and pauses, the arrow keys change section and speed, L loops the section. A foot pedal that sends these keys works too.
+- Works from the keyboard: Space plays and pauses, the arrow keys change section and speed, L loops the section, and / opens the library. A foot pedal that sends these keys works too.
 - A light, monochrome theme. The play screen fits in the window like a desktop app, follows browser zoom, and is laid out for screens from a phone to a large monitor.
 - Installs as an app from Chrome or Safari and works offline.
 

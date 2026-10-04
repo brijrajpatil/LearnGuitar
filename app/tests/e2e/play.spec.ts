@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test"
-import { applyChart, openApp, picker, songPicker, view } from "./helpers"
+import { applyChart, openApp, picker, songButton, view } from "./helpers"
 
 const chooseLevel = async (page: Page, level: string) => {
   await picker(page, "Level").click()
@@ -102,7 +102,7 @@ test("the editor marks errors by line, applies a fix and keeps it after a reload
   await page.getByRole("button", { name: /^Apply/ }).click()
   await expect(page.getByText("Chart applied and saved")).toBeVisible()
   await page.reload()
-  await expect(songPicker(page)).toContainText("Mine")
+  await expect(songButton(page)).toContainText("Mine")
 })
 
 test("a custom pattern is saved and used for the section", async ({ page }) => {
@@ -122,7 +122,7 @@ test("a new song starts from the template and opens the editor", async ({ page }
   await openApp(page)
   await page.getByRole("button", { name: "Menu" }).click()
   await page.getByRole("menuitem", { name: "New song" }).click()
-  await expect(songPicker(page)).toContainText("New song")
+  await expect(songButton(page)).toContainText("New song")
   await expect(page.getByRole("textbox", { name: "Chart text" })).toBeVisible()
 })
 
@@ -136,7 +136,7 @@ test("imports the prototype's data on first run from the same origin", async ({ 
   })
   await page.goto("/")
   await expect(page.getByText("Your songs and settings from the prototype were imported.")).toBeVisible()
-  await expect(songPicker(page)).toContainText("From the prototype")
+  await expect(songButton(page)).toContainText("From the prototype")
   expect((await view(page)).tempo).toBe(88)
   await expect(picker(page, "Level")).toContainText("Beginner")
 })
@@ -156,6 +156,6 @@ test("imports the prototype's backup file from the menu", async ({ page }) => {
   await page.getByRole("menuitem", { name: "Import prototype backup…" }).click()
   await (await chooser).setFiles({ name: "backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(backup)) })
   await expect(page.getByText(/Backup imported/)).toBeVisible()
-  await songPicker(page).click()
+  await songButton(page).click()
   await expect(page.getByRole("option", { name: "From a backup" })).toBeVisible()
 })

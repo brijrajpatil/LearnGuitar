@@ -101,6 +101,7 @@ Terms:
 
 Song library
 
+- A library page lists every song with its chords and difficulty, with search and filters for collection and difficulty. Built 2026-10-04 (see [decision 0014](../decisions/0014-library-page.md)).
 - Songs are saved on the device and can be exported and imported as text files.
 - Each song has title, artist, key, tempo, time signature, tuning, capo fret, and which guitar it's for. Electric songs get a notes field for amp settings.
 - Each song can link to its sources: the tab you learn from, and a tutorial video with a timestamp for each section.
@@ -275,3 +276,4 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 - 2026-10-04: The play screen fits in the window, like a desktop app. The chord cards take the height left over, and when it can't all fit, the middle scrolls while Play stays at the bottom. See [decision 0011](../decisions/0011-play-screen-fits-the-window.md).
 - 2026-10-04: The code moves into `app/` and the docs group into product, design and decisions, so the repo's front page leads with the product. See [decision 0012](../decisions/0012-repo-layout.md).
 - 2026-10-04: The app is hosted on GitHub Pages from the public repo LearnGuitar, at <https://brijrajpatil.github.io/LearnGuitar/>. Pull requests and pushes to `main` run the checks, and `main` deploys. See [decision 0013](../decisions/0013-github-pages-hosting.md).
+- 2026-10-04: Songs are picked from a library page, opened from the song's title or the / key, in place of the drop-down menu. See [decision 0014](../decisions/0014-library-page.md).

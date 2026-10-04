@@ -1,19 +1,18 @@
 import { useRef, useState } from "react"
-import { EllipsisIcon, InfoIcon } from "lucide-react"
+import { ChevronDownIcon, EllipsisIcon, InfoIcon } from "lucide-react"
 import { toast } from "sonner"
 import { songSeconds } from "@/core/song/types"
 import { Button } from "@/ui/components/button"
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/ui/components/dropdown-menu"
 import { Popover, PopoverHeader, PopoverTitle, PopoverTrigger } from "@/ui/components/popover"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/ui/components/select"
+import { Kbd } from "@/ui/components/kbd"
 import { Toggle } from "@/ui/components/toggle"
+import { Tooltip, TooltipTrigger } from "@/ui/components/tooltip"
 import { useAppState, useController } from "@/ui/hooks/use-app"
 import { formatTime } from "@/ui/play/display"
 import { ModeSwitch } from "@/ui/play/ModeSwitch"
 import { SettingsSheet } from "@/ui/play/SettingsSheet"
 import { ShortcutsDialog } from "@/ui/play/ShortcutsDialog"
-
-const NEW_SONG = "__new"
 
 /** The song's facts and notes, kept off the play screen until asked for. */
 function SongInfo() {
@@ -55,6 +54,7 @@ function SongInfo() {
 export function Header() {
   const app = useController()
   const { songs, songId, editorOpen } = useAppState()
+  const title = songs.find((s) => s.id === songId)?.title ?? "Untitled"
   const fileInput = useRef<HTMLInputElement>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
@@ -69,33 +69,23 @@ export function Header() {
   return (
     <header className="flex flex-wrap items-center gap-x-4 gap-y-3">
       <div className="flex min-w-0 items-center gap-1">
-        <Select
-          aria-label="Song"
-          selectedKey={songId}
-          onSelectionChange={(key) => {
-            if (key === NEW_SONG) app.newSong()
-            else if (key !== null) app.selectSong(String(key))
-          }}
-          className="min-w-0"
-        >
-          <SelectTrigger className="h-11 max-w-[min(28rem,70vw)] bg-transparent px-2 text-xl font-semibold">
-            <SelectValue>{({ selectedText }) => selectedText}</SelectValue>
-          </SelectTrigger>
-          <SelectContent className="min-w-72">
-            <SelectGroup>
-              {songs.map((s) => (
-                <SelectItem key={s.id} id={s.id} textValue={s.title}>
-                  {s.title}
-                  {s.artist && <span className="font-normal text-muted-foreground">{s.artist}</span>}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-            <SelectSeparator />
-            <SelectGroup>
-              <SelectItem id={NEW_SONG}>New song…</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        {/* The song's title opens the library, where you pick another (decision 0014). */}
+        <TooltipTrigger delay={500}>
+          <Button
+            variant="ghost"
+            data-slot="song-button"
+            className="h-11 max-w-[min(28rem,70vw)] min-w-0 px-2 text-xl font-semibold"
+            onPress={() => app.openLibrary()}
+          >
+            <span className="sr-only">Song: </span>
+            <span className="truncate">{title}</span>
+            <span className="sr-only">. Open the library</span>
+            <ChevronDownIcon className="text-muted-foreground" />
+          </Button>
+          <Tooltip>
+            Library <Kbd>/</Kbd>
+          </Tooltip>
+        </TooltipTrigger>
         <SongInfo />
       </div>
 

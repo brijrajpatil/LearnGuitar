@@ -6,6 +6,7 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 ### Added
 
+- A library page. Click the song's title or press / to open it. Search by title, artist or chord name, filter by collection and difficulty, and press Enter or click to open a song ([decision 0014](docs/decisions/0014-library-page.md)). New song is under Your songs.
 - A chart with a capo (`capo: 2`) now sounds at the pitch of a guitar with that capo on. The diagrams still show the shapes you finger.
 - The app is live at <https://brijrajpatil.github.io/LearnGuitar/>, so you can try it or install it without running anything ([decision 0013](docs/decisions/0013-github-pages-hosting.md)). It saves to its own browser storage, apart from a local copy.
 

@@ -113,13 +113,15 @@ The app's own variants live in the copied component files:
 | Toggle group | `segment` | The practice mode switch: Learn a section, Build speed, Play the song |
 | Progress | default | Build speed's progress, in the emphasis fill |
 
+An input group draws the focus outline around the whole group, icon included, instead of around the bare input inside it.
+
 React Aria handles focus, keyboard and press behavior. Hover styles apply only to a mouse, and dragging a finger off a control cancels the press. Every control shows a 2 px outline in `--ring` when focused from the keyboard. Disabled buttons drop to 50% opacity.
 
 ## The play screen
 
 The play screen has six rows, from top to bottom:
 
-1. Header: the song picker, About this song, the practice mode switch, How to practise, Edit chart and the menu.
+1. Header: the song's title, which opens the library, About this song, the practice mode switch, How to practise, Edit chart and the menu.
 2. Position line: the section name, the bar within the section and a progress bar for the section. During the count-in it shows the count, with the current beat filled with emphasis. While playing, it shows the bar's cue when the chart has one.
 3. Chord cards. The Now card is white and largest, with the chord name and its diagram. The Next card sits on `--tint` with no border, and counts down to the change.
 4. Strum card: the pattern's name, what's coming next, Level and Change pattern. Below them is one slot per eighth note. Arrows strum down or up, a dot is a missed strum, B picks the bass note, and 1 to 6 pick a string. The slot being played is filled with emphasis.
@@ -129,6 +131,18 @@ The play screen has six rows, from top to bottom:
 The chart editor opens as a panel beside the play screen, so the chords stay in view while editing. Lines with an error get the `--error-line` background and a message in `--destructive`.
 
 ![The chart editor open beside the play screen, showing the Amazing Grace chart with line numbers and the chart check below it.](images/chart-editor.png)
+
+## The library page
+
+The song's title in the header opens the library in place of the play screen ([0014](../decisions/0014-library-page.md)). It fills the window the same way: the top rows stay put and only the list scrolls.
+
+1. Top row: the "Library" heading, the search field (an input group with a search icon and a `/` key hint) and Back to the current song.
+2. Filters: the collection filter in the `segment` toggle group, the difficulty select, and the number of songs listed. With Your songs chosen, New song sits at the end of the row.
+3. The list: a card with column labels (Song, Chords, Difficulty) and one row per song. A row has the title with the artist or "Study" under it in `--muted-foreground`, the chords drawn with `ChordName`, and the difficulty. The focused or hovered row is `--accent`, and keyboard focus draws the 2 px outline inside the row. The current song has a small dot in the emphasis fill.
+
+Below the `sm` breakpoint the column labels hide, the chords move under the title, and the collection names shorten (Folk, Yours).
+
+When nothing matches, the list says so and offers Clear filters. Your songs, when there are none yet, explains what goes there and offers New song.
 
 ## Changing the system
 
@@ -148,3 +162,4 @@ The chart editor opens as a panel beside the play screen, so the chords stay in 
 | [0009](../decisions/0009-birch-light-theme-and-session-modes.md) | A light theme, the contrast rules, rem sizing and the practice modes | Contrast, sizing and modes stand |
 | [0010](../decisions/0010-monochrome-theme-and-geist.md) | Monochrome colors, the emphasis tokens and Geist | Current |
 | [0011](../decisions/0011-play-screen-fits-the-window.md) | The play screen fills the window, with window-height variants | Current |
+| [0014](../decisions/0014-library-page.md) | The library page, opened from the song's title | Current |
