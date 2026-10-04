@@ -36,7 +36,7 @@ Never rewrite an accepted decision note. Write a new one that supersedes it, and
 ## Code
 
 - Current code: `prototype/index.html`, a single-file prototype with no build step. It runs from `file://`.
-- Planned rebuild: a TypeScript PWA (see the brief's Architecture section and `docs/decisions/0005-typescript-pwa.md`).
+- The rebuild, a TypeScript PWA with Vite and React, is in progress in `src/` (see the brief's Architecture section and `docs/decisions/0005-typescript-pwa.md`). `src/core`, `src/audio` and `src/practice` never import React or anything from `src/ui`. `npm test` runs the unit tests, and `npm run lint` and `npm run typecheck` the checks.
 - Keep the chart text format backwards compatible. Songs already saved must keep loading.
 - The app stores edits, tempos and pattern choices per song id in localStorage. Never change or drop a song's id, or the owner loses that data.
 - To test over HTTP (as on GitHub Pages), serve the folder with `python3 -m http.server 8642` and open `http://localhost:8642/prototype/`.

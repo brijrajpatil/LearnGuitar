@@ -198,6 +198,7 @@ Data flows one way: song, then timeline, then audio and screen.
 | `core/song` | Song data types (parts, sections, chords, lead notes, lyrics), with a schema version and migrations so old songs keep loading |
 | `core/chart` | Reads and writes the text format, for import, export and the text editor |
 | `core/theory` | Chords, voicings, tunings, capo and simplification rules |
+| `core/pattern` | Strum and pick patterns: presets, custom patterns and figures written in a chart |
 | `core/timeline` | Turns a song, the chosen parts and levels, and settings into one timed list of events: clicks, strums, picks, lead notes, chord changes, lyric syllables, section starts, pattern-change warnings |
 | `audio` | Lookahead scheduler, instruments (click, acoustic, electric, overdrive), the mixer, and input for recording |
 | `practice` | Transport (stopped, count-in, playing, looping), speed trainer, drills, gap click |
