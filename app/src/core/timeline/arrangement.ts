@@ -11,7 +11,7 @@ import {
   type PatternId,
 } from "@/core/pattern/patterns"
 import { TICKS_PER_EIGHTH, type ChordSpan, type Song, type Voicing } from "@/core/song/types"
-import { findVoicing, pickString, simplifiedName } from "@/core/theory/chords"
+import { capoFret, findVoicing, pickString, simplifiedName, withCapo } from "@/core/theory/chords"
 
 /** A song's levels, from easy to the recorded version. */
 export type Level = "beginner" | "arranged" | "record"
@@ -36,6 +36,8 @@ export interface Arrangement {
   autoPatterns: Pattern[]
   /** The pattern each section actually plays. */
   patterns: Pattern[]
+  /** The capo's fret, 0 for none. Sounds play this many semitones above the shapes. */
+  capo: number
 }
 
 /**
@@ -77,6 +79,7 @@ export function arrange(song: Song, settings: ArrangementSettings): Arrangement 
     barChords,
     autoPatterns,
     patterns,
+    capo: capoFret(song.capo),
   }
 }
 
@@ -165,7 +168,8 @@ export function barSteps(arr: Arrangement, bar: number): TimelineStep[] {
   for (let slot = 0; slot < arr.slotsPerBar; slot++) {
     const step = stepAt(arr, bar, slot)
     const chord = chordAt(arr, bar, slot)
-    const voicing = voicingOf(arr, chord)
+    const shape = voicingOf(arr, chord)
+    const voicing = shape && withCapo(shape, arr.capo)
     const accent = slot === 0
     let sound: StepSound | null = null
     if (voicing && (step === "D" || step === "U")) {
@@ -189,9 +193,12 @@ export function countInSteps(arr: Arrangement): TimelineStep[] {
   }))
 }
 
-/** Every chord the arrangement can play, for loading their sounds before playback. */
+/** Every chord the arrangement can play, as it sounds, for loading the sounds before playback. */
 export function chordsUsed(arr: Arrangement): Voicing[] {
   const names = new Set<string>()
   for (const spans of arr.barChords) for (const s of spans) names.add(s.chord)
-  return [...names].map((n) => voicingOf(arr, n)).filter((v): v is Voicing => v !== null)
+  return [...names]
+    .map((n) => voicingOf(arr, n))
+    .filter((v): v is Voicing => v !== null)
+    .map((v) => withCapo(v, arr.capo))
 }

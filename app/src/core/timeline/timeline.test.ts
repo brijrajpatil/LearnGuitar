@@ -95,6 +95,15 @@ describe("arrangement", () => {
     expect(barSteps(arrange(d, base), 0).every((s) => s.sound === null)).toBe(true)
   })
 
+  it("sounds the shapes a capo's frets higher, and keeps the shapes for the diagrams", () => {
+    const capoSong = parseChart(`title: Capo\ncapo: 2\n[Verse] pattern=A\nD | G\n`, []).song
+    const arr = arrange(capoSong, base)
+    expect(arr.capo).toBe(2)
+    const strum = barSteps(arr, 0)[0].sound
+    expect(strum?.type === "strum" && strum.voicing.frets).toEqual([-1, -1, 2, 4, 5, 4])
+    expect(arrange(song, base).capo).toBe(0)
+  })
+
   it("counts in with clicks only", () => {
     const steps = countInSteps(make())
     expect(steps.filter((s) => s.click)).toHaveLength(4)

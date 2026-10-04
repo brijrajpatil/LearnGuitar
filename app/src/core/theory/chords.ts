@@ -24,6 +24,34 @@ export const stringMidi = (string: number, fret: number): number =>
   STANDARD_TUNING[string] + fret
 
 /**
+ * The capo's fret from a chart's capo setting, such as "2", "capo 2" or "2nd fret".
+ * 0 when there's no capo or the text has no fret number in 1 to 12.
+ */
+export function capoFret(text: string): number {
+  const m = String(text).match(/\d+/)
+  const n = m ? Number(m[0]) : 0
+  return n >= 1 && n <= 12 ? n : 0
+}
+
+const withCapoCache = new WeakMap<Voicing, Map<number, Voicing>>()
+
+/**
+ * The shape as it sounds with a capo: every played string moves up by the capo's fret.
+ * Diagrams keep the shape you finger; only the sound uses this.
+ */
+export function withCapo(v: Voicing, capo: number): Voicing {
+  if (!capo) return v
+  let byCapo = withCapoCache.get(v)
+  if (!byCapo) withCapoCache.set(v, (byCapo = new Map()))
+  let out = byCapo.get(capo)
+  if (!out) {
+    out = { ...v, frets: v.frets.map((f) => (f < 0 ? f : f + capo)) }
+    byCapo.set(capo, out)
+  }
+  return out
+}
+
+/**
  * Splits a chord name for display: the name with ♯ and ♭ signs, and a parenthesised
  * suffix such as "(easy)" shown smaller.
  */
