@@ -1,6 +1,6 @@
 # 0008. The prototype moves to its own folder, and its data is imported
 
-Status: Accepted
+Status: Accepted. Where the app lives is superseded by [0012](0012-repo-layout.md).
 Date: 2026-10-04
 
 ## Context

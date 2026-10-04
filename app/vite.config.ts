@@ -10,15 +10,16 @@ import { VitePWA } from "vite-plugin-pwa"
 // lets the app find that data on first run when the prototype was served here.
 const PORT = 8642
 
-// Serves the git-ignored songs/ folder from the local dev and preview servers only.
-// It's never copied into dist/, so personal charts can't end up in a deployed build.
+// Serves the git-ignored songs/ folder at the repo root from the local dev and preview
+// servers only. It's never copied into dist/, so personal charts can't end up in a
+// deployed build. It sits at the root because the prototype loads it too.
 function personalSongs(): Plugin {
   const serve: Connect.NextHandleFunction = async (req, res, next) => {
     const url = (req.url ?? "").split("?")[0]
     const match = url.match(/\/songs\/([\w-]+\.js)$/)
     if (!match) return next()
     try {
-      const body = await readFile(resolve(import.meta.dirname, "songs", match[1]))
+      const body = await readFile(resolve(import.meta.dirname, "..", "songs", match[1]))
       res.setHeader("Content-Type", "text/javascript; charset=utf-8")
       res.setHeader("Cache-Control", "no-store")
       res.end(body)
@@ -34,12 +35,29 @@ function personalSongs(): Plugin {
   }
 }
 
+// Serves the prototype from the repo root at /prototype/ on the dev server, the address
+// it had before the app moved into app/. What it saved lives in this origin's localStorage.
+function prototype(): Plugin {
+  const serve: Connect.NextHandleFunction = async (req, res, next) => {
+    const url = (req.url ?? "").split("?")[0]
+    if (!/^\/prototype(\/|\/index\.html)?$/.test(url)) return next()
+    const body = await readFile(resolve(import.meta.dirname, "..", "prototype", "index.html"))
+    res.setHeader("Content-Type", "text/html; charset=utf-8")
+    res.end(body)
+  }
+  return {
+    name: "prototype",
+    configureServer: (server) => void server.middlewares.use(serve),
+  }
+}
+
 export default defineConfig({
   base: "./",
   plugins: [
     react(),
     tailwindcss(),
     personalSongs(),
+    prototype(),
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["icon.svg"],

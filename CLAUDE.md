@@ -35,6 +35,7 @@ Never rewrite an accepted decision note. Write a new one that supersedes it, and
 
 ## Code
 
+- The app is in `app/`, and npm commands run from there. Code paths in this section (`src/`, `tests/`) are inside `app/`. The repo layout is in `docs/decisions/0012-repo-layout.md`.
 - The app is a TypeScript PWA built with Vite and React, in `src/`. The brief's Architecture section describes the modules. `src/core`, `src/audio` and `src/practice` never import React or anything from `src/ui`.
 - The single-file prototype is in `prototype/index.html`. Leave it as it is, apart from fixes the owner asks for, until milestone 1's review retires it.
 - Follow the design system in `docs/decisions/0001-design-system.md`, `0009-birch-light-theme-and-session-modes.md`, `0010-monochrome-theme-and-geist.md` and `0011-play-screen-fits-the-window.md`. Shared components are in `src/ui/components` (shadcn, Luma style, React Aria base). Colors, stage type sizes and spacing are tokens in `src/index.css`. Components contain no raw hex values or one-off pixel sizes.
@@ -43,7 +44,7 @@ Never rewrite an accepted decision note. Write a new one that supersedes it, and
 - Add shadcn components with `npx shadcn@latest add <name>`. Variants the app needs go into the copied component file.
 - Keep the chart text format backwards compatible. Songs already saved must keep loading.
 - The app stores edits, tempos and pattern choices per song id in IndexedDB. Never change or drop a song's id, or the owner loses that data.
-- `npm run dev` serves the app at `http://localhost:8642`, with `songs/` and `prototype/` too. `npm test` runs the unit tests, `npm run test:e2e` the browser tests (flows, layout and timing), `npm run lint` and `npm run typecheck` the checks. Run all four before saying a change works.
+- `npm run dev` serves the app at `http://localhost:8642`, with `songs/` and the prototype (at `/prototype/`) from the repo root. `npm test` runs the unit tests, `npm run test:e2e` the browser tests (flows, layout and timing), `npm run lint` and `npm run typecheck` the checks. Run all four before saying a change works.
 - In the browser console, `window.__practice.sync()` reports timing stats for the audio scheduler.
 
 ## Commits

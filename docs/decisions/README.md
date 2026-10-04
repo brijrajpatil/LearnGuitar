@@ -11,10 +11,11 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0005](0005-typescript-pwa.md) | Rebuild as a TypeScript PWA | Accepted, 2026-10-04 |
 | [0006](0006-public-domain-demo-song.md) | A public domain demo song, and personal songs outside the repo | Accepted, 2026-10-04 |
 | [0007](0007-luma-style-and-inter.md) | shadcn's Luma style, with Inter as the font | Superseded by 0009 |
-| [0008](0008-prototype-folder-and-data-import.md) | The prototype moves to its own folder, and its data is imported | Accepted, 2026-10-04 |
+| [0008](0008-prototype-folder-and-data-import.md) | The prototype moves to its own folder, and its data is imported | Accepted, 2026-10-04. Where the app lives is superseded by 0012 |
 | [0009](0009-birch-light-theme-and-session-modes.md) | Birch: a light theme, session modes, and a layout that scales | Accepted, 2026-10-04. Color and type superseded by 0010, layout by 0011 |
 | [0010](0010-monochrome-theme-and-geist.md) | A monochrome theme, with Geist | Accepted, 2026-10-04 |
 | [0011](0011-play-screen-fits-the-window.md) | The play screen fits the window | Accepted, 2026-10-04 |
+| [0012](0012-repo-layout.md) | Repo layout: the app in app/, the docs grouped by product and design | Accepted, 2026-10-04 |
 
 ## Writing a note
 

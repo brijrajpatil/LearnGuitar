@@ -31,7 +31,11 @@ Songs and settings are saved in your browser on this device. Nothing is sent any
 
 ## Run it
 
-You need [Node.js](https://nodejs.org) 22 or later.
+You need [Node.js](https://nodejs.org) 22 or later. The app is in the `app/` folder, and every command runs from there.
+
+```bash
+cd app
+```
 
 ```bash
 npm install
@@ -46,16 +50,16 @@ Then open <http://localhost:8642>. It opens on Amazing Grace, a public domain hy
 | Command | What it does |
 |---|---|
 | `npm run dev` | Runs the app with live reload |
-| `npm run build` | Type-checks and builds the installable app into `dist/` |
+| `npm run build` | Type-checks and builds the installable app into `app/dist/` |
 | `npm run preview` | Serves the built app, offline support included |
 | `npm test` | Unit tests for the chart format, theory, timeline, transport, storage, practice modes and theme contrast |
 | `npm run test:e2e` | Browser tests in Chrome: the main flows, layout at zoom levels from 100% to 400%, and a 20-second timing check |
 | `npm run test:timing` | The full two-minute timing check |
 | `npm run lint` | ESLint |
 
-The prototype still works without any of this: open `prototype/index.html` in a browser. It has a Download backup button in its editor. To bring what you saved there into the app, choose Import prototype backup in the app's menu. If you used the prototype from `http://localhost:8642`, the app imports it by itself the first time it opens.
+The prototype still works without any of this: open `prototype/index.html` in a browser. It has a Download backup button in its editor. To bring what you saved there into the app, choose Import prototype backup in the app's menu. `npm run dev` also serves it at <http://localhost:8642/prototype/>. If you used the prototype from that address, the app imports it by itself the first time it opens.
 
-To keep your own charts out of git, put them in `songs/personal.js`. The `songs/` folder is git-ignored. The local dev and preview servers serve it, and a deployed build never includes it:
+To keep your own charts out of git, put them in `songs/personal.js` at the repo root. The `songs/` folder is git-ignored. The local dev and preview servers serve it, and a deployed build never includes it:
 
 ```js
 window.PERSONAL_SONGS = [
@@ -95,19 +99,19 @@ The app never fetches lyrics or tabs. Anything like that in a chart is what you 
 
 ## How it's built
 
-A TypeScript web app built with Vite and React, installable as a PWA. The interface uses [shadcn/ui](https://ui.shadcn.com) on React Aria Components with Tailwind CSS v4 ([decision 0001](docs/decisions/0001-design-system.md)). The look is a light, monochrome theme with the Geist typeface. Its colors, type sizes and spacing come from one token file, `src/index.css`, and a test checks their contrast ([decisions 0009](docs/decisions/0009-birch-light-theme-and-session-modes.md) and [0010](docs/decisions/0010-monochrome-theme-and-geist.md)). Songs and settings are stored in IndexedDB.
+A TypeScript web app built with Vite and React, installable as a PWA. The interface uses [shadcn/ui](https://ui.shadcn.com) on React Aria Components with Tailwind CSS v4 ([decision 0001](docs/decisions/0001-design-system.md)). The look is a light, monochrome theme with the Geist typeface. Its colors, type sizes and spacing come from one token file, `app/src/index.css`, and a test checks their contrast ([decisions 0009](docs/decisions/0009-birch-light-theme-and-session-modes.md) and [0010](docs/decisions/0010-monochrome-theme-and-geist.md)). Songs and settings are stored in IndexedDB.
 
 Data flows one way: song, then timeline, then audio and screen. The music and audio code has no React in it, so it can be tested on its own.
 
 | Folder | What it holds |
 |---|---|
-| `src/core/` | The chart format, chords and voicings, patterns, and the timeline that turns a song and your settings into timed events |
-| `src/audio/` | The Web Audio engine: a synthesized acoustic guitar, the click, and a lookahead scheduler |
-| `src/practice/` | The transport: count-in, playback, loops and the speed trainer |
-| `src/data/` | Storage, built-in songs, personal songs and the import from the prototype |
-| `src/app/` | Connects the modules and holds the app's state |
-| `src/ui/` | React screens and the shadcn components |
-| `tests/e2e/` | Browser tests, including the timing check |
+| `app/src/core/` | The chart format, chords and voicings, patterns, and the timeline that turns a song and your settings into timed events |
+| `app/src/audio/` | The Web Audio engine: a synthesized acoustic guitar, the click, and a lookahead scheduler |
+| `app/src/practice/` | The transport: count-in, playback, loops and the speed trainer |
+| `app/src/data/` | Storage, built-in songs, personal songs and the import from the prototype |
+| `app/src/app/` | Connects the modules and holds the app's state |
+| `app/src/ui/` | React screens and the shadcn components |
+| `app/tests/e2e/` | Browser tests, including the timing check |
 
 The [product brief's architecture section](docs/product-brief.md#architecture) has the reasoning.
 
