@@ -1,5 +1,7 @@
-// Songs that ship with the app. They hold chords only, with no lyrics or tabs, so they
-// can be published (see docs/decisions/0006).
+// Songs that ship with the app: the library in src/data/library. They hold chords only,
+// with no lyrics or tabs (see docs/decisions/0006).
+
+import { LIBRARY, type LibrarySong } from "@/data/library"
 
 export interface SongSource {
   /** Stable id. Saved edits, tempos and pattern choices are stored under it. */
@@ -7,35 +9,12 @@ export interface SongSource {
   chart: string
 }
 
-export const DEMO_SONGS: readonly SongSource[] = [
-  {
-    id: "amazing-grace",
-    chart: `title: Amazing Grace
-artist: Traditional
-key: G
-time: 3/4
-tempo: 80
-note: A traditional hymn in the public domain, with words by John Newton (1779). The chords are a common folk arrangement. A traditional song has no single record, so the Record level plays a fingerpicked version.
-
-# Beginner: one downstroke per beat.
-# Arranged: the chord's bass note on beat 1, then down-up strums.
-# Record: fingerpicked, the bass note then strings 3 2 1 2 3.
-
-[Intro] pattern=B.DUDU record=B32123
-G | G
-[Verse 1] pattern=B.DUDU record=B32123
-G | G7 | C | G | G | G | D | D
-G | G7 | C | G | Em | D | G | G
-[Verse 2] pattern=B.DUDU record=B32123
-G | G7 | C | G | G | G | D | D
-G | G7 | C | G | Em | D | G | G
-[Outro] pattern=E
-G
-`,
-  },
-]
+export const BUILTIN_SONGS: readonly LibrarySong[] = LIBRARY
 
 export const DEFAULT_SONG_ID = "amazing-grace"
+
+/** A built-in song's chart by id, for tests and defaults. */
+export const builtinChart = (id: string): string | undefined => BUILTIN_SONGS.find((s) => s.id === id)?.chart
 
 export const NEW_SONG_TEMPLATE = `title: New song
 artist:

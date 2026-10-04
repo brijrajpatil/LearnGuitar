@@ -12,7 +12,7 @@ import {
   type ArrangementSettings,
 } from "@/core/timeline/arrangement"
 import { upcoming } from "@/core/timeline/upcoming"
-import { DEMO_SONGS } from "@/data/builtin-songs"
+import { builtinChart, DEFAULT_SONG_ID } from "@/data/builtin-songs"
 
 const CHART = `title: Test
 time: 4/4
@@ -87,7 +87,7 @@ describe("arrangement", () => {
   })
 
   it("plays picked strings and skips a pick on a muted string", () => {
-    const { song: grace } = parseChart(DEMO_SONGS[0].chart, [])
+    const { song: grace } = parseChart(builtinChart(DEFAULT_SONG_ID)!, [])
     const arr = arrange(grace, { ...base, level: "record" })
     const steps = barSteps(arr, 0)
     expect(steps.map((s) => (s.sound?.type === "pick" ? s.sound.string : null))).toEqual([0, 3, 4, 5, 4, 3])

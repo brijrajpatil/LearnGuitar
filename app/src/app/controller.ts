@@ -7,8 +7,9 @@ import { parseChart, type ChartError, type ParsedChart } from "@/core/chart/pars
 import { isValidSteps, normalizeSteps, type CustomPattern, type PatternId } from "@/core/pattern/patterns"
 import type { Song } from "@/core/song/types"
 import { arrange, sectionKey, type Arrangement, type Level } from "@/core/timeline/arrangement"
-import { DEMO_SONGS, NEW_SONG_TEMPLATE } from "@/data/builtin-songs"
+import { BUILTIN_SONGS, NEW_SONG_TEMPLATE } from "@/data/builtin-songs"
 import { IndexedDbStore, type KeyValueStore } from "@/data/kv"
+import type { Collection, Difficulty } from "@/data/library/catalog"
 import { loadPersonalSongs } from "@/data/personal-songs"
 import {
   entriesFromBackupFile,
@@ -21,6 +22,9 @@ import { DEFAULT_SETTINGS, Repository, type PracticeMode, type Settings, type St
 import { clampTempo } from "@/practice/trainer"
 import { Transport } from "@/practice/transport"
 
+/** A library collection, or "yours" for songs you made and your personal song file. */
+export type SongCollection = Collection | "yours"
+
 export interface SongEntry {
   id: string
   builtin: boolean
@@ -31,6 +35,13 @@ export interface SongEntry {
   artist: string
   /** The title, for messages and the menu's type-ahead. */
   label: string
+  /** The chart's chord names in order of first use, for the library's chords column and search. */
+  chords: string[]
+  collection: SongCollection
+  /** Library songs only. */
+  difficulty: Difficulty | null
+  /** False for a popular song not yet checked against the record. */
+  checked: boolean
 }
 
 export interface AppState {
@@ -43,6 +54,8 @@ export interface AppState {
   overrides: Record<string, PatternId>
   customPatterns: CustomPattern[]
   editorOpen: boolean
+  /** The library page shows in place of the play screen. */
+  libraryOpen: boolean
   /** Editor text not yet applied, kept while the editor is closed. */
   draft: { id: string; text: string } | null
   /** Bumped to ask the editor to move its cursor to a bar's line. */
@@ -51,11 +64,34 @@ export interface AppState {
 
 export type Notify = (message: string, opts?: { duration?: number }) => void
 
-/** The title and artist for the song menu. */
+/** What the library shows about a chart: its title, artist and chords. */
 const namesOf = (chart: string, custom: CustomPattern[]) => {
   const { song } = parseChart(chart, custom)
   const title = song.title || "Untitled"
-  return { title, artist: song.artist, label: title }
+  const chords = [...new Set(song.bars.flatMap((b) => b.chords.map((c) => c.chord)))]
+  return { title, artist: song.artist, label: title, chords }
+}
+
+const LIBRARY_BY_ID = new Map(BUILTIN_SONGS.map((s) => [s.id, s]))
+
+/** A song list entry. Library songs carry their catalog facts, every other song is yours. */
+function makeEntry(
+  id: string,
+  chart: string,
+  original: string | null,
+  custom: CustomPattern[]
+): SongEntry {
+  const lib = LIBRARY_BY_ID.get(id)
+  return {
+    id,
+    builtin: original !== null,
+    original,
+    chart,
+    ...namesOf(chart, custom),
+    collection: lib?.collection ?? "yours",
+    difficulty: lib?.difficulty ?? null,
+    checked: lib?.checked ?? true,
+  }
 }
 
 export class AppController {
@@ -89,6 +125,7 @@ export class AppController {
       overrides: {},
       customPatterns: [],
       editorOpen: false,
+      libraryOpen: false,
       draft: null,
       editorFocus: { line: 1, seq: 0 },
     }
@@ -121,17 +158,14 @@ export class AppController {
         await this.repo.markPrototypeImported()
       }
     }
-    const personal = await loadPersonalSongs(DEMO_SONGS.map((s) => s.id))
+    const personal = await loadPersonalSongs(BUILTIN_SONGS.map((s) => s.id))
     this.data = data
-    const builtin = [...DEMO_SONGS, ...personal]
+    const builtin = [...BUILTIN_SONGS, ...personal]
     const custom = data.customPatterns
-    const songs: SongEntry[] = builtin.map((b) => {
-      const chart = data.charts[b.id] ?? b.chart
-      return { id: b.id, builtin: true, original: b.chart, chart, ...namesOf(chart, custom) }
-    })
+    const songs: SongEntry[] = builtin.map((b) => makeEntry(b.id, data.charts[b.id] ?? b.chart, b.chart, custom))
     for (const id of data.userSongIds) {
       const chart = data.charts[id]
-      if (typeof chart === "string") songs.push({ id, builtin: false, original: null, chart, ...namesOf(chart, custom) })
+      if (typeof chart === "string") songs.push(makeEntry(id, chart, null, custom))
     }
     this.set({ songs, settings: data.settings, customPatterns: custom })
     const t = this.transport
@@ -159,7 +193,7 @@ export class AppController {
     })
     for (const id of data.userSongIds) {
       if (!songs.some((s) => s.id === id) && typeof data.charts[id] === "string") {
-        songs.push({ id, builtin: false, original: null, chart: data.charts[id], ...namesOf(data.charts[id], data.customPatterns) })
+        songs.push(makeEntry(id, data.charts[id], null, data.customPatterns))
       }
     }
     this.set({ songs, settings: data.settings, customPatterns: data.customPatterns })
@@ -192,6 +226,7 @@ export class AppController {
     this.set({
       songId: entry.id,
       settings,
+      libraryOpen: false,
       overrides: this.data?.overrides[entry.id] ?? {},
       draft,
       editorOpen: openEditor || (this.state.editorOpen && this.state.songId === entry.id),
@@ -205,7 +240,7 @@ export class AppController {
 
   newSong(): void {
     const id = "song-" + Date.now().toString(36)
-    const entry: SongEntry = { id, builtin: false, original: null, chart: NEW_SONG_TEMPLATE, ...namesOf(NEW_SONG_TEMPLATE, []) }
+    const entry = makeEntry(id, NEW_SONG_TEMPLATE, null, [])
     this.set({ songs: [...this.state.songs, entry] })
     this.persistChart(id, NEW_SONG_TEMPLATE)
     this.persistUserSongIds()
@@ -259,6 +294,20 @@ export class AppController {
 
   currentEntry(): SongEntry | undefined {
     return this.state.songs.find((s) => s.id === this.state.songId)
+  }
+
+  // ---- library ----
+
+  /** Shows the library page in place of the play screen, and stops playback. */
+  openLibrary(): void {
+    if (this.state.libraryOpen) return
+    this.transport.pause()
+    this.set({ libraryOpen: true })
+  }
+
+  /** Goes back to the play screen on the current song. */
+  closeLibrary(): void {
+    this.set({ libraryOpen: false })
   }
 
   // ---- editor ----

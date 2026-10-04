@@ -5,7 +5,7 @@ import { parseChart } from "@/core/chart/parse"
 import { arrange, type Arrangement } from "@/core/timeline/arrangement"
 import { Transport, type TransportEvent } from "@/practice/transport"
 import { nextPassTempo } from "@/practice/trainer"
-import { DEMO_SONGS } from "@/data/builtin-songs"
+import { builtinChart, DEFAULT_SONG_ID } from "@/data/builtin-songs"
 
 /** A fake audio clock and output that records what was scheduled. */
 function harness(chart: string, level: "beginner" | "arranged" | "record" = "arranged") {
@@ -94,7 +94,7 @@ describe("Transport", () => {
   })
 
   it("plays to the end of the song, then stops and goes back to the start", () => {
-    const h = harness(DEMO_SONGS[0].chart)
+    const h = harness(builtinChart(DEFAULT_SONG_ID)!)
     h.transport.setTempos(130, 130)
     h.transport.play(30)
     h.run(12)

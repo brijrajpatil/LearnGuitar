@@ -1,18 +1,18 @@
 import { describe, expect, it } from "vitest"
 import { parseChart } from "@/core/chart/parse"
-import { DEMO_SONGS, NEW_SONG_TEMPLATE } from "@/data/builtin-songs"
+import { BUILTIN_SONGS, builtinChart, DEFAULT_SONG_ID, NEW_SONG_TEMPLATE } from "@/data/builtin-songs"
 
 const parse = (text: string) => parseChart(text, [])
 const messages = (text: string) => parse(text).errors.map((e) => `${e.line}: ${e.message}`)
 
 describe("parseChart", () => {
   it("reads the built-in demo and the new song template without errors", () => {
-    for (const { chart } of DEMO_SONGS) expect(parse(chart).errors).toEqual([])
+    for (const { chart } of BUILTIN_SONGS) expect(parse(chart).errors).toEqual([])
     expect(parse(NEW_SONG_TEMPLATE).errors).toEqual([])
   })
 
   it("reads settings, sections and bars from Amazing Grace", () => {
-    const { song } = parse(DEMO_SONGS[0].chart)
+    const { song } = parse(builtinChart(DEFAULT_SONG_ID)!)
     expect(song.title).toBe("Amazing Grace")
     expect(song.artist).toBe("Traditional")
     expect(song.beatsPerBar).toBe(3)

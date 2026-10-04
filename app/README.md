@@ -23,7 +23,7 @@ Then open <http://localhost:8642>. It opens on Amazing Grace, a public domain hy
 | `npm run dev` | Runs the app with live reload |
 | `npm run build` | Type-checks and builds the installable app into `dist/` |
 | `npm run preview` | Serves the built app, offline support included |
-| `npm test` | Unit tests for the chart format, theory, timeline, transport, storage, practice modes and theme contrast |
+| `npm test` | Unit tests for the chart format, theory, timeline, transport, storage, the song library, practice modes and theme contrast |
 | `npm run test:e2e` | Browser tests in Chrome: the main flows, layout at zoom levels from 100% to 400%, and a 20-second timing check |
 | `npm run test:timing` | The full two-minute timing check |
 | `npm run lint` | ESLint |
@@ -55,6 +55,16 @@ G | C | Em | D` },
 
 Keep each `id` the same once you've used a song. The app saves your edits and tempos under it.
 
+## Library songs
+
+The songs built into the app are in `src/data/library/`. Each one is a chart file in the folder for its collection, named by its id, such as `traditional/amazing-grace.txt`. `src/data/library/catalog.ts` lists them in the order the library shows them, with each song's collection and difficulty.
+
+To add one:
+
+1. Write the chart in the usual format and save it as `src/data/library/<collection>/<id>.txt`. The id is a lowercase slug and never changes once the song ships, because players' edits and tempos are saved under it.
+2. Add a line for it to the catalog.
+3. Run `npm test`. The library test checks that the chart parses, every chord has a shape, the catalog and the files match, and the difficulty fits the chords.
+
 ## The prototype
 
 The single-file prototype in [`../prototype/`](../prototype/) works without any of this: open its `index.html` in a browser. `npm run dev` also serves it at <http://localhost:8642/prototype/>.
@@ -70,7 +80,7 @@ Data flows one way: song, then timeline, then audio and screen. The music and au
 | `src/core/` | The chart format, chords and voicings, patterns, and the timeline that turns a song and your settings into timed events |
 | `src/audio/` | The Web Audio engine: a synthesized acoustic guitar, the click, and a lookahead scheduler |
 | `src/practice/` | The transport: count-in, playback, loops and the speed trainer |
-| `src/data/` | Storage, built-in songs, personal songs and the import from the prototype |
+| `src/data/` | Storage, the built-in song library, personal songs and the import from the prototype |
 | `src/app/` | Connects the modules and holds the app's state |
 | `src/ui/` | React screens and the shadcn components |
 | `src/index.css` | The design tokens: colors, type sizes and spacing |
