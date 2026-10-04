@@ -31,6 +31,14 @@ Then open <http://localhost:8642>. It opens on Amazing Grace, a public domain hy
 
 In the browser console, `window.__practice.sync()` reports timing stats for the audio scheduler.
 
+## Deploying
+
+The live app is at <https://brijrajpatil.github.io/LearnGuitar/>, on GitHub Pages ([decision 0013](../docs/decisions/0013-github-pages-hosting.md)).
+
+The workflow in [`../.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) runs on every pull request and every push to `main`. It runs lint, typecheck, the unit tests, the browser tests and the build. The timing test is left out, because shared CI machines are too uneven for it, so run it here before merging audio changes. Pushes to `main` then publish `dist/` to Pages, so anything merged goes live.
+
+The live app keeps its own songs and settings, apart from what you saved at `localhost:8642`. Personal songs from `songs/` load only on localhost.
+
 ## Your own songs
 
 To keep your own charts out of git, put them in `songs/personal.js` at the repo root, one level up from this folder. The `songs/` folder is git-ignored. The local dev and preview servers serve it, and a deployed build never includes it:

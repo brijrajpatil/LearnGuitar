@@ -4,6 +4,8 @@ A guitar practice app for learning songs you can sing along to. It plays your gu
 
 ![The play screen during Amazing Grace: the chord to play now and the next one with diagrams, the strum strip with the current beat filled black, the song map and the Play bar.](docs/design/images/play-screen.png)
 
+Try it in your browser at <https://brijrajpatil.github.io/LearnGuitar/>. It opens on Amazing Grace and installs as an app from Chrome or Safari.
+
 Status: milestone 1 of 6 is built and in its week of practice ([milestones](docs/product/product-brief.md#milestones)). The app is now a TypeScript web app you can install, rebuilt from a single-file prototype that's kept in [`prototype/`](prototype/).
 
 ## Why I'm building it
@@ -97,6 +99,7 @@ Each milestone ends with a week of real practice and a written review before the
 | [`app/`](app/) | The web app: code, tests and build setup |
 | [`docs/`](docs/) | The product brief, the design system, decision notes and milestone reviews. The [docs guide](docs/README.md) says what to read first |
 | [`prototype/`](prototype/) | The single-file prototype the app was rebuilt from |
+| [`.github/workflows/`](.github/workflows/) | The workflow that tests every pull request and publishes `main` to GitHub Pages |
 | [`CHANGELOG.md`](CHANGELOG.md) | What changed in the app |
 | [`CLAUDE.md`](CLAUDE.md) | Working notes for Claude Code, the AI coding assistant used on this project |
 

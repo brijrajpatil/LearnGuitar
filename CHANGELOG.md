@@ -4,6 +4,10 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 ## Unreleased
 
+### Added
+
+- The app is live at <https://brijrajpatil.github.io/LearnGuitar/>, so you can try it or install it without running anything ([decision 0013](docs/decisions/0013-github-pages-hosting.md)). It saves to its own browser storage, apart from a local copy.
+
 ### Changed
 
 - The player is rebuilt as a TypeScript web app (milestone 1). It does everything the prototype did, from the same charts, and installs as an app that works offline.
@@ -27,6 +31,7 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 ### Project
 
+- GitHub Actions runs lint, typecheck, the unit tests, the browser tests and the build on every pull request and every push to `main`, then publishes `main` to GitHub Pages. The repo is public at <https://github.com/brijrajpatil/LearnGuitar>.
 - The app's code moved into `app/`, so the repo's front page shows the README and docs first. Run npm commands from `app/` ([decision 0012](docs/decisions/0012-repo-layout.md)).
 - The docs are grouped by area. The product brief and the milestone reviews are in `docs/product/`, the decisions index shows each note's area, and `docs/README.md` gives a reading order.
 - A design system doc in `docs/design/` describes the current tokens, contrast, components and play screen, with screenshots. The README keeps the product story and a quick start, and the developer guide moved to `app/README.md`.

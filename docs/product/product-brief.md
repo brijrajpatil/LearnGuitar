@@ -233,7 +233,7 @@ Extension points, each an interface:
 - Song files with lyrics, tabs or record figures stay out of the repository, in a git-ignored `songs/` folder.
 - Unit tests for the text parser, theory and timeline. Browser tests for the main flows.
 - The timing check from the current player becomes an automated test: play a song for two minutes and fail on any late audio event or drift.
-- Proposed: GitHub Actions runs the tests on every push, and the main branch deploys to GitHub Pages.
+- GitHub Actions runs the checks and tests on every pull request and every push to `main`, and `main` deploys to GitHub Pages ([decision 0013](../decisions/0013-github-pages-hosting.md)).
 - Keyboard first, a high contrast light theme, and large type that follows browser zoom.
 
 ## Milestones
@@ -254,9 +254,8 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 2. Should the speed trainer step up only after passes marked clean? Recommended: yes.
 3. Do I have, or want, a Bluetooth foot pedal? It would let me start, stop and mark passes without taking a hand off the guitar.
 4. Is a line's start time enough for lyric sync, or does each word need its own beat? Recommended: tap line starts, spread the words across the line's bars, and fix single words by hand where the timing matters.
-5. Hosting. A PWA must be served over HTTPS to install on another device. Recommended: GitHub Pages. It's free, serves over HTTPS, and gives the README a live demo link.
-6. A name for the app. The name becomes the repo name and the demo URL. The prototype's window title says Strum Practice, and the folder says song-practice.
-7. When to add a license. Without one, people can read the code but not reuse it. Worth deciding before inviting other people to contribute.
+5. A name for the app. The repo is LearnGuitar, so the demo URL is `brijrajpatil.github.io/LearnGuitar/`. The app still calls itself Song Practice, the prototype's window title says Strum Practice, and the local folder says song-practice.
+6. When to add a license. Without one, people can read the code but not reuse it. Worth deciding before inviting other people to contribute.
 
 ## Decision log
 
@@ -275,3 +274,4 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 - 2026-10-04: The look goes monochrome, in neutral greys with black for emphasis and red only for errors, and the font changes to Geist. Color comes later. See [decision 0010](../decisions/0010-monochrome-theme-and-geist.md).
 - 2026-10-04: The play screen fits in the window, like a desktop app. The chord cards take the height left over, and when it can't all fit, the middle scrolls while Play stays at the bottom. See [decision 0011](../decisions/0011-play-screen-fits-the-window.md).
 - 2026-10-04: The code moves into `app/` and the docs group into product, design and decisions, so the repo's front page leads with the product. See [decision 0012](../decisions/0012-repo-layout.md).
+- 2026-10-04: The app is hosted on GitHub Pages from the public repo LearnGuitar, at <https://brijrajpatil.github.io/LearnGuitar/>. Pull requests and pushes to `main` run the checks, and `main` deploys. See [decision 0013](../decisions/0013-github-pages-hosting.md).

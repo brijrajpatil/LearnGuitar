@@ -46,6 +46,7 @@ Never rewrite an accepted decision note. Write a new one that supersedes it, and
 - Keep the chart text format backwards compatible. Songs already saved must keep loading.
 - The app stores edits, tempos and pattern choices per song id in IndexedDB. Never change or drop a song's id, or the owner loses that data.
 - `npm run dev` serves the app at `http://localhost:8642`, with `songs/` and the prototype (at `/prototype/`) from the repo root. `npm test` runs the unit tests, `npm run test:e2e` the browser tests (flows, layout and timing), `npm run lint` and `npm run typecheck` the checks. Run all four before saying a change works.
+- `.github/workflows/deploy.yml` runs lint, typecheck, the unit tests, the browser tests (without the timing test) and the build on every pull request and every push to `main`. Pushes to `main` deploy to GitHub Pages at <https://brijrajpatil.github.io/LearnGuitar/>, so anything merged into `main` goes live. See `docs/decisions/0013-github-pages-hosting.md`.
 - In the browser console, `window.__practice.sync()` reports timing stats for the audio scheduler.
 
 ## Commits
