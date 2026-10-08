@@ -136,6 +136,8 @@ The chart editor opens as a panel beside the play screen, so the chords stay in 
 
 The song's title in the header opens the library in place of the play screen ([0014](../decisions/0014-library-page.md)). It fills the window the same way: the top rows stay put and only the list scrolls.
 
+![The library page on a 13-inch MacBook Air at 100% zoom: the search field, the collection and difficulty filters with "51 songs", and the list starting with the First chords studies and songs.](images/library.png)
+
 1. Top row: the "Library" heading, the search field (an input group with a search icon and a `/` key hint) and Back to the current song.
 2. Filters: the collection filter in the `segment` toggle group, the difficulty select, and the number of songs listed. With Your songs chosen, New song sits at the end of the row.
 3. The list: a card with column labels (Song, Chords, Difficulty) and one row per song. A row has the title with the artist or "Study" under it in `--muted-foreground`, the chords drawn with `ChordName`, and the difficulty. The focused or hovered row is `--accent`, and keyboard focus draws the 2 px outline inside the row. The current song has a small dot in the emphasis fill.
