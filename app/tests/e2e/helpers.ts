@@ -25,6 +25,29 @@ export const view = (page: Page) =>
 export const sync = (page: Page) =>
   page.evaluate(() => (window as unknown as { __practice: { sync(): unknown } }).__practice.sync() as SyncReport)
 
+/**
+ * A value the app saved in IndexedDB, or undefined. Saves finish a moment after the screen
+ * changes, so a test waits for one before it reloads.
+ */
+export const stored = (page: Page, key: string) =>
+  page.evaluate(
+    (k) =>
+      new Promise<unknown>((resolve, reject) => {
+        const open = indexedDB.open("song-practice", 1)
+        open.onerror = () => reject(open.error)
+        open.onsuccess = () => {
+          const db = open.result
+          const get = db.transaction("kv").objectStore("kv").get(k)
+          get.onsuccess = () => {
+            resolve(get.result)
+            db.close()
+          }
+          get.onerror = () => reject(get.error)
+        }
+      }),
+    key
+  )
+
 /** A menu button found by its label. Its accessible name also includes the chosen value. */
 export const picker = (page: Page, label: string) => page.locator(`[data-slot="select-trigger"][aria-label="${label}"]`)
 

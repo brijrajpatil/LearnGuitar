@@ -1,5 +1,5 @@
 import { expect, test, type Page, type Request } from "@playwright/test"
-import { openApp, songButton } from "./helpers"
+import { openApp, songButton, stored } from "./helpers"
 
 // Gemini is never called for real: every request to Google's API gets a canned reply,
 // and the key is a made-up test value (decision 0017).
@@ -68,7 +68,9 @@ test("drafts a song from its name with the player's key, then saves and plays it
   await expect(page.getByRole("region", { name: "Now" })).toBeVisible()
   await expect(songButton(page)).toContainText("The Water Is Wide")
 
-  // The library marks it as an AI draft, and the key is remembered after a reload.
+  // The library marks it as an AI draft, and the key is remembered after a reload. The
+  // song has to be saved in the browser first.
+  await expect.poll(async () => ((await stored(page, "userSongs")) as string[] | undefined)?.length).toBe(1)
   await page.reload()
   await expect(page.getByRole("region", { name: "Now" })).toBeVisible()
   await page.keyboard.press("/")

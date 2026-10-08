@@ -84,7 +84,7 @@ Several AI sessions, sometimes from different tools, work in this repo at the sa
 - `songs/` is git-ignored, so a worktree doesn't have it. Link it from the worktree root when you need the owner's songs: `ln -s ../../../songs songs`.
 - The browser tests reuse any server already on port 8642, which may be another session's older code. When another dev server could be running, run them with your own Playwright config that starts this worktree's server on a free port, such as 8651, with `reuseExistingServer: false`. Keep that config out of the repo.
 - Personal songs in `songs/personal.js` load only on localhost, through the dev server. The live site doesn't have them. The owner's practice data, including their Let Down edits and lyrics, lives in their browser's storage for `http://localhost:8642`. Never clear it.
-- Settings save 200 ms after a change. A browser test that reloads to check a setting waits for that first.
+- Saves finish a moment after the screen changes: settings 200 ms after a change, and songs and charts once IndexedDB has written them. A browser test that reloads waits for the save first, with `stored()` from `tests/e2e/helpers.ts`, or a short wait for settings.
 - A browser test that plays music waits for real time. A new song plays at 70 BPM, whatever the chart's tempo, and CI machines can be slower, so give playback waits room and poll often.
 
 ## Writing style
