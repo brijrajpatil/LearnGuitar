@@ -1,6 +1,6 @@
 # 0003. Lyrics and tabs are only what the player enters
 
-Status: Accepted
+Status: Accepted. Partly superseded by [0017](0017-ai-chord-drafts.md): the app may draft chords, never lyrics or tabs, when the player asks.
 Date: 2026-10-04
 
 ## Context

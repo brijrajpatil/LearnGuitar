@@ -29,7 +29,7 @@ Never rewrite an accepted decision note. Write a new one that supersedes it, and
 
 ## Content rules
 
-- Lyrics, tabs and record figures are only what the owner types into the app. Never fetch, generate or copy them from websites into the app, the repo or the docs.
+- Lyrics, tabs, record figures and cue text are only what the player types into the app. Never fetch, generate or copy them from websites into the app, the repo or the docs. The one exception is adding a song with AI, which drafts chords only, when the player asks, with the player's own key, and keeps them on their device (`docs/decisions/0017-ai-chord-drafts.md`). Its tests use made-up words and public domain chords.
 - Song files with lyrics, tabs or record figures stay out of the repo. They go in `songs/`, which is git-ignored. The owner's charts, starting with Let Down, are in `songs/personal.js`.
 - Songs built into the app ship to everyone, so they are progression studies or public domain songs, with chords only and no lyrics or tabs. The public domain rule and what else is left out are in `docs/decisions/0015-built-in-library-contents.md`. The library is in `app/src/data/library/`.
 - No personal data in the repo beyond what the owner chose to put in the brief.
@@ -37,7 +37,7 @@ Never rewrite an accepted decision note. Write a new one that supersedes it, and
 ## Code
 
 - The app is in `app/`, and npm commands run from there. Code paths in this section (`src/`, `tests/`) are inside `app/`. The repo layout is in `docs/decisions/0012-repo-layout.md`.
-- The app is a TypeScript PWA built with Vite and React, in `src/`. The brief's Architecture section describes the modules. `src/core`, `src/audio` and `src/practice` never import React or anything from `src/ui`.
+- The app is a TypeScript PWA built with Vite and React, in `src/`. The brief's Architecture section describes the modules. `src/core`, `src/audio`, `src/practice` and `src/ai` never import React or anything from `src/ui`.
 - The single-file prototype is in `prototype/index.html`. Leave it as it is, apart from fixes the owner asks for, until milestone 1's review retires it.
 - Follow the design system in `docs/design/design-system.md`. Decisions 0001, 0009, 0010 and 0011 in `docs/decisions/` have the reasons behind it. Shared components are in `src/ui/components` (shadcn, Luma style, React Aria base). Colors, stage type sizes and spacing are tokens in `src/index.css`. Components contain no raw hex values or one-off pixel sizes.
 - The theme is monochrome. Emphasis (`bg-emphasis`) means "now" or "progress" and nothing else, and red (`destructive`) means an error or a destructive action. Don't add colors: color comes back through the `--emphasis` tokens, with a new decision note first.

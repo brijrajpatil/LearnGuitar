@@ -6,7 +6,7 @@ One note per decision that had alternatives worth remembering. Each note says wh
 |---|---|---|---|
 | [0001](0001-design-system.md) | Design system: shadcn/ui on React Aria, with Tailwind CSS v4 | Design | Accepted, 2026-10-04. Partly superseded by 0009 |
 | [0002](0002-single-file-prototype.md) | Start with a single-file prototype | Tech | Accepted, 2026-10-04 |
-| [0003](0003-lyrics-and-tabs-are-user-entered.md) | Lyrics and tabs are only what the player enters | Product | Accepted, 2026-10-04 |
+| [0003](0003-lyrics-and-tabs-are-user-entered.md) | Lyrics and tabs are only what the player enters | Product | Accepted, 2026-10-04. Partly superseded by 0017, which lets the AI draft chords |
 | [0004](0004-public-repo-and-future-users.md) | Public repo, built for future users too | Product | Accepted, 2026-10-04 |
 | [0005](0005-typescript-pwa.md) | Rebuild as a TypeScript PWA | Tech | Accepted, 2026-10-04 |
 | [0006](0006-public-domain-demo-song.md) | A public domain demo song, and personal songs outside the repo | Product | Accepted, 2026-10-04. The single demo song is superseded by 0015 |
@@ -20,6 +20,7 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0014](0014-library-page.md) | The library is a page of its own | Design | Accepted, 2026-10-04 |
 | [0015](0015-built-in-library-contents.md) | The built-in library: progression studies and public domain songs | Product | Accepted, 2026-10-08 |
 | [0016](0016-key-and-capo.md) | Play a song in another key, with a capo to keep the record's sound | Product, design, tech | Accepted, 2026-10-08 |
+| [0017](0017-ai-chord-drafts.md) | Draft chords with the player's own AI key | Product, tech | Accepted, 2026-10-08 |
 
 ## Writing a note
 

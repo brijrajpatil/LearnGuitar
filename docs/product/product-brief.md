@@ -72,7 +72,7 @@ Proposed targets, to revisit after a few weeks of use:
 2. Your hands stay on the guitar. Everything in play mode works from the keyboard, so a Bluetooth foot pedal (which acts as a keyboard) can drive it.
 3. You hear the guitar parts you choose and a click. Nothing comes from the original recording.
 4. Every part has a simpler version. For rhythm, that goes down to easy chords and one downstroke per beat.
-5. Your songs and practice history stay on your devices, as files you can export. Lyrics, tabs and cue text are only what you enter. The app has no way to fetch them.
+5. Your songs and practice history stay on your devices, as files you can export. Lyrics, tabs and cue text are only what you enter. The app has no way to fetch them, and its AI drafts chords only.
 6. The app is built in small steps. Each milestone ends with a week of real practice and a short written review before the next one starts.
 7. The work is done in the open. The docs say why each decision was made, and they change in the same commit as the code.
 
@@ -106,6 +106,7 @@ Song library
 - Each song has title, artist, key, tempo, time signature, tuning, capo fret, and which guitar it's for. Electric songs get a notes field for amp settings.
 - Each song can link to its sources: the tab you learn from, and a tutorial video with a timestamp for each section.
 - Cue text is only what you type.
+- Add a song by name. The AI drafts its chords with your own free Gemini key, or the app converts a chord sheet you paste. Chords only, kept on your device (see [decision 0017](../decisions/0017-ai-chord-drafts.md)).
 - The app ships with a library of progression studies and public domain folk and traditional songs, so it's playable on first open. Built-in songs have chords only, with no lyrics or tabs. Built 2026-10-08 with 17 studies and 34 songs (see [decision 0015](../decisions/0015-built-in-library-contents.md)).
 
 Parts and levels
@@ -207,6 +208,7 @@ Data flows one way: song, then timeline, then audio and screen.
 | `audio` | Lookahead scheduler, instruments (click, acoustic, electric, overdrive), the mixer, and input for recording |
 | `practice` | Transport (stopped, count-in, playing, looping), speed trainer, drills, gap click |
 | `data` | Storage in IndexedDB behind a small interface, plus export, import and backup, and the one-time import from the prototype |
+| `ai` | Adding a song: the Gemini client, the steps that draft and check a chart, and the converters from an AI draft or a pasted chord sheet to a chart |
 | `app` | Connects the modules: loads saved data, holds the app's state, and saves changes |
 | `ui` | Play mode (chord, strum strip, tab and lyric views), setup, library, editor, progress |
 
@@ -280,3 +282,4 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 - 2026-10-04: Songs are picked from a library page, opened from the song's title or the / key, in place of the drop-down menu. See [decision 0014](../decisions/0014-library-page.md).
 - 2026-10-08: The app ships a library of 17 progression studies and 34 public domain folk and traditional songs. Popular songs were considered and left out, so the repo and the site still publish no charts of commercial songs. This work went ahead before the milestone 1 review. See [decision 0015](../decisions/0015-built-in-library-contents.md).
 - 2026-10-08: Each song can be played with the chords of another key, saved per song, with a capo that keeps the record's sound where one fits. The header shows the record's key. See [decision 0016](../decisions/0016-key-and-capo.md).
+- 2026-10-08: A player can add a song by name. The AI drafts the chords with the player's own free Gemini key, or the app converts a chord sheet they paste. Drafts are chords only and stay on the player's device, and I pay nothing for the AI. This partly supersedes decision 0003. See [decision 0017](../decisions/0017-ai-chord-drafts.md).
