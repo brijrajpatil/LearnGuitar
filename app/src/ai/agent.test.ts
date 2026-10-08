@@ -117,6 +117,8 @@ describe("drafting a song", () => {
     expect(out.tries).toBe(0)
     expect(out.source).toEqual({ kind: "paste" })
     expect(out.problems).toEqual([])
+    const lower = await draftSong({ song: "drunken sailor", from: "sheet", text: sheet }, { key: null, shapes: NO_SHAPE_TOOLS })
+    expect(lower.chart).toMatch(/^title: Drunken Sailor$/m)
 
     const withKey = fakeGemini(answer(sailor()))
     await draftSong({ song: "Drunken Sailor", from: "sheet", text: sheet }, { key, fetch: withKey.fetch, shapes: NO_SHAPE_TOOLS })

@@ -1,3 +1,4 @@
+import { Button } from "@/ui/components/button"
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from "@/ui/components/field"
 import { Sheet, SheetDescription, SheetHeader, SheetTitle } from "@/ui/components/sheet"
 import { Slider } from "@/ui/components/slider"
@@ -24,7 +25,7 @@ function Volume({ name, volume, muted, onVolume, onMute }: { name: string; volum
 /** Settings you change now and then, kept off the play screen. */
 export function SettingsSheet({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: (open: boolean) => void }) {
   const app = useController()
-  const { settings } = useAppState()
+  const { settings, hasAiKey } = useAppState()
   const mix = settings.mix
   return (
     <Sheet isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -55,6 +56,20 @@ export function SettingsSheet({ isOpen, onOpenChange }: { isOpen: boolean; onOpe
           onVolume={(v) => app.setMix({ guitarVolume: v, guitarMuted: false })}
           onMute={(m) => app.setMix({ guitarMuted: m })}
         />
+        {hasAiKey && (
+          <>
+            <FieldSeparator />
+            <Field orientation="horizontal">
+              <FieldContent>
+                <FieldLabel>Gemini key</FieldLabel>
+                <FieldDescription>Saved in this browser for adding songs with AI.</FieldDescription>
+              </FieldContent>
+              <Button variant="outline" size="sm" onPress={() => void app.forgetAiKey()}>
+                Forget key
+              </Button>
+            </Field>
+          </>
+        )}
       </FieldGroup>
     </Sheet>
   )

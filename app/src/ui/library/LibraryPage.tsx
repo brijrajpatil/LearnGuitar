@@ -1,8 +1,10 @@
 import { useRef, useState, type KeyboardEvent } from "react"
 import { ArrowLeftIcon, PlusIcon, SearchIcon } from "lucide-react"
 import { ListBox, ListBoxItem, SearchField } from "react-aria-components"
+import { cn } from "cn"
 import type { SongEntry } from "@/app/controller"
 import { DIFFICULTIES } from "@/data/library/catalog"
+import { Badge } from "@/ui/components/badge"
 import { Button } from "@/ui/components/button"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/ui/components/input-group"
 import { Kbd } from "@/ui/components/kbd"
@@ -17,6 +19,7 @@ import {
   type CollectionFilter,
   type DifficultyFilter,
 } from "@/ui/library/filter"
+import { AddSongPanel } from "@/ui/library/AddSongPanel"
 import { ChordList } from "@/ui/play/ChordName"
 
 const COLLECTIONS: { id: CollectionFilter; name: string; short: string }[] = [
@@ -46,7 +49,12 @@ function SongRow({ song, current }: { song: SongEntry; current: boolean }) {
           )}
           <span className="truncate">{song.title}</span>
         </span>
-        {by && <span className="block truncate text-sm text-muted-foreground">{by}</span>}
+        {(by || song.aiDraft) && (
+          <span className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
+            {by && <span className="truncate">{by}</span>}
+            {song.aiDraft && <Badge variant="outline">AI draft</Badge>}
+          </span>
+        )}
         {/* Phones have no chords column, so the chords go under the title. */}
         <span className="mt-0.5 block text-sm sm:hidden">
           <Chords chords={song.chords} />
@@ -76,6 +84,13 @@ export function LibraryPage() {
   const search = useRef<HTMLInputElement>(null)
   const list = useRef<HTMLDivElement>(null)
   const shown = filterSongs(songs, { query, collection, difficulty })
+  // The Add a song panel, opened with what was typed in the search (decision 0017).
+  const [adding, setAdding] = useState<string | null>(null)
+  const openAdd = (seed: string) => setAdding(seed.trim())
+  const closeAdd = () => {
+    setAdding(null)
+    requestAnimationFrame(() => search.current?.focus())
+  }
 
   const clearFilters = () => {
     setQuery("")
@@ -84,12 +99,13 @@ export function LibraryPage() {
     search.current?.focus()
   }
 
-  // Escape goes back to the play screen once the search is empty (the search field clears
-  // itself first). "/" jumps to the search from anywhere on the page.
+  // Escape closes the Add a song panel, then goes back to the play screen once the search
+  // is empty (the search field clears itself first). "/" jumps to the search from anywhere.
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       e.preventDefault()
-      app.closeLibrary()
+      if (adding !== null) closeAdd()
+      else app.closeLibrary()
     } else if (e.key === "/" && e.target !== search.current) {
       e.preventDefault()
       search.current?.focus()
@@ -110,6 +126,8 @@ export function LibraryPage() {
               onChange={setQuery}
               autoFocus
               className="order-last w-full sm:order-none sm:w-auto sm:flex-1"
+              // Enter with nothing found opens Add a song with what was typed.
+              onSubmit={(value) => value.trim() && !shown.length && openAdd(value)}
               onKeyDown={(e) => {
                 // React Aria stops other keys here unless told to pass them on.
                 if (e.key === "ArrowDown") {
@@ -186,41 +204,59 @@ export function LibraryPage() {
             <p className="text-sm text-muted-foreground" aria-live="polite">
               {shown.length === 1 ? "1 song" : `${shown.length} songs`}
             </p>
-            {collection === "yours" && (
-              <Button variant="outline" size="sm" className="ml-auto" onPress={() => app.newSong()}>
+            {collection === "yours" && adding === null && (
+              <Button variant="outline" size="sm" className="ml-auto" onPress={() => openAdd(query)}>
                 <PlusIcon />
-                New song
+                Add a song
               </Button>
             )}
           </div>
 
-          <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-3xl border border-border bg-card fit:min-h-48">
+          <div className="flex min-h-0 flex-1 gap-4">
             <div
-              aria-hidden="true"
-              className="grid grid-cols-[minmax(0,1fr)_minmax(0,16rem)_7rem] gap-x-4 border-b border-border px-4 py-2 text-xs font-medium text-muted-foreground max-sm:hidden"
-            >
-              <span>Song</span>
-              <span>Chords</span>
-              <span>Difficulty</span>
-            </div>
-            <ListBox
-              ref={list}
-              aria-label="Songs"
-              items={shown}
-              onAction={(key) => app.selectSong(String(key))}
-              // relative: the chord names' screen reader text is positioned absolutely, and
-              // has to scroll with the list instead of making the whole page taller.
-              className="relative min-h-0 flex-1 overflow-y-auto outline-none"
-              renderEmptyState={() => (
-                <EmptyState
-                  noSongsYet={collection === "yours" && !songs.some((s) => s.collection === "yours")}
-                  onClear={clearFilters}
-                  onNew={() => app.newSong()}
-                />
+              className={cn(
+                "flex min-h-0 flex-1 flex-col overflow-hidden rounded-3xl border border-border bg-card fit:min-h-48",
+                // Narrow screens show the panel in place of the list.
+                adding !== null && "max-lg:hidden"
               )}
             >
-              {(song) => <SongRow song={song} current={song.id === songId} />}
-            </ListBox>
+              <div
+                aria-hidden="true"
+                className="grid grid-cols-[minmax(0,1fr)_minmax(0,16rem)_7rem] gap-x-4 border-b border-border px-4 py-2 text-xs font-medium text-muted-foreground max-sm:hidden"
+              >
+                <span>Song</span>
+                <span>Chords</span>
+                <span>Difficulty</span>
+              </div>
+              <ListBox
+                ref={list}
+                aria-label="Songs"
+                items={shown}
+                onAction={(key) => app.selectSong(String(key))}
+                // relative: the chord names' screen reader text is positioned absolutely, and
+                // has to scroll with the list instead of making the whole page taller.
+                className="relative min-h-0 flex-1 overflow-y-auto outline-none"
+                renderEmptyState={() => (
+                  <EmptyState
+                    noSongsYet={collection === "yours" && !songs.some((s) => s.collection === "yours")}
+                    query={adding === null ? query.trim() : ""}
+                    onClear={clearFilters}
+                    onAdd={() => openAdd(query)}
+                  />
+                )}
+              >
+                {(song) => <SongRow song={song} current={song.id === songId} />}
+              </ListBox>
+              {query.trim() && shown.length > 0 && adding === null && (
+                <div className="border-t border-border px-2 py-1.5">
+                  <Button variant="ghost" size="sm" onPress={() => openAdd(query)}>
+                    <PlusIcon />
+                    <span className="truncate">Add "{query.trim()}"</span>
+                  </Button>
+                </div>
+              )}
+            </div>
+            {adding !== null && <AddSongPanel key={adding} seed={adding} onClose={closeAdd} />}
           </div>
         </div>
       </main>
@@ -228,26 +264,48 @@ export function LibraryPage() {
   )
 }
 
-/** Shown when the list is empty: an invitation for your songs, or a way out of the filters. */
-function EmptyState({ noSongsYet, onClear, onNew }: { noSongsYet: boolean; onClear: () => void; onNew: () => void }) {
+/** Shown when the list is empty: an invitation to add a song, or a way out of the filters. */
+function EmptyState({
+  noSongsYet,
+  query,
+  onClear,
+  onAdd,
+}: {
+  noSongsYet: boolean
+  query: string
+  onClear: () => void
+  onAdd: () => void
+}) {
   return (
     <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
-      {noSongsYet ? (
+      {noSongsYet && !query ? (
         <>
           <p className="font-medium">Your songs show here</p>
-          <p className="max-w-sm text-sm text-muted-foreground">Write a chart for a song you want to learn, and it joins the library.</p>
-          <Button variant="outline" size="sm" onPress={onNew}>
+          <p className="max-w-sm text-sm text-muted-foreground">
+            Add a song you want to learn. The AI can draft its chords, or you can paste them from a chord page.
+          </p>
+          <Button variant="outline" size="sm" onPress={onAdd}>
             <PlusIcon />
-            New song
+            Add a song
           </Button>
         </>
       ) : (
         <>
           <p className="font-medium">No songs match</p>
-          <p className="max-w-sm text-sm text-muted-foreground">Try another word or chord, or clear the filters.</p>
-          <Button variant="outline" size="sm" onPress={onClear}>
-            Clear filters
-          </Button>
+          <p className="max-w-sm text-sm text-muted-foreground">
+            {query ? "Add it to your songs, or try another word or chord." : "Try another word or chord, or clear the filters."}
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            {query && (
+              <Button size="sm" onPress={onAdd}>
+                <PlusIcon />
+                <span className="max-w-60 truncate">Add "{query}"</span>
+              </Button>
+            )}
+            <Button variant="outline" size="sm" onPress={onClear}>
+              Clear filters
+            </Button>
+          </div>
         </>
       )}
     </div>

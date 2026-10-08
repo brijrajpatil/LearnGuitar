@@ -133,6 +133,38 @@ for (const size of SIZES) {
   })
 }
 
+// The Add a song panel (decision 0017): beside the list on wide screens, in its place on
+// narrow ones. Nothing sideways, and in windows that fit, only the panel's body scrolls.
+for (const size of SIZES) {
+  test(`the Add a song panel fits ${size.name} (${size.width}x${size.height})`, async ({ browser }) => {
+    const page = await browser.newPage({ viewport: { width: size.width, height: size.height }, deviceScaleFactor: size.scale })
+    await openApp(page)
+    await page.keyboard.press("/")
+    await page.getByRole("searchbox", { name: "Search songs" }).fill("a song not in the library")
+    await page.keyboard.press("Enter")
+    const panel = page.getByRole("region", { name: "Add a song" })
+    await expect(panel).toBeVisible()
+    const r = await page.evaluate(() => {
+      const inside = (el: Element | null) => {
+        if (!el) return false
+        const b = el.getBoundingClientRect()
+        return b.left >= -1 && b.right <= innerWidth + 1 && b.width > 0
+      }
+      return {
+        sideways: document.documentElement.scrollWidth - innerWidth,
+        pageScrolls: document.documentElement.scrollHeight > innerHeight + 1,
+        panel: inside(document.querySelector('[aria-labelledby="add-song-title"]')),
+        song: inside(document.getElementById("add-song-name")),
+        draft: inside([...document.querySelectorAll("button")].find((b) => b.textContent === "Draft with AI") ?? null),
+      }
+    })
+    expect(r.sideways, "no sideways scrolling").toBeLessThanOrEqual(0)
+    for (const name of ["panel", "song", "draft"] as const) expect(r[name], `${name} fits the width`).toBe(true)
+    if (size.height >= FIT_HEIGHT) expect(r.pageScrolls, "only the panel scrolls, never the whole page").toBe(false)
+    await page.close()
+  })
+}
+
 // Zooming in makes the chord text bigger on screen. In a window that fits, the header,
 // strum card and Play bar grow too and leave the chords less room, so the chord can't
 // grow at every step. It's never smaller than at 100%, and it's bigger at 400%.

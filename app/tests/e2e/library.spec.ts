@@ -63,14 +63,15 @@ test("opening the library stops playback, and Space doesn't start it there", asy
   expect((await view(page)).state).toBe("stopped")
 })
 
-test("the collection filter shows your songs, with New song", async ({ page }) => {
+test("the collection filter shows your songs, and Add a song can start a blank chart", async ({ page }) => {
   // Without the owner's personal song file, as on the live site.
   await page.route("**/songs/personal.js", (r) => r.abort())
   await openApp(page)
   await page.keyboard.press("/")
   await page.getByRole("radio", { name: /Your songs|Yours/ }).click()
   await expect(page.getByText("Your songs show here")).toBeVisible()
-  await page.getByRole("button", { name: "New song" }).first().click()
+  await page.getByRole("button", { name: "Add a song" }).first().click()
+  await page.getByRole("button", { name: "Write the chart yourself" }).click()
   await expect(songButton(page)).toContainText("New song")
   await expect(page.getByRole("textbox", { name: "Chart text" })).toBeVisible()
 })

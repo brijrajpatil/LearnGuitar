@@ -75,7 +75,9 @@ export async function draftSong(req: DraftRequest, opts: AgentOptions): Promise<
     emit()
   }
   const date = (opts.now ?? (() => new Date()))()
-  const song = oneLine(req.song, 120)
+  const typed = oneLine(req.song, 120)
+  // A name typed all in lower case, like "the water is wide", gets capitals for its title.
+  const song = typed === typed.toLowerCase() ? typed.replace(/(^|\s)(\p{L})/gu, (_, s, c: string) => s + c.toUpperCase()) : typed
   const finish = (out: ChartDraft, source: DraftSource, draft: SongDraft, tries: number, problems: string[]) => {
     for (const s of steps) if (s.state === "running") s.state = "done"
     emit()
