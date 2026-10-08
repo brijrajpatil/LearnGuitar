@@ -231,7 +231,7 @@ Extension points, each an interface:
 ### Engineering practices
 
 - Git from the first commit, with small commits under my own Git identity. The commit history is public.
-- Docs change in the same commit as the code. [`CLAUDE.md`](../../CLAUDE.md) lists which doc each kind of change updates.
+- Docs change in the same commit as the code. [`AGENTS.md`](../../AGENTS.md) lists which doc each kind of change updates.
 - [`CHANGELOG.md`](../../CHANGELOG.md) gets an entry for every change a user can see.
 - Each decision with alternatives worth remembering gets a note in [`decisions/`](../decisions/) with its reason.
 - Each milestone ends with a written review in [`reviews/`](reviews/).

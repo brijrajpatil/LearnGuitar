@@ -87,6 +87,10 @@ A TypeScript web app built with Vite and React, installable as a PWA. The interf
 
 Data flows one way: song, then timeline, then audio and screen. The music and audio code has no React in it, so it can be tested on its own. The [app's README](app/README.md#code-map) maps the code, and the [product brief's architecture section](docs/product/product-brief.md#architecture) has the reasoning.
 
+## Building it with AI tools
+
+I build the app with AI coding tools, and the repo works with any of them. The rules they follow are in [`AGENTS.md`](AGENTS.md): keep the docs current, never put lyrics or tabs in the repo, run the four checks, and ask me before committing. Codex, Antigravity, Cursor and Copilot's coding agent read it directly. Claude Code, Gemini CLI and Copilot Chat each have a small file of their own that points to it ([decision 0022](docs/decisions/0022-one-instruction-file-for-ai-tools.md)).
+
 ## How adding a song with AI works
 
 Each player brings their own free Gemini key, so the browser calls Gemini directly. There's no server, and the AI costs me nothing ([decision 0017](docs/decisions/0017-ai-chord-drafts.md)).
@@ -133,7 +137,8 @@ Each milestone ends with a week of real practice and a written review before the
 | [`prototype/`](prototype/) | The single-file prototype the app was rebuilt from |
 | [`.github/workflows/`](.github/workflows/) | The workflow that tests every pull request and publishes `main` to GitHub Pages |
 | [`CHANGELOG.md`](CHANGELOG.md) | What changed in the app |
-| [`CLAUDE.md`](CLAUDE.md) | Working notes for Claude Code, the AI coding assistant used on this project |
+| [`AGENTS.md`](AGENTS.md) | The rules for AI coding tools working on this project, shared by all of them |
+| [`CLAUDE.md`](CLAUDE.md), [`GEMINI.md`](GEMINI.md), [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Point Claude Code, Gemini CLI and Antigravity, and Copilot Chat to `AGENTS.md` |
 
 ## License
 

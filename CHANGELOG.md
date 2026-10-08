@@ -49,6 +49,7 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 ### Project
 
+- The rules for AI coding tools moved from `CLAUDE.md` to `AGENTS.md`, so Codex, Antigravity, Gemini CLI, Copilot and Cursor follow the same rules as Claude Code. `CLAUDE.md`, `GEMINI.md` and `.github/copilot-instructions.md` point to it. `AGENTS.md` also covers working alongside other AI sessions, the worktree and test traps, and the writing style ([decision 0022](docs/decisions/0022-one-instruction-file-for-ai-tools.md)).
 - GitHub Actions runs lint, typecheck, the unit tests, the browser tests and the build on every pull request and every push to `main`, then publishes `main` to GitHub Pages. The repo is public at <https://github.com/brijrajpatil/LearnGuitar>.
 - The app's code moved into `app/`, so the repo's front page shows the README and docs first. Run npm commands from `app/` ([decision 0012](docs/decisions/0012-repo-layout.md)).
 - The docs are grouped by area. The product brief and the milestone reviews are in `docs/product/`, the decisions index shows each note's area, and `docs/README.md` gives a reading order.

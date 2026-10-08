@@ -15,7 +15,7 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0009](0009-birch-light-theme-and-session-modes.md) | Birch: a light theme, session modes, and a layout that scales | Design, product | Accepted, 2026-10-04. Color and type superseded by 0010, layout by 0011, session modes by 0020 |
 | [0010](0010-monochrome-theme-and-geist.md) | A monochrome theme, with Geist | Design | Accepted, 2026-10-04 |
 | [0011](0011-play-screen-fits-the-window.md) | The play screen fits the window | Design | Accepted, 2026-10-04 |
-| [0012](0012-repo-layout.md) | Repo layout: the app in app/, the docs grouped by product and design | Tech | Accepted, 2026-10-04 |
+| [0012](0012-repo-layout.md) | Repo layout: the app in app/, the docs grouped by product and design | Tech | Accepted, 2026-10-04. The AI tools' notes moved to AGENTS.md in 0022 |
 | [0013](0013-github-pages-hosting.md) | Host the app on GitHub Pages, from the LearnGuitar repo | Tech | Accepted, 2026-10-04 |
 | [0014](0014-library-page.md) | The library is a page of its own | Design | Accepted, 2026-10-04. Partly superseded by 0018, which remembers the family filter |
 | [0015](0015-built-in-library-contents.md) | The built-in library: progression studies and public domain songs | Product | Accepted, 2026-10-08 |
@@ -24,6 +24,7 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0018](0018-library-family-filter.md) | Filter the library by chord family | Product, design | Accepted, 2026-10-08 |
 | [0020](0020-loop-button-and-typed-speed.md) | A loop button and a speed-up switch, and speed typed in BPM or % | Product, design | Accepted, 2026-10-08 |
 | [0021](0021-lyrics-on-the-strum-grid.md) | Lyrics on the strum grid, synced by tapping each word | Product, design, tech | Accepted, 2026-10-08 |
+| [0022](0022-one-instruction-file-for-ai-tools.md) | One instruction file for every AI coding tool | Tech | Accepted, 2026-10-08 |
 
 ## Writing a note
 

@@ -1,6 +1,6 @@
 # 0012. Repo layout: the app in app/, the docs grouped by product and design
 
-Status: Accepted
+Status: Accepted. The working notes for AI tools moved from `CLAUDE.md` to `AGENTS.md` in [0022](0022-one-instruction-file-for-ai-tools.md).
 Date: 2026-10-04
 
 Supersedes where [0008](0008-prototype-folder-and-data-import.md) put the app. The rest of 0008 stands: the prototype stays in `prototype/`, the dev server keeps it at its old address, and the app imports what it saved.
