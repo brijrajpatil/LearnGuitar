@@ -218,7 +218,9 @@ export function LibraryPage() {
               aria-label="Songs"
               items={shown}
               onAction={(key) => app.selectSong(String(key))}
-              className="min-h-0 flex-1 overflow-y-auto outline-none"
+              // relative: the chord names' screen reader text is positioned absolutely, and
+              // has to scroll with the list instead of making the whole page taller.
+              className="relative min-h-0 flex-1 overflow-y-auto outline-none"
               renderEmptyState={() => (
                 <EmptyState
                   noSongsYet={collection === "yours" && !songs.some((s) => s.collection === "yours")}
