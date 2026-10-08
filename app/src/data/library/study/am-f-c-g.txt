@@ -1,0 +1,16 @@
+title: Am, F, C and G
+key: C
+time: 4/4
+tempo: 72
+note: Your first full barre chord: F, with finger 1 across all six strings at fret 1. Press with the side of the finger, close to the fret. With Simplify chords on, the app plays Fmaj7 until the barre rings.
+
+simplify F -> Fmaj7
+
+[Part 1] pattern=D record=C
+Am | F | C | G
+Am | F | C | G
+[Part 2] pattern=B record=C
+Am | F | C | G
+Am | F | G | G
+[End] pattern=E
+Am

@@ -1,0 +1,17 @@
+title: F, Bb, C, Dm and Gm
+key: F
+time: 4/4
+tempo: 72
+note: Barre chords in the key of F. F is the E shape with a barre at fret 1, and Gm is the Em shape with a barre at fret 3. Bb is the A shape with a barre at fret 1. Move between them without lifting the hand off the neck.
+
+[Part 1] pattern=B record=C
+F | Bb | C | F
+F | Bb | C | C
+[Part 2] pattern=B record=C
+Dm | Gm | C | F
+Dm | Gm | C | C
+[Part 3] pattern=C record=D
+F | Bb | Gm | C
+F | Bb | C | F
+[End] pattern=E
+F

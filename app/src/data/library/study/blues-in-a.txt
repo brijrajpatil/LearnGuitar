@@ -1,0 +1,16 @@
+title: Twelve-bar blues in A
+key: A
+time: 4/4
+tempo: 96
+note: Twelve bars on three chords: four bars of A7, two of D7 and two of A7, then E7, D7, A7 and E7 to turn around. Most blues and a lot of early rock and roll follow this order.
+
+[Chorus 1] pattern=C record=D.DUD.DU
+A7 | A7 | A7 | A7
+D7 | D7 | A7 | A7
+E7 | D7 | A7 | E7
+[Chorus 2] pattern=C record=D.DUD.DU
+A7 | A7 | A7 | A7
+D7 | D7 | A7 | A7
+E7 | D7 | A7 | A7
+[End] pattern=E
+A7

@@ -1,0 +1,16 @@
+title: The Canon progression
+key: D
+time: 4/4
+tempo: 72
+note: Eight chords from Pachelbel's Canon in D, written around 1700, which have turned up in many songs since. With Simplify chords on, the app plays Bm7 for Bm and an easier F#m.
+
+simplify Bm -> Bm7
+
+[Part 1] pattern=D record=C
+D | A | Bm | F#m
+G | D | G | A
+[Part 2] pattern=B record=C
+D A | Bm F#m | G D | G A
+D A | Bm F#m | G D | G A
+[End] pattern=E
+D

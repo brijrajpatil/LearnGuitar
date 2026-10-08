@@ -1,0 +1,16 @@
+title: D, Bm, G and A
+key: D
+time: 4/4
+tempo: 76
+note: Bm is a barre at fret 2 that leaves out the low E string. This is the doo-wop order of C, Am, F and G, moved up to D. With Simplify chords on, the app plays Bm7, which needs no barre.
+
+simplify Bm -> Bm7
+
+[Part 1] pattern=B record=C
+D | Bm | G | A
+D | Bm | G | A
+[Part 2] pattern=C record=D
+G | A | D | Bm
+G | A | D | D
+[End] pattern=E
+D

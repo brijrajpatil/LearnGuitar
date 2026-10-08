@@ -1,0 +1,18 @@
+title: G, C and D7 in 3/4
+key: G
+time: 3/4
+tempo: 90
+note: Three beats to a bar, as in a waltz. Count 1 2 3 and lean on beat 1. Arranged picks the chord's bass note on beat 1, then strums down and up.
+
+# Beginner: one downstroke per beat.
+# Arranged: the bass note, then down-up strums.
+# Record: fingerpicked, the bass note then strings 3 2 1 2 3.
+
+[Part 1] pattern=B.DUDU record=B32123
+G | G | C | G | G | G | D7 | D7
+G | G | C | G | G | D7 | G | G
+[Part 2] pattern=B.DUDU record=B32123
+C | C | G | G | D7 | D7 | G | G
+C | C | G | G | D7 | D7 | G | G
+[End] pattern=E
+G

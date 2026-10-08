@@ -1,0 +1,15 @@
+title: Em, C, G and D with a capo
+key: A
+capo: 2
+time: 4/4
+tempo: 84
+note: Put a capo on fret 2 and play the same shapes. Everything sounds two half steps higher, in the key of A, and the app plays it at that pitch. A capo lets you play in a singer's key with easy shapes.
+
+[Part 1] pattern=B record=C
+Em | C | G | D
+Em | C | G | D
+[Part 2] pattern=C record=D
+C | G | D | Em
+C | G | D | D
+[End] pattern=E
+Em

@@ -20,7 +20,7 @@ test("/ opens the library, search filters it, and Enter opens a song", async ({ 
   await page.getByRole("button", { name: "Menu" }).click()
   await page.getByRole("menuitem", { name: "New song" }).click()
   // New song opens the editor.
-  await page.getByRole("textbox", { name: "Chart text" }).fill("title: Mine\nartist: Me\n[Verse] pattern=A\nAm | Dm")
+  await page.getByRole("textbox", { name: "Chart text" }).fill("title: Mine\nartist: Me\n[Verse] pattern=A\nAm | Cmaj7")
   await page.getByRole("button", { name: /^Apply/ }).click()
   await expect(page.getByText("Chart applied and saved")).toBeVisible()
   await page.getByRole("button", { name: "Close the editor" }).click()
@@ -29,7 +29,7 @@ test("/ opens the library, search filters it, and Enter opens a song", async ({ 
   await search(page).fill("grace")
   await expect(songs(page).getByRole("option")).toHaveCount(1)
   await expect(songs(page).getByRole("option")).toContainText("Amazing Grace")
-  await search(page).fill("dm")
+  await search(page).fill("cmaj7")
   await expect(songs(page).getByRole("option")).toHaveCount(1)
   await expect(songs(page).getByRole("option")).toContainText("Mine")
   await search(page).fill("grace")

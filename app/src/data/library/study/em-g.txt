@@ -1,0 +1,20 @@
+title: Em and G
+key: G
+time: 4/4
+tempo: 70
+note: Two chords that share a finger. Play Em with fingers 1 and 2, as the diagram shows, and finger 1 stays on string 5 at fret 2 when you change to G.
+
+# Beginner: one downstroke per beat.
+# Arranged: down-up eighths.
+# Record: old faithful, D.DU.UDU.
+
+chord Em = 022000 012000
+
+[Part 1] pattern=B record=C
+Em | Em | G | G
+Em | Em | G | G
+[Part 2] pattern=B record=C
+Em | G | Em | G
+Em | G | Em | Em
+[End] pattern=E
+G

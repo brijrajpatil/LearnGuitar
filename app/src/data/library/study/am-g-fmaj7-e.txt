@@ -1,0 +1,14 @@
+title: Am, G, Fmaj7 and E
+key: Am
+time: 4/4
+tempo: 84
+note: A minor line that steps down from Am to E, heard in flamenco and in a lot of rock. E pulls back to Am each time. Fmaj7 stands in for F here.
+
+[Part 1] pattern=B record=C
+Am | G | Fmaj7 | E
+Am | G | Fmaj7 | E
+[Part 2] pattern=B record=C
+Am G | Fmaj7 E | Am G | Fmaj7 E
+Am G | Fmaj7 E | Am | Am
+[End] pattern=E
+Am

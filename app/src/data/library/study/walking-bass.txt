@@ -1,0 +1,17 @@
+title: Walking bass with G/B and D/F#
+key: G
+time: 4/4
+tempo: 80
+note: A slash chord puts another note in the bass. G/B and D/F# let the bass walk by step: G, B, C on the way up, and G, F#, E on the way down. Arranged picks the bass note on beat 1 so you hear it walk.
+note: D/F# uses the thumb over the neck for the low F#. With Simplify chords on, the app plays D instead.
+
+[Walk up] pattern=B.DUDUDU record=B.DU.UDU
+G | G/B | C | C
+G | G/B | C | D
+[Walk down] pattern=B.DUDUDU record=B.DU.UDU
+G | D/F# | Em | Em
+C | C | D | D
+G | D/F# | Em | Em
+C | D | G | G
+[End] pattern=E
+G

@@ -1,0 +1,14 @@
+title: G, D, Em and C
+key: G
+time: 4/4
+tempo: 80
+note: The order of chords behind a great many pop songs, here in G. Part 2 changes chord every two beats, so get Part 1 smooth first.
+
+[Part 1] pattern=B record=C
+G | D | Em | C
+G | D | Em | C
+[Part 2] pattern=B record=C
+G D | Em C | G D | Em C
+G D | Em C | C D | G
+[End] pattern=E
+G

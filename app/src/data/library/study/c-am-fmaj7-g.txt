@@ -1,0 +1,14 @@
+title: C, Am, Fmaj7 and G
+key: C
+time: 4/4
+tempo: 76
+note: The 1950s doo-wop order of chords. Fmaj7 stands in for F, which needs a barre: it keeps F's three notes and adds the open top string. Once you can play F, try it in place of Fmaj7.
+
+[Part 1] pattern=D record=C
+C | Am | Fmaj7 | G
+C | Am | Fmaj7 | G
+[Part 2] pattern=B record=C
+C Am | Fmaj7 G | C Am | Fmaj7 G
+C Am | Fmaj7 G | C | C
+[End] pattern=E
+C

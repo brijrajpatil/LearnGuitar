@@ -59,6 +59,8 @@ Keep each `id` the same once you've used a song. The app saves your edits and te
 
 The songs built into the app are in `src/data/library/`. Each one is a chart file in the folder for its collection, named by its id, such as `traditional/amazing-grace.txt`. `src/data/library/catalog.ts` lists them in the order the library shows them, with each song's collection and difficulty.
 
+A built-in song must be a progression study or a public domain song, with chords only. [Decision 0015](../docs/decisions/0015-built-in-library-contents.md) has the public domain rule and what else is left out.
+
 To add one:
 
 1. Write the chart in the usual format and save it as `src/data/library/<collection>/<id>.txt`. The id is a lowercase slug and never changes once the song ships, because players' edits and tempos are saved under it.

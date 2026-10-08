@@ -1,0 +1,18 @@
+title: A and D
+key: A
+time: 4/4
+tempo: 70
+note: A and D are the first change in hundreds of songs. Lift all three fingers together and land the D shape at once, rather than one finger at a time.
+
+# Beginner: one downstroke per beat.
+# Arranged: down-up eighths.
+# Record: old faithful, D.DU.UDU.
+
+[Part 1] pattern=B record=C
+A | A | D | D
+A | A | D | D
+[Part 2] pattern=B record=C
+A | D | A | D
+A | D | A | A
+[End] pattern=E
+A

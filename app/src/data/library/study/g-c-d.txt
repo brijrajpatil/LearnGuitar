@@ -1,0 +1,14 @@
+title: G, C and D
+key: G
+time: 4/4
+tempo: 76
+note: The three main chords of the key of G. G is home, C moves away from it, and D pulls back home. Thousands of folk, country and rock songs use only these three.
+
+[Verse] pattern=B record=C
+G | G | C | C | G | G | D | D
+G | G | C | C | G | D | G | G
+[Chorus] pattern=B record=C
+C | C | G | G | C | C | D | D
+C | C | G | G | D | D | G | G
+[End] pattern=E
+G
