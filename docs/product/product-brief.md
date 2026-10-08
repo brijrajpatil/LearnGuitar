@@ -124,6 +124,7 @@ Play mode
 
 - Everything in the current player: section and bar, current chord with diagram, next chord with beat countdown, strum strip, pattern-change warning, song map, count-in.
 - Capo: diagrams show the shapes you finger, the header shows the capo fret, and the synth plays the pitch that sounds.
+- Key and capo: the header shows the record's key, and you can play the song with the chords of another key. Picking a key sets the capo that keeps the record's sound, so I can learn one chord family at a time and still play the songs I want. Built 2026-10-08 (see [decision 0016](../decisions/0016-key-and-capo.md)).
 - Missed strums show as faint arrows, so your hand keeps the down-up motion going.
 - A sixteenth-note grid for patterns that need it, and triplets for shuffle feels.
 - For lead parts, a scrolling tab view with the current note lit and the chord name above.
@@ -278,3 +279,4 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 - 2026-10-04: The app is hosted on GitHub Pages from the public repo LearnGuitar, at <https://brijrajpatil.github.io/LearnGuitar/>. Pull requests and pushes to `main` run the checks, and `main` deploys. See [decision 0013](../decisions/0013-github-pages-hosting.md).
 - 2026-10-04: Songs are picked from a library page, opened from the song's title or the / key, in place of the drop-down menu. See [decision 0014](../decisions/0014-library-page.md).
 - 2026-10-08: The app ships a library of 17 progression studies and 34 public domain folk and traditional songs. Popular songs were considered and left out, so the repo and the site still publish no charts of commercial songs. This work went ahead before the milestone 1 review. See [decision 0015](../decisions/0015-built-in-library-contents.md).
+- 2026-10-08: Each song can be played with the chords of another key, saved per song, with a capo that keeps the record's sound where one fits. The header shows the record's key. See [decision 0016](../decisions/0016-key-and-capo.md).

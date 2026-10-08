@@ -17,7 +17,7 @@ import {
   type CollectionFilter,
   type DifficultyFilter,
 } from "@/ui/library/filter"
-import { ChordName } from "@/ui/play/ChordName"
+import { ChordList } from "@/ui/play/ChordName"
 
 const COLLECTIONS: { id: CollectionFilter; name: string; short: string }[] = [
   { id: "all", name: "All", short: "All" },
@@ -29,17 +29,7 @@ const COLLECTIONS: { id: CollectionFilter; name: string; short: string }[] = [
 /** At most this many chords in a row, then "+3". */
 const CHORDS_SHOWN = 6
 
-function Chords({ chords }: { chords: string[] }) {
-  const rest = chords.length - CHORDS_SHOWN
-  return (
-    <span className="flex min-w-0 flex-wrap gap-x-2">
-      {chords.slice(0, CHORDS_SHOWN).map((c) => (
-        <ChordName key={c} name={c} />
-      ))}
-      {rest > 0 && <span className="text-muted-foreground">+{rest}</span>}
-    </span>
-  )
-}
+const Chords = ({ chords }: { chords: string[] }) => <ChordList chords={chords} limit={CHORDS_SHOWN} />
 
 function SongRow({ song, current }: { song: SongEntry; current: boolean }) {
   const by = byline(song)

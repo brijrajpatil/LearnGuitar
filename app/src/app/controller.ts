@@ -54,6 +54,8 @@ export interface AppState {
   editorOpen: boolean
   /** The library page shows in place of the play screen. */
   libraryOpen: boolean
+  /** The header's key and capo picker is open. */
+  keyPickerOpen: boolean
   /** Editor text not yet applied, kept while the editor is closed. */
   draft: { id: string; text: string } | null
   /** Bumped to ask the editor to move its cursor to a bar's line. */
@@ -123,6 +125,7 @@ export class AppController {
       customPatterns: [],
       editorOpen: false,
       libraryOpen: false,
+      keyPickerOpen: false,
       draft: null,
       editorFocus: { line: 1, seq: 0 },
     }
@@ -353,6 +356,11 @@ export class AppController {
   /** Back to the chords and capo the chart gives. */
   resetKey(): void {
     this.setKey(writtenChoice(this.state.song))
+  }
+
+  /** Opens or closes the key and capo picker, from its button or the K key. */
+  setKeyPickerOpen(open: boolean): void {
+    this.set({ keyPickerOpen: open })
   }
 
   /** Sets or clears (null) a section's pattern override. */

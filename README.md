@@ -24,11 +24,12 @@ The [product brief](docs/product/product-brief.md) has the full problem, goals, 
 - A strum strip shows each down, up and missed strum as it plays, and warns a bar before the pattern changes.
 - Three levels for every song. Beginner strums one downstroke per beat. Arranged uses each section's own pattern. Record plays the figure from the record where the chart has one.
 - Simplify chords swaps hard shapes for easier ones, for example F#m for a four-string version.
+- Shows the key the record is in, and plays any song with the chords of another key, so you can stick to one chord family while you learn it. It sets the capo that keeps the record's sound, for example G shapes with a capo on fret 2 for a song in A.
 - Speed shows the BPM and how it compares with the record ("88% of the record"), with quick picks from 60% to the record's speed.
 - A song map along the bottom: click a bar to jump to it, or a section name to loop it.
 - A built-in library of 17 progression studies and 34 public domain folk songs, with chords only. The library page lists each one with its chords and difficulty. Search it by title, artist or chord, and filter it by collection and difficulty.
 - Songs are text charts you write in the built-in editor, with errors marked by line. Custom strum and pick patterns can be any length and run on across bar lines.
-- Works from the keyboard: Space plays and pauses, the arrow keys change section and speed, L loops the section, and / opens the library. A foot pedal that sends these keys works too.
+- Works from the keyboard: Space plays and pauses, the arrow keys change section and speed, L loops the section, / opens the library, and K picks the key and capo. A foot pedal that sends these keys works too.
 - A light, monochrome theme. The play screen fits in the window like a desktop app, follows browser zoom, and is laid out for screens from a phone to a large monitor.
 - Installs as an app from Chrome or Safari and works offline.
 

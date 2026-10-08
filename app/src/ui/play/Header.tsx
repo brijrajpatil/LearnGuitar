@@ -2,6 +2,8 @@ import { useRef, useState } from "react"
 import { ChevronDownIcon, EllipsisIcon, InfoIcon } from "lucide-react"
 import { toast } from "sonner"
 import { songSeconds } from "@/core/song/types"
+import { capoFret } from "@/core/theory/chords"
+import { keyName, moveKey, writtenKey } from "@/core/theory/keys"
 import { Button } from "@/ui/components/button"
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/ui/components/dropdown-menu"
 import { Popover, PopoverHeader, PopoverTitle, PopoverTrigger } from "@/ui/components/popover"
@@ -10,20 +12,23 @@ import { Toggle } from "@/ui/components/toggle"
 import { Tooltip, TooltipTrigger } from "@/ui/components/tooltip"
 import { useAppState, useController } from "@/ui/hooks/use-app"
 import { formatTime } from "@/ui/play/display"
+import { KeyPicker } from "@/ui/play/KeyPicker"
 import { ModeSwitch } from "@/ui/play/ModeSwitch"
 import { SettingsSheet } from "@/ui/play/SettingsSheet"
 import { ShortcutsDialog } from "@/ui/play/ShortcutsDialog"
 
 /** The song's facts and notes, kept off the play screen until asked for. */
 function SongInfo() {
-  const { song } = useAppState()
+  const { song, arrangement: arr } = useAppState()
+  const written = writtenKey(song)
+  const recordKey = written && moveKey(written.key, capoFret(song.capo))
   const facts: [string, string][] = [
-    ["Key", song.key || "Not given"],
+    ["Key", recordKey ? `${keyName(recordKey)}${written.guessed ? ", from the chords" : ""}` : "Not given"],
     ["Time", `${song.beatsPerBar}/4`],
     ["Record speed", song.tempo ? `${song.tempo} BPM` : "Not given"],
     ["Length", `${song.bars.length} bars${song.tempo ? `, ${formatTime(songSeconds(song, song.tempo))} at the record's speed` : ""}`],
   ]
-  if (song.capo) facts.splice(2, 0, ["Capo", song.capo])
+  if (arr.capo) facts.splice(2, 0, ["Capo", `Fret ${arr.capo}`])
   return (
     <PopoverTrigger>
       <Button variant="ghost" size="icon-sm" aria-label="About this song">
@@ -67,7 +72,9 @@ export function Header() {
   }
 
   return (
-    <header className="flex flex-wrap items-center gap-x-4 gap-y-3">
+    // A container, so the mode switch moves to its own row when the header is narrow,
+    // including when the chart editor takes part of the window.
+    <header className="@container flex flex-wrap items-center gap-x-4 gap-y-3">
       <div className="flex min-w-0 items-center gap-1">
         {/* The song's title opens the library, where you pick another (decision 0014). */}
         <TooltipTrigger delay={500}>
@@ -87,13 +94,14 @@ export function Header() {
           </Tooltip>
         </TooltipTrigger>
         <SongInfo />
+        <KeyPicker />
       </div>
 
-      <div className="order-last flex w-full justify-center lg:order-none lg:w-auto lg:flex-1">
+      <div className="order-last flex w-full justify-center @5xl:order-none @5xl:w-auto @5xl:flex-1">
         <ModeSwitch />
       </div>
 
-      <div className="ml-auto flex items-center gap-2 lg:ml-0">
+      <div className="ml-auto flex items-center gap-2 @5xl:ml-0">
         <Toggle variant="outline" isSelected={editorOpen} onChange={(on) => app.setEditorOpen(on)}>
           Edit chart
         </Toggle>

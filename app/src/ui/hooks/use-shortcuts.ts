@@ -55,6 +55,10 @@ export function useShortcuts(app: AppController): void {
         case "/":
           app.openLibrary()
           break
+        case "k":
+        case "K":
+          app.setKeyPickerOpen(true)
+          break
         default:
           handled = false
       }

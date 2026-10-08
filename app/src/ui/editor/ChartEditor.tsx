@@ -25,6 +25,9 @@ const LINE_PX = 24
 const FORMAT_HELP = `title: Amazing Grace     settings: title, artist, key, capo,
 tempo: 80                  time (2/4 to 7/4), tempo, note
 note: shown in the (i) popover
+key: G                   the key of the chords as written, before
+                           any capo. Leave it out and the app works
+                           it out from the chords
 # a line starting with # is a comment
 
 [Verse 1] pattern=C      section header. pattern = A to E, a saved

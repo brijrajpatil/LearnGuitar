@@ -7,6 +7,7 @@ const SHORTCUTS: [string, string][] = [
   ["↑ ↓", "Speed up or down 1 BPM, or 5 with Shift"],
   ["L", "Loop this section, or play the whole song again"],
   ["/", "Open the library and search it"],
+  ["K", "Choose the key and capo to play in"],
   ["⌘ Enter", "Apply chart edits (Ctrl+Enter on Windows)"],
   ["Esc", "Close the editor, a dialog or the library"],
 ]

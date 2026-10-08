@@ -121,7 +121,7 @@ React Aria handles focus, keyboard and press behavior. Hover styles apply only t
 
 The play screen has six rows, from top to bottom:
 
-1. Header: the song's title, which opens the library, About this song, the practice mode switch, How to practise, Edit chart and the menu.
+1. Header: the song's title, which opens the library, About this song, the key and capo button, the practice mode switch, How to practise, Edit chart and the menu. The header lays out by its own width (a CSS container): when it's narrower than 64rem, as on a tablet or with the chart editor open, the mode switch moves to a row of its own below the rest.
 2. Position line: the section name, the bar within the section and a progress bar for the section. During the count-in it shows the count, with the current beat filled with emphasis. While playing, it shows the bar's cue when the chart has one.
 3. Chord cards. The Now card is white and largest, with the chord name and its diagram. The Next card sits on `--tint` with no border, and counts down to the change.
 4. Strum card: the pattern's name, what's coming next, Level and Change pattern. Below them is one slot per eighth note. Arrows strum down or up, a dot is a missed strum, B picks the bass note, and 1 to 6 pick a string. The slot being played is filled with emphasis.
@@ -131,6 +131,18 @@ The play screen has six rows, from top to bottom:
 The chart editor opens as a panel beside the play screen, so the chords stay in view while editing. Lines with an error get the `--error-line` background and a message in `--destructive`.
 
 ![The chart editor open beside the play screen, showing the Amazing Grace chart with line numbers and the chart check below it.](images/chart-editor.png)
+
+## The key and capo picker
+
+The header's key button opens a popover ([0016](../decisions/0016-key-and-capo.md)). The button is `ghost`. It says "Key of A", and after a change the shapes and capo follow in `--muted-foreground`, such as "G shapes, capo 2". The K key opens it too, with focus on the chosen key.
+
+1. Heading: the record's key, and one line on what the list is for.
+2. The list: a React Aria ListBox in two sections, open-chord families and other keys, each under a `text-xs` label in `--muted-foreground`. A row has the key, the song's chords in that key drawn with `ChordName`, how many barre chords they need, and the capo that keeps the record's sound. The chosen row is `--tint`, with the small emphasis dot the library uses for the current song. The focused or hovered row is `--accent`. Keys the app can't move the song to are listed in `--muted-foreground` and can't be picked.
+3. The capo stepper: two `outline` icon buttons around the fret, and a sentence on how it sounds next to the record. Back to the chart's key, an `outline` button, shows after a change.
+
+The list scrolls inside the popover when the window is short. On a phone the popover is the window's width less 1rem on each side, the barre count moves under the chords, and the sentence wraps under the stepper.
+
+![The key and capo picker open on Amazing Grace, with E chosen: the header reads Key of G, E shapes, capo 3, and the list shows each key's chords, barre count and capo.](images/key-picker.png)
 
 ## The library page
 

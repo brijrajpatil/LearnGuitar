@@ -24,12 +24,33 @@ function Accidental({ kind }: { kind: "♯" | "♭" }) {
   )
 }
 
+/** A chord name as a screen reader should say it: "F sharp m", "B flat". */
+export const spokenChord = (name: string): string =>
+  name
+    .replace(/#/g, " sharp ")
+    .replace(/([A-G])b/g, "$1 flat ")
+    .replace(/ +(?=\/|$)/g, "")
+    .replace(/ +/g, " ")
+
+/** Chord names in a row, the first `limit` of them, then "+3" for the rest. */
+export function ChordList({ chords, limit }: { chords: string[]; limit: number }) {
+  const rest = chords.length - limit
+  return (
+    <span className="flex min-w-0 flex-wrap gap-x-2">
+      {chords.slice(0, limit).map((c) => (
+        <ChordName key={c} name={c} />
+      ))}
+      {rest > 0 && <span className="text-muted-foreground">+{rest}</span>}
+    </span>
+  )
+}
+
 /** A chord name with ♯ and ♭, and its parenthesised suffix shown smaller. */
 export function ChordName({ name }: { name: string }) {
   const { base, suffix } = formatChordName(name)
   return (
     <span>
-      <span className="sr-only">{name.replace(/#/g, " sharp").replace(/([A-G])b/g, "$1 flat")}</span>
+      <span className="sr-only">{spokenChord(name)}</span>
       <span aria-hidden="true">
         {base.split(/([♯♭])/).map((part, i) =>
           part === "♯" || part === "♭" ? <Accidental key={i} kind={part} /> : part
