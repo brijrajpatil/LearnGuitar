@@ -88,6 +88,15 @@ describe("Repository", () => {
     expect(settings.tempo).toEqual({ b: 80 })
     expect(settings.mix).toEqual(DEFAULT_SETTINGS.mix)
     expect(settings.key).toEqual({ a: { shapes: 10, capo: 2 } })
+    expect(settings.family).toBeNull()
+  })
+
+  it("keeps a chord family, and drops a key that isn't one of the five", async () => {
+    const kv = new MemoryStore()
+    await kv.set("settings", { family: 7 })
+    expect((await new Repository(kv).load()).settings.family).toBe(7)
+    await kv.set("settings", { family: 5 })
+    expect((await new Repository(kv).load()).settings.family).toBeNull()
   })
 })
 

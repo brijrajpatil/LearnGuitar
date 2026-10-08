@@ -1,6 +1,6 @@
 # 0014. The library is a page of its own
 
-Status: Accepted
+Status: Accepted. Partly superseded by [0018](0018-library-family-filter.md): the chord family filter is remembered between visits.
 Date: 2026-10-04
 
 ## Context

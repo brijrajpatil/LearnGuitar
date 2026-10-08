@@ -85,6 +85,20 @@ describe("key and capo", () => {
     expect(c.getState().arrangement).toMatchObject({ shapes: 0, capo: 0 })
     expect(c.getState().settings.key).toEqual({})
   })
+
+  it("opens a song from the library in the chosen family, and as saved without one", async () => {
+    const c = await app()
+    c.openFromLibrary("michael-row")
+    expect(c.getState().arrangement).toMatchObject({ shapes: 0, capo: 0 })
+    c.setFamily(7)
+    c.openFromLibrary("michael-row")
+    expect(c.getState()).toMatchObject({ songId: "michael-row", settings: { family: 7 } })
+    expect(c.getState().arrangement).toMatchObject({ shapes: 5, capo: 7 })
+    expect(c.getState().arrangement.barChords[0][0].chord).toBe("G")
+    // A song already in the family's key keeps no saved choice.
+    c.openFromLibrary("amazing-grace")
+    expect(c.getState().settings.key["amazing-grace"]).toBeUndefined()
+  })
 })
 
 describe("adding songs", () => {

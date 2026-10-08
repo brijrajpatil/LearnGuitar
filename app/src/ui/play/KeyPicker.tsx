@@ -10,7 +10,7 @@ import { Popover, PopoverDescription, PopoverHeader, PopoverTitle, PopoverTrigge
 import { Tooltip, TooltipTrigger } from "@/ui/components/tooltip"
 import { useAppState, useController } from "@/ui/hooks/use-app"
 import { ChordList, ChordName, spokenChord } from "@/ui/play/ChordName"
-import { plural } from "@/ui/play/display"
+import { capoText, plural } from "@/ui/play/display"
 
 const MAX_CAPO = 12
 
@@ -23,12 +23,6 @@ const KeyInWords = ({ k }: { k: Key }) => (
     <ChordName name={tonicName(k)} /> {k.minor ? "minor" : "major"}
   </>
 )
-
-function capoText(o: KeyOption): string {
-  if (o.shapes === 0) return o.capo ? `Capo ${o.capo}, as written` : "As written"
-  if (o.capo === null) return "No capo fits"
-  return o.capo ? `Capo ${o.capo}` : "No capo"
-}
 
 function KeyRow({ option }: { option: KeyOption }) {
   const barres = option.barres ? plural(option.barres, "barre") : "No barres"

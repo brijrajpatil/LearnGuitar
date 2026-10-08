@@ -6,6 +6,7 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 ### Added
 
+- A chord family filter in the library. Pick a family, such as G (G, C, D, Em, Am and Bm7), to list the songs you can play with its chords, shown as you'd play them in that family with the capo each needs. 37 of the 51 built-in songs fit the G family. A song opened from the list plays in the family, and the library remembers the family you picked ([decision 0018](docs/decisions/0018-library-family-filter.md)).
 - Add a song by name from the library: type it in the search and press Enter. The AI drafts the chords with your own free Gemini key, or the app converts chords you paste from a page, with the lyrics left out. Drafts are marked until you check them ([decision 0017](docs/decisions/0017-ai-chord-drafts.md)).
 - Key and capo. The header shows the key the record is in. Click it or press K to play the song with the chords of another key: each key lists the song's chords in it, how many barre chords they need, and the capo that keeps the record's sound. For example, Let Down in A becomes G, D, Em and C with a capo on fret 2. A capo stepper says how the result compares with the record. The choice is saved per song ([decision 0016](docs/decisions/0016-key-and-capo.md)).
 - Shapes for every chord in every key: common chords use the standard barre shapes, and slash chords get a shape with the right bass note. The built-in shapes add Csus2, Csus4, C/E, C/G, Gsus4, Dm7 and Emaj7, which charts can now use without a `chord` line.

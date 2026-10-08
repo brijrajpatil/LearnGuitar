@@ -10,6 +10,7 @@ import { parseChart, type ChartError, type ParsedChart } from "@/core/chart/pars
 import { isValidSteps, normalizeSteps, type CustomPattern, type PatternId } from "@/core/pattern/patterns"
 import type { Song } from "@/core/song/types"
 import { arrange, sectionKey, writtenChoice, type Arrangement, type KeyChoice, type Level } from "@/core/timeline/arrangement"
+import { familyFit } from "@/core/timeline/family"
 import { BUILTIN_SONGS, NEW_SONG_TEMPLATE } from "@/data/builtin-songs"
 import { IndexedDbStore, type KeyValueStore } from "@/data/kv"
 import type { Collection, Difficulty } from "@/data/library/catalog"
@@ -351,6 +352,23 @@ export class AppController {
   /** Goes back to the play screen on the current song. */
   closeLibrary(): void {
     this.set({ libraryOpen: false })
+  }
+
+  /** The chord family the library filters by, or null for any (decision 0018). Remembered. */
+  setFamily(family: number | null): void {
+    this.updateSettings({ family })
+  }
+
+  /**
+   * Opens a song picked in the library. With a family chosen, the song plays in that
+   * family's shapes, with the capo that keeps the chart's sound when one fits.
+   */
+  openFromLibrary(id: string): void {
+    this.selectSong(id)
+    const family = this.state.settings.family
+    if (family === null) return
+    const fit = familyFit(this.state.song, this.state.arrangement.settings, family)
+    if (fit?.fits) this.setKey({ shapes: fit.shapes, capo: fit.capo ?? 0 })
   }
 
   // ---- editor ----

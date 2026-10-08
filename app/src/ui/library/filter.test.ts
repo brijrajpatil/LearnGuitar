@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import type { SongEntry } from "@/app/controller"
-import { filterSongs, matchesQuery } from "@/ui/library/filter"
+import type { FamilyFit } from "@/core/timeline/family"
+import { filterSongs, matchesQuery, type FamilyFits } from "@/ui/library/filter"
 
 const song = (p: Partial<SongEntry> & Pick<SongEntry, "id">): SongEntry => ({
   builtin: true,
@@ -26,7 +27,18 @@ const songs = [
 ]
 
 const ids = (list: SongEntry[]) => list.map((s) => s.id)
-const all = { query: "", collection: "all", difficulty: "any" } as const
+const all = { query: "", collection: "all", difficulty: "any", family: null } as const
+
+// The songs moved into the G family: Greensleeves needs B, so it doesn't fit.
+const inG = (fits: boolean, chords: string[]) => ({ fits, chords }) as FamilyFit
+const fitsG: FamilyFits = new Map([
+  ["greensleeves", inG(false, ["Em", "G", "D", "Bm", "C", "B"])],
+  ["mountain", inG(true, ["G", "D7", "C"])],
+  ["g-d", inG(true, ["G", "D"])],
+  ["mine", null],
+  ["sailor", inG(true, ["Em", "D"])],
+  ["minor-four", inG(false, ["G", "C", "Cm"])],
+])
 
 describe("library filter", () => {
   it("lists the easiest first, keeps the catalog's order within a difficulty, and puts your songs last", () => {
@@ -49,5 +61,14 @@ describe("library filter", () => {
   it("finds songs by a chord name, matched whole", () => {
     expect(ids(filterSongs(songs, { ...all, query: "fm" }))).toEqual(["minor-four"])
     expect(ids(filterSongs(songs, { ...all, query: "Dm" }))).toEqual(["sailor"])
+  })
+
+  it("keeps the songs that fit the chosen family, and searches the chords as played in it", () => {
+    const g = { ...all, family: 7 }
+    expect(ids(filterSongs(songs, g, fitsG))).toEqual(["g-d", "sailor", "mountain"])
+    expect(ids(filterSongs(songs, { ...g, query: "Em" }, fitsG))).toEqual(["sailor"])
+    expect(ids(filterSongs(songs, { ...g, query: "Dm" }, fitsG))).toEqual([])
+    // With no family chosen, the fits are ignored.
+    expect(ids(filterSongs(songs, all, fitsG))).toHaveLength(6)
   })
 })

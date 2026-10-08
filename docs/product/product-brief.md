@@ -102,6 +102,7 @@ Terms:
 Song library
 
 - A library page lists every song with its chords and difficulty, with search and filters for collection and difficulty. Built 2026-10-04 (see [decision 0014](../decisions/0014-library-page.md)).
+- A chord family filter in the library lists the songs I can play with the family I'm learning, with each song's chords as played in that family and the capo it needs. Opening a song from it plays the song in the family. Built 2026-10-08 (see [decision 0018](../decisions/0018-library-family-filter.md)).
 - Songs are saved on the device and can be exported and imported as text files.
 - Each song has title, artist, key, tempo, time signature, tuning, capo fret, and which guitar it's for. Electric songs get a notes field for amp settings.
 - Each song can link to its sources: the tab you learn from, and a tutorial video with a timestamp for each section.
@@ -283,3 +284,4 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 - 2026-10-08: The app ships a library of 17 progression studies and 34 public domain folk and traditional songs. Popular songs were considered and left out, so the repo and the site still publish no charts of commercial songs. This work went ahead before the milestone 1 review. See [decision 0015](../decisions/0015-built-in-library-contents.md).
 - 2026-10-08: Each song can be played with the chords of another key, saved per song, with a capo that keeps the record's sound where one fits. The header shows the record's key. See [decision 0016](../decisions/0016-key-and-capo.md).
 - 2026-10-08: A player can add a song by name. The AI drafts the chords with the player's own free Gemini key, or the app converts a chord sheet they paste. Drafts are chords only and stay on the player's device, and I pay nothing for the AI. This partly supersedes decision 0003. See [decision 0017](../decisions/0017-ai-chord-drafts.md).
+- 2026-10-08: The library can filter by chord family, so I can learn one family and see every song I can play with it. The family is remembered between visits, which changes decision 0014's rule that filters reset. See [decision 0018](../decisions/0018-library-family-filter.md).

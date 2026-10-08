@@ -149,11 +149,13 @@ The list scrolls inside the popover when the window is short. On a phone the pop
 
 The song's title in the header opens the library in place of the play screen ([0014](../decisions/0014-library-page.md)). It fills the window the same way: the top rows stay put and only the list scrolls.
 
-![The library page on a 13-inch MacBook Air at 100% zoom: the search field, the collection and difficulty filters with "51 songs", and the list starting with the First chords studies and songs.](images/library.png)
+![The library page on a 13-inch MacBook Air at 100% zoom with the G family chosen: the filters say "37 songs fit the G family", and the list has Chords in G and Capo columns, starting with the First chords studies and songs.](images/library.png)
 
 1. Top row: the "Library" heading, the search field (an input group with a search icon and a `/` key hint) and Back to the current song.
-2. Filters: the collection filter in the `segment` toggle group, the difficulty select, and the number of songs listed. With Your songs chosen, Add a song sits at the end of the row.
+2. Filters: the collection filter in the `segment` toggle group, the difficulty select, the chord family select, and the number of songs listed. Each family in the select has its chords under its name in `text-xs` `--muted-foreground`, and the trigger shows only the name. With Your songs chosen, Add a song sits at the end of the row.
 3. The list: a card with column labels (Song, Chords, Difficulty) and one row per song. A row has the title with the artist or "Study" under it in `--muted-foreground`, the chords drawn with `ChordName`, and the difficulty. The focused or hovered row is `--accent`, and keyboard focus draws the 2 px outline inside the row. The current song has a small dot in the emphasis fill.
+
+With a chord family chosen ([0018](../decisions/0018-library-family-filter.md)), the count says how many songs fit, the Chords column becomes "Chords in G" with each song's chords as played in the family, and the Difficulty column becomes Capo, worded as in the key picker.
 
 Below the `sm` breakpoint the column labels hide, the chords move under the title, and the collection names shorten (Folk, Yours).
 

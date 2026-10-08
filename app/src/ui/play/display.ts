@@ -3,12 +3,20 @@
 
 import type { Pattern } from "@/core/pattern/patterns"
 import { nextChange, type Arrangement, type NextChange } from "@/core/timeline/arrangement"
+import type { KeyOption } from "@/core/timeline/key-options"
 import type { TransportView } from "@/practice/transport"
 
 /** A pattern's name as the player sees it. */
 export const patternTitle = (p: Pattern): string => (p.kind === "inline" ? "The chart's pattern" : p.name)
 
 export const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? "" : "s"}`
+
+/** The capo a key needs, as the key picker and the library show it: "Capo 2", "No capo fits". */
+export function capoText(o: Pick<KeyOption, "shapes" | "capo">): string {
+  if (o.shapes === 0) return o.capo ? `Capo ${o.capo}, as written` : "As written"
+  if (o.capo === null) return "No capo fits"
+  return o.capo ? `Capo ${o.capo}` : "No capo"
+}
 
 export const formatTime = (seconds: number): string => {
   const s = Math.round(seconds)

@@ -1,8 +1,10 @@
-import { useRef, useState, type KeyboardEvent } from "react"
+import { useMemo, useRef, useState, type KeyboardEvent } from "react"
 import { ArrowLeftIcon, PlusIcon, SearchIcon } from "lucide-react"
-import { ListBox, ListBoxItem, SearchField } from "react-aria-components"
+import { ListBox, ListBoxItem, SearchField, Text } from "react-aria-components"
 import { cn } from "cn"
 import type { SongEntry } from "@/app/controller"
+import { noteName } from "@/core/theory/names"
+import { familyChords, familyFit, FAMILIES, type FamilyFit } from "@/core/timeline/family"
 import { DIFFICULTIES } from "@/data/library/catalog"
 import { Badge } from "@/ui/components/badge"
 import { Button } from "@/ui/components/button"
@@ -18,9 +20,14 @@ import {
   filterSongs,
   type CollectionFilter,
   type DifficultyFilter,
+  type FamilyFits,
 } from "@/ui/library/filter"
 import { AddSongPanel } from "@/ui/library/AddSongPanel"
 import { ChordList } from "@/ui/play/ChordName"
+import { capoText, plural } from "@/ui/play/display"
+
+/** The five chord families, with the chords each one's learner plays (decision 0018). */
+const FAMILY_ITEMS = FAMILIES.map((f) => ({ id: String(f), key: noteName(f, false), chords: familyChords(f).join(", ") }))
 
 const COLLECTIONS: { id: CollectionFilter; name: string; short: string }[] = [
   { id: "all", name: "All", short: "All" },
@@ -34,8 +41,13 @@ const CHORDS_SHOWN = 6
 
 const Chords = ({ chords }: { chords: string[] }) => <ChordList chords={chords} limit={CHORDS_SHOWN} />
 
-function SongRow({ song, current }: { song: SongEntry; current: boolean }) {
+/**
+ * One song. With a family chosen (`fit`), its chords are as played in the family, and
+ * the last column says the capo in place of the difficulty.
+ */
+function SongRow({ song, current, fit }: { song: SongEntry; current: boolean; fit: FamilyFit | null }) {
   const by = byline(song)
+  const chords = fit?.chords ?? song.chords
   return (
     <ListBoxItem
       id={song.id}
@@ -57,14 +69,14 @@ function SongRow({ song, current }: { song: SongEntry; current: boolean }) {
         )}
         {/* Phones have no chords column, so the chords go under the title. */}
         <span className="mt-0.5 block text-sm sm:hidden">
-          <Chords chords={song.chords} />
+          <Chords chords={chords} />
         </span>
       </span>
       <span className="text-sm max-sm:hidden">
-        <Chords chords={song.chords} />
+        <Chords chords={chords} />
       </span>
       <span className="text-right text-sm text-muted-foreground sm:text-left">
-        {song.difficulty ? DIFFICULTY_NAMES[song.difficulty] : ""}
+        {fit ? capoText(fit) : song.difficulty ? DIFFICULTY_NAMES[song.difficulty] : ""}
       </span>
     </ListBoxItem>
   )
@@ -76,14 +88,24 @@ function SongRow({ song, current }: { song: SongEntry; current: boolean }) {
  */
 export function LibraryPage() {
   const app = useController()
-  const { songs, songId } = useAppState()
+  const { songs, songId, settings, customPatterns } = useAppState()
   const current = songs.find((s) => s.id === songId)
   const [query, setQuery] = useState("")
   const [collection, setCollection] = useState<CollectionFilter>("all")
   const [difficulty, setDifficulty] = useState<DifficultyFilter>("any")
+  // The family is remembered between visits (decision 0018). The other filters reset.
+  const family = settings.family
+  const simplify = settings.simplify
   const search = useRef<HTMLInputElement>(null)
   const list = useRef<HTMLDivElement>(null)
-  const shown = filterSongs(songs, { query, collection, difficulty })
+  // Every song moved into the family, worked out once per family, not on each key typed.
+  const fits = useMemo<FamilyFits | undefined>(() => {
+    if (family === null) return undefined
+    const arrangement = { level: "arranged" as const, simplify, overrides: {}, customPatterns }
+    return new Map(songs.map((s) => [s.id, familyFit(app.validate(s.chart).song, arrangement, family)]))
+  }, [app, songs, family, simplify, customPatterns])
+  const shown = filterSongs(songs, { query, collection, difficulty, family }, fits)
+  const familyKey = family === null ? null : noteName(family, false)
   // The Add a song panel, opened with what was typed in the search (decision 0017).
   const [adding, setAdding] = useState<string | null>(null)
   const openAdd = (seed: string) => setAdding(seed.trim())
@@ -96,6 +118,7 @@ export function LibraryPage() {
     setQuery("")
     setCollection("all")
     setDifficulty("any")
+    app.setFamily(null)
     search.current?.focus()
   }
 
@@ -201,8 +224,33 @@ export function LibraryPage() {
                 </SelectGroup>
               </SelectContent>
             </Select>
+            <Select
+              aria-label="Chord family"
+              selectedKey={family === null ? "any" : String(family)}
+              onSelectionChange={(key) => key !== null && app.setFamily(key === "any" ? null : Number(key))}
+            >
+              <SelectTrigger className="h-8">
+                <SelectValue>{({ selectedText }) => selectedText}</SelectValue>
+              </SelectTrigger>
+              <SelectContent className="min-w-56">
+                <SelectGroup>
+                  <SelectItem id="any">Any family</SelectItem>
+                  {FAMILY_ITEMS.map((f) => (
+                    <SelectItem key={f.id} id={f.id} textValue={`${f.key} family`}>
+                      <span className="flex flex-col">
+                        <Text slot="label">{f.key} family</Text>
+                        <Text slot="description" className="text-xs font-normal text-muted-foreground">
+                          {f.chords}
+                        </Text>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
             <p className="text-sm text-muted-foreground" aria-live="polite">
-              {shown.length === 1 ? "1 song" : `${shown.length} songs`}
+              {plural(shown.length, "song")}
+              {familyKey && ` ${shown.length === 1 ? "fits" : "fit"} the ${familyKey} family`}
             </p>
             {collection === "yours" && adding === null && (
               <Button variant="outline" size="sm" className="ml-auto" onPress={() => openAdd(query)}>
@@ -225,14 +273,16 @@ export function LibraryPage() {
                 className="grid grid-cols-[minmax(0,1fr)_minmax(0,16rem)_7rem] gap-x-4 border-b border-border px-4 py-2 text-xs font-medium text-muted-foreground max-sm:hidden"
               >
                 <span>Song</span>
-                <span>Chords</span>
-                <span>Difficulty</span>
+                <span>{familyKey ? `Chords in ${familyKey}` : "Chords"}</span>
+                <span>{familyKey ? "Capo" : "Difficulty"}</span>
               </div>
               <ListBox
                 ref={list}
                 aria-label="Songs"
                 items={shown}
-                onAction={(key) => app.selectSong(String(key))}
+                // The rows show each song's chords in the family, so they redraw when it changes.
+                dependencies={[fits, songId]}
+                onAction={(key) => app.openFromLibrary(String(key))}
                 // relative: the chord names' screen reader text is positioned absolutely, and
                 // has to scroll with the list instead of making the whole page taller.
                 className="relative min-h-0 flex-1 overflow-y-auto outline-none"
@@ -245,7 +295,7 @@ export function LibraryPage() {
                   />
                 )}
               >
-                {(song) => <SongRow song={song} current={song.id === songId} />}
+                {(song) => <SongRow song={song} current={song.id === songId} fit={fits?.get(song.id) ?? null} />}
               </ListBox>
               {query.trim() && shown.length > 0 && adding === null && (
                 <div className="border-t border-border px-2 py-1.5">

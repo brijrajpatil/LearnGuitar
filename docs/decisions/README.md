@@ -17,10 +17,11 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0011](0011-play-screen-fits-the-window.md) | The play screen fits the window | Design | Accepted, 2026-10-04 |
 | [0012](0012-repo-layout.md) | Repo layout: the app in app/, the docs grouped by product and design | Tech | Accepted, 2026-10-04 |
 | [0013](0013-github-pages-hosting.md) | Host the app on GitHub Pages, from the LearnGuitar repo | Tech | Accepted, 2026-10-04 |
-| [0014](0014-library-page.md) | The library is a page of its own | Design | Accepted, 2026-10-04 |
+| [0014](0014-library-page.md) | The library is a page of its own | Design | Accepted, 2026-10-04. Partly superseded by 0018, which remembers the family filter |
 | [0015](0015-built-in-library-contents.md) | The built-in library: progression studies and public domain songs | Product | Accepted, 2026-10-08 |
 | [0016](0016-key-and-capo.md) | Play a song in another key, with a capo to keep the record's sound | Product, design, tech | Accepted, 2026-10-08 |
 | [0017](0017-ai-chord-drafts.md) | Draft chords with the player's own AI key | Product, tech | Accepted, 2026-10-08 |
+| [0018](0018-library-family-filter.md) | Filter the library by chord family | Product, design | Accepted, 2026-10-08 |
 
 ## Writing a note
 

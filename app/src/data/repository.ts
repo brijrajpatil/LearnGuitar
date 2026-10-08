@@ -4,6 +4,7 @@
 import type { Mix } from "@/audio/engine"
 import { isValidSteps, type CustomPattern, type PatternId } from "@/core/pattern/patterns"
 import { LEVELS, type KeyChoice, type Level } from "@/core/timeline/arrangement"
+import { FAMILIES } from "@/core/timeline/key-options"
 import { DEFAULT_SONG_ID } from "@/data/builtin-songs"
 import type { KeyValueStore } from "@/data/kv"
 
@@ -29,6 +30,8 @@ export interface Settings {
   start: Record<string, number>
   /** The key and capo each song is played in, when it isn't the chart's own (decision 0016). */
   key: Record<string, KeyChoice>
+  /** The chord family the library filters by, as its major key's home note, or null for any (decision 0018). */
+  family: number | null
   mix: Mix
   trainerStep: number
 }
@@ -43,6 +46,7 @@ export const DEFAULT_SETTINGS: Settings = {
   target: {},
   start: {},
   key: {},
+  family: null,
   mix: { clickVolume: 70, clickMuted: false, guitarVolume: 85, guitarMuted: false },
   trainerStep: 3,
 }
@@ -104,6 +108,7 @@ export function cleanSettings(v: unknown): Settings {
     target: numberMap(s.target),
     start: numberMap(s.start),
     key: keyMap(s.key),
+    family: typeof s.family === "number" && FAMILIES.includes(s.family) ? s.family : null,
     mix: {
       clickVolume: num(mix.clickVolume, d.mix.clickVolume),
       clickMuted: mix.clickMuted === true,
