@@ -135,7 +135,7 @@ Each milestone ends with a week of real practice and a written review before the
 | [`app/`](app/) | The web app: code, tests and build setup |
 | [`docs/`](docs/) | The product brief, the design system, decision notes and milestone reviews. The [docs guide](docs/README.md) says what to read first |
 | [`prototype/`](prototype/) | The single-file prototype the app was rebuilt from |
-| [`.github/workflows/`](.github/workflows/) | The workflow that tests every pull request and publishes `main` to GitHub Pages |
+| [`.github/workflows/`](.github/workflows/) | The workflows that test every pull request, scan its React code and publish `main` to GitHub Pages |
 | [`CHANGELOG.md`](CHANGELOG.md) | What changed in the app |
 | [`AGENTS.md`](AGENTS.md) | The rules for AI coding tools working on this project, shared by all of them |
 | [`CLAUDE.md`](CLAUDE.md), [`GEMINI.md`](GEMINI.md), [`.github/copilot-instructions.md`](.github/copilot-instructions.md) | Point Claude Code, Gemini CLI and Antigravity, and Copilot Chat to `AGENTS.md` |
