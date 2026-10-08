@@ -1,0 +1,29 @@
+title: My Bonnie Lies over the Ocean
+artist: Traditional
+key: G
+time: 3/4
+tempo: 108
+note: A Scottish folk song, first published in 1881. The chords are a common folk harmony.
+
+[Verse 1] pattern=B.DUDU record=B32123
+G | C | G | G
+G | A7 | D7 | D7
+G | C | G | G
+C | D7 | G | G
+[Chorus] pattern=B.DUDU record=B32123
+G | G | C | C
+D7 | D7 | G | G
+G | G | C | C
+D7 | D7 | G | G
+[Verse 2] pattern=B.DUDU record=B32123
+G | C | G | G
+G | A7 | D7 | D7
+G | C | G | G
+C | D7 | G | G
+[Chorus] pattern=B.DUDU record=B32123
+G | G | C | C
+D7 | D7 | G | G
+G | G | C | C
+D7 | D7 | G | G
+[End] pattern=E
+G

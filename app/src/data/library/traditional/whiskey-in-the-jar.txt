@@ -1,0 +1,25 @@
+title: Whiskey in the Jar
+artist: Traditional
+key: G
+time: 4/4
+tempo: 120
+note: An Irish folk song about a highwayman. The chords are a common folk harmony.
+
+[Verse 1] pattern=B record=C
+G | G | Em | Em
+C | C | G | G
+G | G | Em | Em
+C | C | G | G
+[Chorus] pattern=B record=C
+D | D | G | G
+C | C | G D | G
+[Verse 2] pattern=B record=C
+G | G | Em | Em
+C | C | G | G
+G | G | Em | Em
+C | C | G | G
+[Chorus] pattern=B record=C
+D | D | G | G
+C | C | G D | G
+[End] pattern=E
+G

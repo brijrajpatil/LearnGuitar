@@ -1,0 +1,24 @@
+title: Wade in the Water
+artist: Traditional
+key: Em
+time: 4/4
+tempo: 84
+note: An African American spiritual, first published in 1901. The chords are a common folk harmony.
+
+[Chorus] pattern=D record=B.DU.UDU
+Em | Em | Am | Am
+Em | Em | B7 | Em
+[Verse 1] pattern=D record=B.DU.UDU
+Em | Em | B7 | Em
+Em | Em | B7 | Em
+[Chorus] pattern=D record=B.DU.UDU
+Em | Em | Am | Am
+Em | Em | B7 | Em
+[Verse 2] pattern=D record=B.DU.UDU
+Em | Em | B7 | Em
+Em | Em | B7 | Em
+[Chorus] pattern=D record=B.DU.UDU
+Em | Em | Am | Am
+Em | Em | B7 | Em
+[End] pattern=E
+Em

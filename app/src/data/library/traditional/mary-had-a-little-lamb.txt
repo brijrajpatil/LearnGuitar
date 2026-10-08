@@ -1,0 +1,18 @@
+title: Mary Had a Little Lamb
+artist: Sarah Josepha Hale
+key: G
+time: 4/4
+tempo: 100
+note: A nursery rhyme with words by Sarah Josepha Hale, first published in 1830. The chords are a common folk harmony.
+
+[Verse 1] pattern=B record=C
+G | G | D7 | G
+G | G | D7 | G
+[Verse 2] pattern=B record=C
+G | G | D7 | G
+G | G | D7 | G
+[Verse 3] pattern=B record=C
+G | G | D7 | G
+G | G | D7 | G
+[End] pattern=E
+G

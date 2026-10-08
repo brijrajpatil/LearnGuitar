@@ -1,0 +1,21 @@
+title: He's Got the Whole World in His Hands
+artist: Traditional
+key: G
+time: 4/4
+tempo: 96
+note: An African American spiritual, first published in 1927. The chords are a common folk harmony.
+
+[Chorus] pattern=B record=C
+G | G | D7 | D7
+G | G | D7 | G
+[Verse 1] pattern=B record=C
+G | G | D7 | D7
+G | G | D7 | G
+[Verse 2] pattern=B record=C
+G | G | D7 | D7
+G | G | D7 | G
+[Chorus] pattern=B record=C
+G | G | D7 | D7
+G | G | D7 | G
+[End] pattern=E
+G

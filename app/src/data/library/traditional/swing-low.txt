@@ -1,0 +1,24 @@
+title: Swing Low, Sweet Chariot
+artist: Traditional
+key: D
+time: 4/4
+tempo: 72
+note: An African American spiritual from the 1800s, usually credited to Wallis Willis. The chords are a common folk harmony.
+
+[Chorus] pattern=D record=B.DU.UDU
+D | G D | D | A7
+D | G D | D A7 | D
+[Verse 1] pattern=D record=B.DU.UDU
+D | G D | D | A7
+D | G D | D A7 | D
+[Chorus] pattern=D record=B.DU.UDU
+D | G D | D | A7
+D | G D | D A7 | D
+[Verse 2] pattern=D record=B.DU.UDU
+D | G D | D | A7
+D | G D | D A7 | D
+[Chorus] pattern=D record=B.DU.UDU
+D | G D | D | A7
+D | G D | D A7 | D
+[End] pattern=E
+D

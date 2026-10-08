@@ -1,0 +1,24 @@
+title: Skip to My Lou
+artist: Traditional
+key: G
+time: 4/4
+tempo: 112
+note: An American folk dance song from the 1800s. The chords are a common folk harmony.
+
+[Chorus] pattern=B record=C
+G | G | D7 | D7
+G | G | D7 | G
+[Verse 1] pattern=B record=C
+G | G | D7 | D7
+G | G | D7 | G
+[Chorus] pattern=B record=C
+G | G | D7 | D7
+G | G | D7 | G
+[Verse 2] pattern=B record=C
+G | G | D7 | D7
+G | G | D7 | G
+[Chorus] pattern=B record=C
+G | G | D7 | D7
+G | G | D7 | G
+[End] pattern=E
+G

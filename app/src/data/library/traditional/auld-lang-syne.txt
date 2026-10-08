@@ -1,0 +1,21 @@
+title: Auld Lang Syne
+artist: Robert Burns
+key: G
+time: 4/4
+tempo: 80
+note: A Scottish song, written down by Robert Burns in 1788 and sung to a traditional tune at the New Year. The verse and the chorus share the same chords. The chords are a common folk harmony.
+
+[Verse 1] pattern=D record=B.DU.UDU
+G | D | G | C
+G | D Em | C D | G
+[Chorus] pattern=D record=B.DU.UDU
+G | D | G | C
+G | D Em | C D | G
+[Verse 2] pattern=D record=B.DU.UDU
+G | D | G | C
+G | D Em | C D | G
+[Chorus] pattern=D record=B.DU.UDU
+G | D | G | C
+G | D Em | C D | G
+[End] pattern=E
+G

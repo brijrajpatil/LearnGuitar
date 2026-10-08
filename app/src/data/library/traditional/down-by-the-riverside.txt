@@ -1,0 +1,29 @@
+title: Down by the Riverside
+artist: Traditional
+key: G
+time: 4/4
+tempo: 108
+note: An African American spiritual. The chords are a common folk harmony.
+
+[Verse 1] pattern=B record=C
+G | G | G | G
+D7 | D7 | G | G
+G | G | G | G
+D7 | D7 | G | G
+[Chorus] pattern=B record=C
+C | C | G | G
+D7 | D7 | G | G
+C | C | G | G
+D7 | D7 | G | G
+[Verse 2] pattern=B record=C
+G | G | G | G
+D7 | D7 | G | G
+G | G | G | G
+D7 | D7 | G | G
+[Chorus] pattern=B record=C
+C | C | G | G
+D7 | D7 | G | G
+C | C | G | G
+D7 | D7 | G | G
+[End] pattern=E
+G

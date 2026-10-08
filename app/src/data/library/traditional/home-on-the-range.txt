@@ -1,0 +1,29 @@
+title: Home on the Range
+artist: Brewster M. Higley and Daniel E. Kelley
+key: G
+time: 3/4
+tempo: 100
+note: Words by Brewster M. Higley and music by Daniel E. Kelley, written in Kansas in the early 1870s. The chords are a common folk harmony.
+
+[Verse 1] pattern=B.DUDU record=B32123
+G | G | G7 | C
+C | G | A7 | D7
+G | G | G7 | C
+C | G | D7 | G
+[Chorus] pattern=B.DUDU record=B32123
+D7 | D7 | G | G
+G | G | A7 | D7
+G | G | G7 | C
+C | G | D7 | G
+[Verse 2] pattern=B.DUDU record=B32123
+G | G | G7 | C
+C | G | A7 | D7
+G | G | G7 | C
+C | G | D7 | G
+[Chorus] pattern=B.DUDU record=B32123
+D7 | D7 | G | G
+G | G | A7 | D7
+G | G | G7 | C
+C | G | D7 | G
+[End] pattern=E
+G

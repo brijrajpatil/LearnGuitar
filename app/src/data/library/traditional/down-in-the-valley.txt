@@ -1,0 +1,18 @@
+title: Down in the Valley
+artist: Traditional
+key: G
+time: 3/4
+tempo: 96
+note: An American folk song. Every verse has the same music. The chords are a common folk harmony.
+
+[Verse 1] pattern=B.DUDU record=B32123
+G | G | D7 | D7
+D7 | D7 | G | G
+[Verse 2] pattern=B.DUDU record=B32123
+G | G | D7 | D7
+D7 | D7 | G | G
+[Verse 3] pattern=B.DUDU record=B32123
+G | G | D7 | D7
+D7 | D7 | G | G
+[End] pattern=E
+G

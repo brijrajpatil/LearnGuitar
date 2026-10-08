@@ -1,0 +1,17 @@
+title: Yankee Doodle
+artist: Traditional
+key: G
+time: 4/4
+tempo: 112
+note: An American song from the 1700s. The chords are a common folk harmony.
+
+[Verse 1] pattern=B record=C
+G | G D7 | G | D7 G
+[Chorus] pattern=B record=C
+C | G | C | D7 G
+[Verse 2] pattern=B record=C
+G | G D7 | G | D7 G
+[Chorus] pattern=B record=C
+C | G | C | D7 G
+[End] pattern=E
+G

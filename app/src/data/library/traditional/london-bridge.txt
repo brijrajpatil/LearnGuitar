@@ -1,0 +1,18 @@
+title: London Bridge Is Falling Down
+artist: Traditional
+key: G
+time: 4/4
+tempo: 100
+note: An English nursery rhyme and singing game. The chords are a common folk harmony.
+
+[Verse 1] pattern=B record=C
+G | G | D7 | G
+G | G | D7 | G
+[Verse 2] pattern=B record=C
+G | G | D7 | G
+G | G | D7 | G
+[Verse 3] pattern=B record=C
+G | G | D7 | G
+G | G | D7 | G
+[End] pattern=E
+G

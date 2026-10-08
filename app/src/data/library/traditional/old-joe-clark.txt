@@ -1,0 +1,21 @@
+title: Old Joe Clark
+artist: Traditional
+key: A
+time: 4/4
+tempo: 120
+note: An Appalachian fiddle tune and song from the late 1800s. The G chord in the chorus gives it its old-time sound. The chords are a common folk harmony.
+
+[Verse 1] pattern=B record=C
+A | A | A | E
+A | A | E | A
+[Chorus] pattern=B record=C
+A | A | G | G
+A | A | E | A
+[Verse 2] pattern=B record=C
+A | A | A | E
+A | A | E | A
+[Chorus] pattern=B record=C
+A | A | G | G
+A | A | E | A
+[End] pattern=E
+A

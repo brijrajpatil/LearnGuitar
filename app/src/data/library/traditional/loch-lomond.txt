@@ -1,0 +1,21 @@
+title: Loch Lomond
+artist: Traditional
+key: G
+time: 4/4
+tempo: 84
+note: A Scottish song, first published in 1841. The verse and the chorus share the same chords. The chords are a common folk harmony.
+
+[Verse 1] pattern=D record=B.DU.UDU
+G | Em | C | D7
+G | Em | C D7 | G
+[Chorus] pattern=D record=B.DU.UDU
+G | Em | C | D7
+G | Em | C D7 | G
+[Verse 2] pattern=D record=B.DU.UDU
+G | Em | C | D7
+G | Em | C D7 | G
+[Chorus] pattern=D record=B.DU.UDU
+G | Em | C | D7
+G | Em | C D7 | G
+[End] pattern=E
+G

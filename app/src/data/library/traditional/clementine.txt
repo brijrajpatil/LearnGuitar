@@ -1,0 +1,21 @@
+title: Oh My Darling, Clementine
+artist: Traditional
+key: G
+time: 3/4
+tempo: 104
+note: An American western folk song, first published in 1884. The verses and the chorus share the same music. The chords are a common folk harmony.
+
+[Verse 1] pattern=B.DUDU record=B32123
+G | G | G | D7
+D7 | G | D7 | G
+[Chorus] pattern=B.DUDU record=B32123
+G | G | G | D7
+D7 | G | D7 | G
+[Verse 2] pattern=B.DUDU record=B32123
+G | G | G | D7
+D7 | G | D7 | G
+[Chorus] pattern=B.DUDU record=B32123
+G | G | G | D7
+D7 | G | D7 | G
+[End] pattern=E
+G

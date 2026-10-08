@@ -1,0 +1,31 @@
+title: Greensleeves
+artist: Traditional
+key: Am
+time: 3/4
+tempo: 96
+note: An English tune from the late 1500s. F is a barre chord. With Simplify chords on, the app plays Fmaj7 in its place. The chords are a common folk harmony.
+
+simplify F -> Fmaj7
+
+[Verse 1] pattern=D.DUDU record=B32123
+Am | C | G | Em
+Am | F | E | E
+Am | C | G | Em
+Am | E | Am | Am
+[Chorus] pattern=D.DUDU record=B32123
+C | C | G | Em
+Am | F | E | E
+C | C | G | Em
+Am | E | Am | Am
+[Verse 2] pattern=D.DUDU record=B32123
+Am | C | G | Em
+Am | F | E | E
+Am | C | G | Em
+Am | E | Am | Am
+[Chorus] pattern=D.DUDU record=B32123
+C | C | G | Em
+Am | F | E | E
+C | C | G | Em
+Am | E | Am | Am
+[End] pattern=E
+Am

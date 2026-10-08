@@ -1,0 +1,24 @@
+title: She'll Be Coming 'Round the Mountain
+artist: Traditional
+key: G
+time: 4/4
+tempo: 112
+note: An American folk song from the late 1800s, sung to the tune of an older spiritual. The chords are a common folk harmony.
+
+[Verse 1] pattern=B record=C
+G | G | G | G
+G | G | D7 | D7
+G | G7 | C | C
+G | D7 | G | G
+[Verse 2] pattern=B record=C
+G | G | G | G
+G | G | D7 | D7
+G | G7 | C | C
+G | D7 | G | G
+[Verse 3] pattern=B record=C
+G | G | G | G
+G | G | D7 | D7
+G | G7 | C | C
+G | D7 | G | G
+[End] pattern=E
+G

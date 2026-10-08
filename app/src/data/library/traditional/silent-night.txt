@@ -1,0 +1,23 @@
+title: Silent Night
+artist: Franz Xaver Gruber and Joseph Mohr
+key: G
+time: 3/4
+tempo: 84
+note: A Christmas carol first sung in Austria in 1818, with music by Franz Xaver Gruber and words by Joseph Mohr. The chords are a common folk harmony.
+
+[Verse 1] pattern=B.D.D. record=B32123
+G | G | G | G
+D7 | D7 | G | G
+C | C | G | G
+C | C | G | G
+D7 | D7 | G | G
+G | D7 | G | G
+[Verse 2] pattern=B.D.D. record=B32123
+G | G | G | G
+D7 | D7 | G | G
+C | C | G | G
+C | C | G | G
+D7 | D7 | G | G
+G | D7 | G | G
+[End] pattern=E
+G

@@ -1,0 +1,24 @@
+title: Shady Grove
+artist: Traditional
+key: Em
+time: 4/4
+tempo: 100
+note: An Appalachian folk song. It is in a minor key, but with D major in place of the usual minor chord, which gives it an old sound. The chords are a common folk harmony.
+
+[Chorus] pattern=B record=C
+Em | D | Em | Em
+Em | D | Em D | Em
+[Verse 1] pattern=B record=C
+Em | D | Em | Em
+Em | D | Em D | Em
+[Chorus] pattern=B record=C
+Em | D | Em | Em
+Em | D | Em D | Em
+[Verse 2] pattern=B record=C
+Em | D | Em | Em
+Em | D | Em D | Em
+[Chorus] pattern=B record=C
+Em | D | Em | Em
+Em | D | Em D | Em
+[End] pattern=E
+Em

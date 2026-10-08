@@ -1,0 +1,17 @@
+title: Twinkle, Twinkle, Little Star
+artist: Traditional
+key: G
+time: 4/4
+tempo: 96
+note: A French folk tune from the 1760s, sung in English to words by Jane Taylor (1806). The chords are a common folk harmony.
+
+[Verse 1] pattern=B record=C
+G | C G | C G | D G
+G C | G D | G C | G D
+G | C G | C G | D G
+[Verse 2] pattern=B record=C
+G | C G | C G | D G
+G C | G D | G C | G D
+G | C G | C G | D G
+[End] pattern=E
+G

@@ -1,0 +1,24 @@
+title: Joshua Fit the Battle of Jericho
+artist: Traditional
+key: Em
+time: 4/4
+tempo: 112
+note: An African American spiritual about the walls of Jericho in the Bible. The chords are a common folk harmony.
+
+[Chorus] pattern=C record=D.DUD.DU
+Em | Em | B7 | Em
+Em | Em | B7 | Em
+[Verse 1] pattern=C record=D.DUD.DU
+Em | Em | B7 | Em
+Em | Em | B7 | Em
+[Chorus] pattern=C record=D.DUD.DU
+Em | Em | B7 | Em
+Em | Em | B7 | Em
+[Verse 2] pattern=C record=D.DUD.DU
+Em | Em | B7 | Em
+Em | Em | B7 | Em
+[Chorus] pattern=C record=D.DUD.DU
+Em | Em | B7 | Em
+Em | Em | B7 | Em
+[End] pattern=E
+Em

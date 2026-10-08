@@ -1,0 +1,29 @@
+title: Soon May the Wellerman Come
+artist: Traditional
+key: Am
+time: 4/4
+tempo: 100
+note: A whaling song from New Zealand, from the 1860s or 1870s. F is a barre chord. With Simplify chords on, the app plays Fmaj7 in its place. The chords are a common folk harmony.
+
+simplify F -> Fmaj7
+
+[Verse 1] pattern=C record=D.DUD.DU
+Am | Am | Dm | Am
+Am | Am | E | Am
+[Chorus] pattern=C record=D.DUD.DU
+F | C | Dm | Am
+F | C | E | Am
+[Verse 2] pattern=C record=D.DUD.DU
+Am | Am | Dm | Am
+Am | Am | E | Am
+[Chorus] pattern=C record=D.DUD.DU
+F | C | Dm | Am
+F | C | E | Am
+[Verse 3] pattern=C record=D.DUD.DU
+Am | Am | Dm | Am
+Am | Am | E | Am
+[Chorus] pattern=C record=D.DUD.DU
+F | C | Dm | Am
+F | C | E | Am
+[End] pattern=E
+Am

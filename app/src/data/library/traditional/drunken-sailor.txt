@@ -1,0 +1,21 @@
+title: Drunken Sailor
+artist: Traditional
+key: Dm
+time: 4/4
+tempo: 100
+note: A sea shanty, sung on sailing ships since at least the 1830s. The chords are a common folk harmony.
+
+[Verse 1] pattern=C record=D.DUD.DU
+Dm | C | Dm | C Dm
+[Chorus] pattern=C record=D.DUD.DU
+Dm | C | Dm | C Dm
+[Verse 2] pattern=C record=D.DUD.DU
+Dm | C | Dm | C Dm
+[Chorus] pattern=C record=D.DUD.DU
+Dm | C | Dm | C Dm
+[Verse 3] pattern=C record=D.DUD.DU
+Dm | C | Dm | C Dm
+[Chorus] pattern=C record=D.DUD.DU
+Dm | C | Dm | C Dm
+[End] pattern=E
+Dm

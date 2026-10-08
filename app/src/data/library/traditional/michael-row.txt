@@ -1,0 +1,21 @@
+title: Michael, Row the Boat Ashore
+artist: Traditional
+key: D
+time: 4/4
+tempo: 96
+note: An African American spiritual from the Sea Islands of South Carolina, first written down in the 1860s. The chords are a common folk harmony.
+
+[Verse 1] pattern=B record=C
+D | D | G | D
+D | A7 | D A7 | D
+[Verse 2] pattern=B record=C
+D | D | G | D
+D | A7 | D A7 | D
+[Verse 3] pattern=B record=C
+D | D | G | D
+D | A7 | D A7 | D
+[Verse 4] pattern=B record=C
+D | D | G | D
+D | A7 | D A7 | D
+[End] pattern=E
+D

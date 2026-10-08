@@ -1,0 +1,24 @@
+title: Scarborough Fair
+artist: Traditional
+key: Am
+time: 3/4
+tempo: 96
+note: A traditional English ballad, named after the medieval fair at Scarborough in Yorkshire. The chords are a common folk harmony.
+
+[Verse 1] pattern=D.DUDU record=B32123
+Am | G | Am | Am
+C | Am | D | Am
+Am | C | G | G
+Am | G | Am | Am
+[Verse 2] pattern=D.DUDU record=B32123
+Am | G | Am | Am
+C | Am | D | Am
+Am | C | G | G
+Am | G | Am | Am
+[Verse 3] pattern=D.DUDU record=B32123
+Am | G | Am | Am
+C | Am | D | Am
+Am | C | G | G
+Am | G | Am | Am
+[End] pattern=E
+Am

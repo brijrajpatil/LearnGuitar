@@ -1,0 +1,16 @@
+title: Happy Birthday to You
+artist: Mildred J. Hill and Patty Smith Hill
+key: G
+time: 3/4
+tempo: 100
+note: The tune was first published in 1893 as Good Morning to All, by the sisters Mildred J. Hill and Patty Smith Hill. In 2015 a US court ruled that the copyright claimed on the words was not valid.
+note: The song starts on two pickup notes, so the first chord falls on the second word. The chords are a common folk harmony.
+
+[Song] pattern=D.DUDU record=B.DUDU
+G | D7 | D7 | G
+G7 | C | G . D7 | G
+[Again] pattern=D.DUDU record=B.DUDU
+G | D7 | D7 | G
+G7 | C | G . D7 | G
+[End] pattern=E
+G
