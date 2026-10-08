@@ -29,6 +29,40 @@ describe("parseVoicing", () => {
   })
 })
 
+// Notes above the root, by chord name suffix.
+const QUALITIES: Record<string, number[]> = {
+  "": [0, 4, 7],
+  m: [0, 3, 7],
+  "7": [0, 4, 7, 10],
+  m7: [0, 3, 7, 10],
+  maj7: [0, 4, 7, 11],
+  sus2: [0, 2, 7],
+  sus4: [0, 5, 7],
+  add9: [0, 2, 4, 7],
+  "5": [0, 7],
+}
+const NOTES: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }
+const pitchClass = (note: string) => (NOTES[note[0]] + (note[1] === "#" ? 1 : note[1] === "b" ? -1 : 0) + 12) % 12
+
+describe("built-in shapes", () => {
+  it("play the notes their names say, with the root or the slash note lowest", () => {
+    for (const [name, v] of Object.entries(VOICINGS)) {
+      const m = name.match(/^([A-G][#b]?)(maj7|m7|m|7|sus2|sus4|add9|5)?(?:\/([A-G][#b]?))?(?:\(\w+\))?$/)
+      expect(m, `${name} is a name this test knows`).not.toBeNull()
+      const root = pitchClass(m![1])
+      const bass = m![3] ? pitchClass(m![3]) : root
+      const tones = new Set([...QUALITIES[m![2] ?? ""].map((i) => (root + i) % 12), bass])
+      const sounded = v.frets.flatMap((f, s) => (f < 0 ? [] : [stringMidi(s, f)]))
+      const classes = new Set(sounded.map((n) => n % 12))
+      expect([...classes].filter((c) => !tones.has(c)), `${name} has no wrong notes`).toEqual([])
+      expect(classes.has(root), `${name} has its root`).toBe(true)
+      const third = QUALITIES[m![2] ?? ""].find((i) => i === 3 || i === 4)
+      if (third !== undefined) expect(classes.has((root + third) % 12), `${name} has its third`).toBe(true)
+      expect(Math.min(...sounded) % 12, `${name} has ${m![3] ?? m![1]} lowest`).toBe(bass)
+    }
+  })
+})
+
 describe("chords", () => {
   const song = { chords: { A: parseVoicing("x02220")! }, simplify: { Bm: "D" } }
 

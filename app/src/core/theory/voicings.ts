@@ -35,7 +35,24 @@ const LIBRARY_SOURCE: Record<string, string> = {
   F: "133211 134211",
   Fmaj7: "xx3210 xx3210",
   Bm: "x24432 x13421",
+  Bm7: "x20202 x10203",
   B7: "x21202 x21304",
+  Dmaj7: "xx0222 xx0123",
+  Gmaj7: "320002 320001",
+  // Barre chords beyond F and Bm.
+  Bb: "x13331 x12341",
+  B: "x24442 x12341",
+  "F#": "244322 134211",
+  "C#m": "x46654 x13421",
+  Cm: "x35543 x13421",
+  Fm: "133111 134111",
+  Gm: "355333 134111",
+  // Power chords: the root and the fifth, with no third.
+  E5: "022xxx 012xxx",
+  A5: "x022xx x012xx",
+  D5: "xx023x xx013x",
+  G5: "355xxx 134xxx",
+  C5: "x355xx x134xx",
 }
 
 /** Easier chords used when Simplify chords is on, unless the chart sets its own. */
