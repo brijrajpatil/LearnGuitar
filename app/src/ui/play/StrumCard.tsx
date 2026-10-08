@@ -5,10 +5,13 @@ import { pickString } from "@/core/theory/chords"
 import { chordAt, hasOverride, sectionOf, stepAt, voicingOf } from "@/core/timeline/arrangement"
 import { upcoming } from "@/core/timeline/upcoming"
 import { Card } from "@/ui/components/card"
+import { Toggle } from "@/ui/components/toggle"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger } from "@/ui/components/select"
 import { useAppState, useController, useTransport } from "@/ui/hooks/use-app"
 import { PatternDialog } from "@/ui/patterns/PatternDialog"
 import { LevelSelect } from "@/ui/play/LevelSelect"
+import { useLyrics } from "@/ui/play/LyricCard"
+import { hasLyrics } from "@/core/timeline/lyrics"
 import { patternTitle, plural } from "@/ui/play/display"
 import { StepSymbol, stepColor } from "@/ui/play/StepSymbol"
 
@@ -50,8 +53,10 @@ export function StrumCard() {
   const app = useController()
   const { arrangement: arr, settings, customPatterns } = useAppState()
   const view = useTransport()
+  const lyrics = useLyrics()
   const [dialogOpen, setDialogOpen] = useState(false)
   if (!arr.song.bars[view.bar]) return <div />
+  const sung = new Map(lyrics?.words.map((w) => [w.slot, w.text]))
   const si = sectionOf(arr, view.bar)
   const sec = arr.song.sections[si]
   const pattern = arr.patterns[si]
@@ -74,6 +79,11 @@ export function StrumCard() {
         </p>
         <div className="flex-1" />
         <UpNext />
+        {hasLyrics(arr.song) && (
+          <Toggle variant="outline" size="sm" isSelected={settings.lyrics} onChange={(on) => app.setLyricsShown(on)}>
+            Lyrics
+          </Toggle>
+        )}
         <LevelSelect />
         <Select
           aria-label={`Strum pattern for ${sec.name}`}
@@ -137,13 +147,16 @@ export function StrumCard() {
               key={k}
               aria-current={lit || undefined}
               className={cn(
-                "flex h-slot flex-col items-center justify-between rounded-slot bg-slot pt-1.5 pb-2.5 short:h-slot-sm short:pb-2 roomy:h-slot-lg",
+                "flex flex-col items-center justify-between rounded-slot bg-slot pt-1.5 roomy:h-slot-lg",
+                // With lyrics, the slots take their compact size below roomy windows, to make room for the words.
+                lyrics ? "h-slot-sm pb-2" : "h-slot pb-2.5 short:h-slot-sm short:pb-2",
                 lit && "bg-emphasis"
               )}
             >
               <span className="sr-only">
                 {label}: {stepWord(step)}
                 {silent ? ", that string isn't in this chord" : ""}
+                {sung.has(k) ? `, sing "${sung.get(k)}"` : ""}
               </span>
               <span
                 aria-hidden="true"
@@ -162,12 +175,32 @@ export function StrumCard() {
                   lit ? "text-emphasis-foreground" : counting ? "text-dim" : stepColor(step, silent)
                 )}
               >
-                <StepSymbol step={step} silent={silent} className="h-strum-symbol short:h-strum-symbol-sm roomy:h-strum-symbol-lg" />
+                <StepSymbol
+                  step={step}
+                  silent={silent}
+                  className={cn(lyrics ? "h-strum-symbol-sm" : "h-strum-symbol short:h-strum-symbol-sm", "roomy:h-strum-symbol-lg")}
+                />
               </span>
             </li>
           )
         })}
       </ol>
+      {lyrics && (
+        // The word sung on each eighth note, under its slot. Screen readers hear it with the slot.
+        <div aria-hidden="true" className="-mt-1 grid gap-2" style={{ gridTemplateColumns: `repeat(${arr.slotsPerBar}, minmax(0, 1fr))` }}>
+          {labels.map((_, k) => (
+            <span
+              key={k}
+              className={cn(
+                "truncate text-center text-stage-word",
+                view.slot === k && view.state === "playing" ? "font-semibold" : "font-medium"
+              )}
+            >
+              {sung.get(k) ?? " "}
+            </span>
+          ))}
+        </div>
+      )}
       {dialogOpen && <PatternDialog isOpen onOpenChange={setDialogOpen} section={si} />}
     </Card>
   )

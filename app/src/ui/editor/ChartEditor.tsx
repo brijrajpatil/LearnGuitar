@@ -42,6 +42,10 @@ D Dsus2                  2 chords split the bar: 2 beats each
 D . . A                  "." holds the chord one more beat
 A*4                      that bar 4 times
 A "watch the change"     cue text, shown with the bar
+> . . /La- . li- . lo . | words for the bars above: one
+                           word or "." per eighth note, | between
+                           bars. A word ending in - joins the
+                           next, / starts a sung line
 
 chord Bm = x24432 x13421 add a chord: frets low E to high E,
                            optional fingers (T = thumb)
@@ -69,11 +73,15 @@ export function ChartEditor() {
     setChecked(next)
   }
 
-  // Check the chart a moment after typing stops.
+  // Check the chart a moment after typing stops, and keep the text as a draft, so opening
+  // tap to sync in the editor's place loses nothing.
   useEffect(() => {
-    const id = setTimeout(() => setChecked(text), 220)
+    const id = setTimeout(() => {
+      setChecked(text)
+      app.setDraft(text)
+    }, 220)
     return () => clearTimeout(id)
-  }, [text])
+  }, [app, text])
 
   const result = useMemo(() => app.validate(checked), [app, checked])
   const errorLines = useMemo(() => new Set(result.errors.map((e) => e.line)), [result])

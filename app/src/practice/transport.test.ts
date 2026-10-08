@@ -139,6 +139,26 @@ describe("Transport", () => {
   })
 })
 
+describe("slotNearest", () => {
+  it("snaps a tap to the slot heard nearest to it, heard or still queued", () => {
+    const h = harness(LONG)
+    h.transport.setTempos(120, 120)
+    expect(h.transport.slotNearest()).toBeNull()
+    h.transport.play(0)
+    // The count-in starts at 0.1 s and lasts 2 s at 120 BPM, so slot k of bar 0 sounds at 2.1 + 0.25k.
+    h.run(0.5)
+    expect(h.transport.slotNearest()).toEqual({ bar: 0, slot: 0 })
+    h.run(2.4)
+    // Heard at 2.88 s: slot 3 sounded at 2.85.
+    expect(h.transport.slotNearest()).toEqual({ bar: 0, slot: 3 })
+    h.run(0.1)
+    // Heard at 2.98 s: slot 4, at 3.1, is still queued but nearer.
+    expect(h.transport.slotNearest()).toEqual({ bar: 0, slot: 4 })
+    h.transport.pause()
+    expect(h.transport.slotNearest()).toBeNull()
+  })
+})
+
 describe("nextPassTempo", () => {
   it("adds the step until the target, and does nothing when off", () => {
     expect(nextPassTempo(90, { on: true, step: 3, target: 100 })).toBe(93)

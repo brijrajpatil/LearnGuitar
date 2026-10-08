@@ -92,6 +92,13 @@
   --text-stage-section--line-height: 1.15;
   --text-stage-countdown: 1.375rem;
   --text-stage-slot: 1.125rem;
+  /* The line being sung, and the word under each strum slot (decision 0021). */
+  --text-stage-lyric: 1.75rem;
+  --text-stage-lyric--line-height: 1.25;
+  --text-stage-lyric-sm: 1.375rem;
+  --text-stage-lyric-sm--line-height: 1.25;
+  --text-stage-word: 1.125rem;
+  --text-stage-word--line-height: 1.25;
 
   /* Stage spacing and radius. */
   --radius-slot: 0.875rem;
@@ -105,8 +112,10 @@
   --spacing-diagram-now: min(34cqi, 18rem, (100cqb - 2.5rem) * 0.9);
   --spacing-diagram-next: min(30cqi, 18rem, (100cqb - 2.5rem) * 0.63);
   --spacing-diagram-column: min(50cqi, 18rem, (50cqb - 1.5rem) * 0.9);
-  /* The chord cards' smallest height: side by side, and stacked on a phone. */
+  /* The chord cards' smallest height: side by side, and stacked on a phone. With lyrics
+     showing, they give 4rem to the lyric card. */
   --spacing-stage: 12rem;
+  --spacing-stage-lyrics: 8rem;
   --spacing-stage-stacked: 24rem;
   --spacing-map: 1.25rem;
   --spacing-editor: min(36rem, 94vw);

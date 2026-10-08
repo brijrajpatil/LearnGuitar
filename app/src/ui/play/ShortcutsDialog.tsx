@@ -8,6 +8,8 @@ const SHORTCUTS: [string, string][] = [
   ["L", "Loop this section, or play the whole song again"],
   ["/", "Open the library and search it"],
   ["K", "Choose the key and capo to play in"],
+  ["Space", "While syncing lyrics: the next word starts now"],
+  ["Backspace", "While syncing lyrics: take the last tap back"],
   ["⌘ Enter", "Apply chart edits (Ctrl+Enter on Windows)"],
   ["Esc", "Close the editor, a dialog or the library"],
 ]
@@ -23,7 +25,7 @@ export function ShortcutsDialog({ isOpen, onOpenChange }: { isOpen: boolean; onO
       <table className="w-full border-collapse">
         <tbody>
           {SHORTCUTS.map(([key, what]) => (
-            <tr key={key}>
+            <tr key={what}>
               <td className="py-1.5 pr-4 align-top whitespace-nowrap">
                 <Kbd>{key}</Kbd>
               </td>

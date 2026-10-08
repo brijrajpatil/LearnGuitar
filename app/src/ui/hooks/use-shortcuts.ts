@@ -7,6 +7,9 @@ const isTyping = (t: EventTarget | null): boolean => {
   return t.tagName === "INPUT" && !["range", "checkbox", "button", "radio"].includes((t as HTMLInputElement).type)
 }
 
+const isReadOnly = (t: EventTarget | null): boolean =>
+  (t instanceof HTMLTextAreaElement || t instanceof HTMLInputElement) && t.readOnly
+
 // Inside these, keys belong to the open dialog, menu or list.
 const inOverlay = (t: EventTarget | null): boolean =>
   t instanceof Element && !!t.closest('[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"]')
@@ -27,6 +30,20 @@ export function useShortcuts(app: AppController): void {
     const onKeyDown = (e: KeyboardEvent) => {
       // The library page has its own keys.
       if (app.getState().libraryOpen) return
+      // While tapping to sync lyrics, Space taps, Backspace takes a tap back and Esc stops.
+      if (app.getState().sync?.recording && !inOverlay(e.target) && !(isTyping(e.target) && !isReadOnly(e.target))) {
+        let synced = true
+        if (e.key === " " || e.key === "Spacebar") {
+          if (!e.repeat) app.tapSync()
+        } else if (e.key === "Backspace") app.undoSyncTap()
+        else if (e.key === "Escape") app.stopSync()
+        else synced = false
+        if (synced) {
+          e.preventDefault()
+          e.stopPropagation()
+          return
+        }
+      }
       if (isTyping(e.target) || inOverlay(e.target)) return
       if (e.metaKey || e.ctrlKey || e.altKey) return
       if (e.key.startsWith("Arrow") && keyboardWidget(e.target)) return

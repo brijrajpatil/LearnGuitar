@@ -10,6 +10,8 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 ### Added
 
+- Lyrics under the strum beats. Each word shows under the eighth note it's sung on, and a lyric card shows the line being sung with its chord changes above it and the next line below. A Lyrics switch hides them while you practise the guitar part ([decision 0021](docs/decisions/0021-lyrics-on-the-strum-grid.md)).
+- Tap to sync lyrics: paste the words, play the song and press Space as each word starts. Each tap lands on the nearest eighth note, and Save writes the words into the chart as `>` lines you can edit. Open it with Add lyrics in the menu.
 - Type the speed in BPM or as a % of the record in the Speed popover. The readout shows the unit you type in first, and the app remembers it ([decision 0020](docs/decisions/0020-loop-button-and-typed-speed.md)).
 - Set the record's speed in the Speed popover. It writes the chart's `tempo:` line, so a chart without one can show your speed as a share of the record's.
 

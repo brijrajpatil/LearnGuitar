@@ -3,6 +3,7 @@ import { ChevronDownIcon, EllipsisIcon, InfoIcon } from "lucide-react"
 import { toast } from "sonner"
 import { songSeconds } from "@/core/song/types"
 import { capoFret } from "@/core/theory/chords"
+import { hasLyrics } from "@/core/timeline/lyrics"
 import { keyName, moveKey, writtenKey } from "@/core/theory/keys"
 import { Button } from "@/ui/components/button"
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/ui/components/dropdown-menu"
@@ -57,7 +58,7 @@ function SongInfo() {
 
 export function Header() {
   const app = useController()
-  const { songs, songId, editorOpen } = useAppState()
+  const { songs, songId, editorOpen, song } = useAppState()
   const title = songs.find((s) => s.id === songId)?.title ?? "Untitled"
   const fileInput = useRef<HTMLInputElement>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -110,10 +111,12 @@ export function Header() {
               else if (key === "import") fileInput.current?.click()
               else if (key === "settings") setSettingsOpen(true)
               else if (key === "shortcuts") setShortcutsOpen(true)
+              else if (key === "lyrics") app.setSyncOpen(true)
             }}
           >
             <DropdownMenuGroup>
               <DropdownMenuItem id="settings">Practice settings…</DropdownMenuItem>
+              <DropdownMenuItem id="lyrics">{hasLyrics(song) ? "Sync lyrics…" : "Add lyrics…"}</DropdownMenuItem>
               <DropdownMenuItem id="shortcuts">Keyboard shortcuts…</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

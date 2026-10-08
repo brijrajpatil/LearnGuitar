@@ -40,6 +40,9 @@ export type TransportEvent =
   /** The tempo changed, by the player or the speed trainer. Saved per song. */
   | { type: "tempo"; tempo: number }
 
+/** How many heard slots to keep for tap snapping: a bar of 7/4 and then some. */
+const HEARD_KEPT = 32
+
 type Queued =
   | { t: number; kind: "count"; ci: number; bar: number }
   | { t: number; kind: "slot"; bar: number; slot: number }
@@ -109,6 +112,8 @@ export class Transport {
   private pass = 1
   private tempo = 70
   private queue: Queued[] = []
+  /** The last few slots heard, with their audio times, for snapping a tap to the nearest. */
+  private heard: { t: number; bar: number; slot: number }[] = []
   private stepsCache = new Map<number, TimelineStep[]>()
   private display = emptyDisplayStats()
 
@@ -214,6 +219,7 @@ export class Transport {
     this.countLeft = arr.slotsPerBar
     this.pass = 1
     this.queue = []
+    this.heard = []
     this.update({ state: "count-in", bar: fromBar, slot: -1, countIn: -1, pass: 1 })
     this.scheduler.start({ schedule: (t) => this.scheduleStep(t) }, out.now() + 0.1)
     this.startFrames()
@@ -285,6 +291,26 @@ export class Transport {
     this.jumpTo(arr.song.sections[section].start)
   }
 
+  /**
+   * The bar and slot nearest to what the player hears right now, for tapping along to sync
+   * lyrics. During the count-in, before any slot is near, it's the first slot. Null when
+   * stopped.
+   */
+  slotNearest(): { bar: number; slot: number } | null {
+    if (!this.playing || !this.out) return null
+    const now = this.out.heardNow()
+    let best: { bar: number; slot: number } | null = null
+    let gap = Infinity
+    const queued = this.queue.flatMap((ev) => (ev.kind === "slot" ? [ev] : []))
+    for (const ev of [...this.heard, ...queued]) {
+      if (Math.abs(ev.t - now) < gap) {
+        gap = Math.abs(ev.t - now)
+        best = { bar: ev.bar, slot: ev.slot }
+      }
+    }
+    return best ?? (this.view.state === "count-in" ? { bar: this.view.bar, slot: 0 } : null)
+  }
+
   /** Schedules ahead now, for example when the tab is hidden and timers slow down. */
   tick(): void {
     this.scheduler.tick()
@@ -315,6 +341,10 @@ export class Transport {
       if (ev.kind === "slot" || ev.kind === "count") {
         if (last) d.skipped++
         last = ev
+        if (ev.kind === "slot") {
+          this.heard.push({ t: ev.t, bar: ev.bar, slot: ev.slot })
+          if (this.heard.length > HEARD_KEPT) this.heard.shift()
+        }
       } else if (ev.kind === "pass") {
         this.update({ pass: ev.pass, tempo: ev.tempo })
         this.emit({
@@ -454,6 +484,7 @@ export class Transport {
   private stop(): void {
     this.scheduler.stop()
     this.queue = []
+    this.heard = []
     this.out?.silence()
     this.stopFrames()
   }

@@ -22,6 +22,7 @@ The [product brief](docs/product/product-brief.md) has the full problem, goals, 
 - Plays a synthesized acoustic guitar part and a click in time, with a one-bar count-in.
 - Shows the current and next chord with diagrams, and counts down the beats to the next change.
 - A strum strip shows each down, up and missed strum as it plays, and warns a bar before the pattern changes.
+- Shows the lyrics under the strum beats, so you can see where each word falls while you strum, with the line being sung above and the next line below. You add the words yourself: paste them, play the song and tap Space as each word starts.
 - Three levels for every song. Beginner strums one downstroke per beat. Arranged uses each section's own pattern. Record plays the figure from the record where the chart has one.
 - Simplify chords swaps hard shapes for easier ones, for example F#m for a four-string version.
 - Shows the key the record is in, and plays any song with the chords of another key, so you can stick to one chord family while you learn it. It sets the capo that keeps the record's sound, for example G shapes with a capo on fret 2 for a song in A.
@@ -68,11 +69,13 @@ tempo: 90
 G | G | C | C | Em | Em | D | D
 [Chorus] pattern=B record=D.DU.UDU
 C | G | D | Em*2
+> /La- . li- . lo . . . | sun . . . on . . . | high
 ```
 
 - `pattern=` picks a preset strum (A to E) or a figure. `record=` is the figure as played on the record, used at the Record level.
 - Figures have one character per eighth note: `D` and `U` strum down and up, `.` misses, `1` to `6` pick a string (1 is high E), `B` picks the chord's bass note.
 - Bars are separated by `|`. Two chords in a bar split it. `Em*2` repeats a bar.
+- A line starting with `>` holds the words for the bars above it, one word or `.` per eighth note, with `|` between bars. A word ending in `-` is a syllable that joins the next one, and `/` starts a new sung line. Tap to sync writes these lines for you.
 
 The full reference is in the app: Edit chart, then Chart format.
 

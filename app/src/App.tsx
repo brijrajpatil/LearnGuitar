@@ -1,9 +1,12 @@
+import { cn } from "@/lib/utils"
 import { useAppState, useController } from "@/ui/hooks/use-app"
 import { useShortcuts } from "@/ui/hooks/use-shortcuts"
 import { ChartEditor } from "@/ui/editor/ChartEditor"
 import { LibraryPage } from "@/ui/library/LibraryPage"
+import { SyncPanel } from "@/ui/lyrics/SyncPanel"
 import { ChordCards } from "@/ui/play/ChordCards"
 import { Header } from "@/ui/play/Header"
+import { LyricCard, useShowLyrics } from "@/ui/play/LyricCard"
 import { PositionLine } from "@/ui/play/PositionLine"
 import { SongMap } from "@/ui/play/SongMap"
 import { StrumCard } from "@/ui/play/StrumCard"
@@ -16,8 +19,9 @@ import { TransportBar } from "@/ui/play/TransportBar"
  */
 export function App() {
   const app = useController()
-  const { ready, editorOpen, libraryOpen } = useAppState()
+  const { ready, editorOpen, syncOpen, libraryOpen } = useAppState()
   useShortcuts(app)
+  const lyrics = useShowLyrics()
 
   if (!ready) {
     return <main className="grid min-h-svh place-items-center text-muted-foreground">Loading your songs…</main>
@@ -33,9 +37,10 @@ export function App() {
           <div className="mx-auto flex w-full max-w-app flex-1 flex-col gap-4 px-4 pt-4 pb-6 select-none short:gap-3 short:pt-3 short:pb-4 sm:px-6 [&>*]:shrink-0">
             <Header />
             <PositionLine />
-            <div className="flex min-h-stage flex-1 flex-col max-sm:min-h-stage-stacked">
+            <div className={cn("flex flex-1 flex-col max-sm:min-h-stage-stacked", lyrics ? "min-h-stage-lyrics" : "min-h-stage")}>
               <ChordCards />
             </div>
+            <LyricCard />
             <StrumCard />
             <SongMap />
           </div>
@@ -43,6 +48,7 @@ export function App() {
         <TransportBar />
       </div>
       {editorOpen && <ChartEditor />}
+      {syncOpen && <SyncPanel />}
     </div>
   )
 }

@@ -23,6 +23,10 @@ describe("the library", () => {
     expect(ids).toContain("amazing-grace")
   })
 
+  it("ships chords only: no chart has a line of lyrics (decision 0021)", () => {
+    for (const s of LIBRARY) expect(s.chart, s.id).not.toMatch(/^\s*>/m)
+  })
+
   it("parses every chart without errors", () => {
     for (const { entry, errors } of parsed) expect(errors, named(entry)).toEqual([])
   })

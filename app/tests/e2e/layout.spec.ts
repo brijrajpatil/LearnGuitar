@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test"
-import { openApp } from "./helpers"
+import { applyChart, openApp } from "./helpers"
 
 // Browser zoom Z on a window W x H gives a CSS viewport of W/Z x H/Z at a device scale
 // of Z, which is what these sizes reproduce. Laptop sizes are Chrome's page area: the
@@ -187,5 +187,62 @@ for (const [name, width, height] of [
     }
     for (let i = 1; i < onScreen.length; i++) expect(onScreen[i], `zoom ${ZOOMS[i] * 100}%`).toBeGreaterThanOrEqual(onScreen[0] - 1)
     expect(onScreen[onScreen.length - 1]).toBeGreaterThan(onScreen[0])
+  })
+}
+
+// With lyrics showing (decision 0021), the play screen has a lyric card and a word under
+// each strum slot. Laptop windows at least 39rem tall, such as a 1366x768 laptop, still
+// show everything. Shorter ones scroll the middle, and Play stays put.
+const LYRICS_ONE_VIEW = { width: 64 * REM, height: 39 * REM }
+// Made-up words, so no song's lyrics are in the repo.
+const LYRICS_CHART = `title: Lyric test
+tempo: 120
+time: 4/4
+[Verse 1] pattern=B
+G | G | C | D
+> . . . . . . /La- li- | lo . sun . . . on | high . . . the . sea | . . . . . . /Mo- ri
+[Chorus] pattern=C
+C | G
+> /Su- . mo . ra . ti | ka`
+
+const LYRICS_SIZES = [
+  ...zoomed('MacBook Air 13"', 1470, 785, [1, 1.25]),
+  ...zoomed("a 1440x900 window", 1440, 900, [1, 1.25, 2]),
+  { name: "a 1366x768 laptop", width: 1366, height: 625, scale: 1 },
+  { name: "a small laptop window", width: 1280, height: 720, scale: 1 },
+  { name: "the smallest one-view window", width: 1024, height: 600, scale: 1 },
+  { name: "a tablet held upright", width: 768, height: 1024, scale: 1 },
+  { name: "a phone", width: 360, height: 740, scale: 1 },
+]
+
+for (const size of LYRICS_SIZES) {
+  test(`fits lyrics on ${size.name} (${size.width}x${size.height})`, async ({ browser }) => {
+    const page = await browser.newPage({ viewport: { width: size.width, height: size.height }, deviceScaleFactor: size.scale })
+    await openApp(page)
+    await applyChart(page, LYRICS_CHART)
+    await page.getByRole("button", { name: "Close the editor" }).click()
+    await expect(page.getByRole("region", { name: "Lyrics" })).toBeVisible()
+    const r = await page.evaluate(() => {
+      const main = document.querySelector("main")!
+      const now = document.querySelector('[aria-label="Now"]')!.getBoundingClientRect()
+      const line = document.querySelector('[aria-label="Lyrics"] p[aria-hidden]')!.getBoundingClientRect()
+      return {
+        sideways: document.documentElement.scrollWidth - innerWidth,
+        pageScrolls: document.documentElement.scrollHeight > innerHeight + 1,
+        middleScrolls: main.scrollHeight > main.clientHeight + 1,
+        // The chord to play now still reads first: its card is taller than the sung line.
+        nowTaller: now.height > line.height * 2,
+      }
+    })
+    expect(r.sideways, "no sideways scrolling").toBeLessThanOrEqual(0)
+    expect(r.nowTaller, "the chord cards stay the largest thing").toBe(true)
+    if (size.width >= LYRICS_ONE_VIEW.width && size.height >= LYRICS_ONE_VIEW.height) {
+      expect(r.pageScrolls, "the page doesn't scroll").toBe(false)
+      expect(r.middleScrolls, "the middle doesn't scroll").toBe(false)
+    } else if (size.height >= FIT_HEIGHT) {
+      expect(r.pageScrolls, "only the middle scrolls, never the whole page").toBe(false)
+      await expect(page.getByRole("button", { name: "Play", exact: true }), "Play stays on screen").toBeInViewport({ ratio: 1 })
+    }
+    await page.close()
   })
 }

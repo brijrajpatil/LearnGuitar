@@ -31,11 +31,23 @@ export interface ChordSpan {
   length: number
 }
 
+/** A word or syllable the player sings, on one eighth note of a bar (decision 0021). */
+export interface LyricWord {
+  /** Eighth-note slot in the bar, from 0. */
+  slot: number
+  /** As typed. A syllable that runs into the next one ends with "-". */
+  text: string
+  /** The first word of a sung line. */
+  lineStart: boolean
+}
+
 export interface Bar {
   /** Index into Song.sections. */
   section: number
   chords: ChordSpan[]
   cue: string
+  /** The words sung in this bar, in slot order. Only what the player typed. */
+  lyrics: LyricWord[]
   /** Line in the chart text, for jumping the editor to this bar. */
   line: number
 }

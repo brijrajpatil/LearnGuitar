@@ -6,12 +6,13 @@ import { draftSong as runDraft, type DraftOutcome, type DraftRequest, type Step 
 import { THEORY_SHAPES } from "@/ai/shape-tools"
 import { AI_DRAFT_NOTE } from "@/ai/to-chart"
 import { AudioEngine, type Mix } from "@/audio/engine"
-import { setChartTempo } from "@/core/chart/edit"
+import { setChartTempo, writeLyrics } from "@/core/chart/edit"
 import { CHART_TEMPO_MAX, CHART_TEMPO_MIN, parseChart, type ChartError, type ParsedChart } from "@/core/chart/parse"
 import { isValidSteps, normalizeSteps, type CustomPattern, type PatternId } from "@/core/pattern/patterns"
 import type { Song } from "@/core/song/types"
 import { arrange, sectionKey, writtenChoice, type Arrangement, type KeyChoice, type Level } from "@/core/timeline/arrangement"
 import { familyFit } from "@/core/timeline/family"
+import { isBefore, placeSynced, slotAfter, splitLyrics, type SlotPosition, type SyncWord } from "@/core/timeline/lyrics-sync"
 import { BUILTIN_SONGS, NEW_SONG_TEMPLATE } from "@/data/builtin-songs"
 import { IndexedDbStore, type KeyValueStore } from "@/data/kv"
 import type { Collection, Difficulty } from "@/data/library/catalog"
@@ -49,6 +50,20 @@ export interface SongEntry {
   aiDraft: boolean
 }
 
+/** Tap to sync in progress for the current song (decision 0021). Kept until the app closes. */
+export interface LyricSync {
+  songId: string
+  /** The words as pasted. */
+  text: string
+  words: SyncWord[]
+  /** Where each word was tapped, or null. */
+  taps: (SlotPosition | null)[]
+  /** The word the next tap places. */
+  next: number
+  /** The song is playing for tapping. */
+  recording: boolean
+}
+
 export interface AppState {
   ready: boolean
   songs: SongEntry[]
@@ -61,6 +76,9 @@ export interface AppState {
   editorOpen: boolean
   /** The library page shows in place of the play screen. */
   libraryOpen: boolean
+  /** The tap to sync panel is open, where the editor opens. */
+  syncOpen: boolean
+  sync: LyricSync | null
   /** The header's key and capo picker is open. */
   keyPickerOpen: boolean
   /** Editor text not yet applied, kept while the editor is closed. */
@@ -139,6 +157,8 @@ export class AppController {
       customPatterns: [],
       editorOpen: false,
       libraryOpen: false,
+      syncOpen: false,
+      sync: null,
       keyPickerOpen: false,
       draft: null,
       editorFocus: { line: 1, seq: 0 },
@@ -146,7 +166,11 @@ export class AppController {
     }
     this.transport.onEvent((e) => {
       if (e.type === "tempo") this.saveTempo(e.tempo)
-      else if (e.type === "end") this.notify("End of song")
+      else if (e.type === "end") {
+        this.notify("End of song")
+        const sync = this.state.sync
+        if (sync?.recording) this.set({ sync: { ...sync, recording: false } })
+      }
       else if (e.type === "pass") {
         if (e.bumped) this.notify(`Time ${e.pass} through: ${e.tempo} BPM${e.atTarget ? ", your goal" : ""}`)
         else this.notify(`Time ${e.pass} through`, { duration: 1400 })
@@ -239,6 +263,7 @@ export class AppController {
       }
     }
     const settings = { ...this.state.settings, songId: entry.id }
+    if (this.state.sync?.recording) this.stopSync()
     this.set({
       songId: entry.id,
       settings,
@@ -246,6 +271,7 @@ export class AppController {
       overrides: this.data?.overrides[entry.id] ?? {},
       draft,
       editorOpen: openEditor || (this.state.editorOpen && this.state.songId === entry.id),
+      syncOpen: !openEditor && this.state.syncOpen && this.state.songId === entry.id,
     })
     this.install(parsed.song, { stop: true, keepPosition: false })
     const song = parsed.song
@@ -375,6 +401,7 @@ export class AppController {
   // ---- editor ----
 
   setEditorOpen(open: boolean): void {
+    if (open) this.setSyncOpen(false)
     this.set({ editorOpen: open })
     if (open) this.focusEditorOnBar(this.transport.getView().bar)
   }
@@ -388,6 +415,113 @@ export class AppController {
   focusEditorOnBar(bar: number): void {
     const line = this.state.song.bars[bar]?.line ?? 1
     this.set({ editorFocus: { line, seq: this.state.editorFocus.seq + 1 } })
+  }
+
+  // ---- tap to sync lyrics (decision 0021) ----
+
+  /**
+   * Opens or closes the tap to sync panel, in the editor's place. The editor keeps its
+   * text as a draft while it's open, so closing it here loses nothing.
+   */
+  setSyncOpen(open: boolean): void {
+    if (!open && this.state.sync?.recording) this.stopSync()
+    if (open && this.state.sync?.songId !== this.state.songId) {
+      this.set({ sync: { songId: this.state.songId, text: "", words: [], taps: [], next: 0, recording: false } })
+    }
+    this.set(open ? { syncOpen: true, editorOpen: false } : { syncOpen: false })
+  }
+
+  /** The pasted words. Changing them starts the taps over. */
+  setSyncText(text: string): void {
+    const words = splitLyrics(text)
+    this.set({ sync: { songId: this.state.songId, text, words, taps: words.map(() => null), next: 0, recording: false } })
+  }
+
+  /** The word the next tap places, chosen by clicking it. */
+  setSyncNext(index: number): void {
+    const sync = this.state.sync
+    if (!sync || sync.recording) return
+    this.set({ sync: { ...sync, next: Math.max(0, Math.min(sync.words.length - 1, index)) } })
+  }
+
+  /**
+   * Plays from the start of the current section for tapping, without the loop. Pick the
+   * section first, in the song map or with the arrow keys.
+   */
+  startSync(): void {
+    const sync = this.state.sync
+    if (!sync || !sync.words.length || sync.next >= sync.words.length) return
+    const t = this.transport
+    if (t.getView().loop) t.toggleLoop()
+    const sections = this.state.song.sections
+    const section = sections.find((s) => s.start <= t.getView().bar && t.getView().bar < s.end) ?? sections[0]
+    this.set({ sync: { ...sync, recording: true } })
+    t.play(section.start)
+  }
+
+  /** Space while syncing: the next word starts on the eighth note heard nearest now. */
+  tapSync(): void {
+    const sync = this.state.sync
+    if (!sync?.recording || sync.next >= sync.words.length) return
+    let at = this.transport.slotNearest()
+    if (!at) return
+    // Two taps on one eighth note: the second word goes on the next one.
+    const prev = sync.taps[sync.next - 1]
+    if (prev && !isBefore(prev, at)) at = slotAfter(prev, this.state.arrangement.slotsPerBar)
+    if (at.bar >= this.state.song.bars.length) return
+    const taps = [...sync.taps]
+    taps[sync.next] = at
+    const next = sync.next + 1
+    this.set({ sync: { ...sync, taps, next } })
+    if (next >= sync.words.length) {
+      this.stopSync()
+      this.notify("That was the last word. Save to keep the lyrics.", { duration: 4000 })
+    }
+  }
+
+  /** Backspace while syncing: takes back the last tap. */
+  undoSyncTap(): void {
+    const sync = this.state.sync
+    if (!sync || sync.next === 0 || !sync.taps[sync.next - 1]) return
+    const taps = [...sync.taps]
+    taps[sync.next - 1] = null
+    this.set({ sync: { ...sync, taps, next: sync.next - 1 } })
+  }
+
+  /** Stops playing for taps. The taps stay until saved or the words change. */
+  stopSync(): void {
+    const sync = this.state.sync
+    if (!sync?.recording) return
+    this.set({ sync: { ...sync, recording: false } })
+    this.transport.pause()
+    this.applyLoop()
+  }
+
+  /**
+   * Writes the tapped words into the chart as ">" lines and saves it. The words keep, so
+   * the next part can be synced from where this one ended.
+   */
+  saveSync(): void {
+    const sync = this.state.sync
+    const entry = this.currentEntry()
+    if (!sync || !entry || !sync.taps.some(Boolean)) return
+    this.stopSync()
+    const parsed = this.validate(entry.chart)
+    if (parsed.errors.length) {
+      this.notify("Fix the errors in the chart first, then save the lyrics.")
+      return
+    }
+    const text = writeLyrics(entry.chart, parsed.song, placeSynced(parsed.song, sync.words, sync.taps))
+    const saved = this.validate(text)
+    if (saved.errors.length) {
+      this.notify("These lyrics don't fit the chart. Check the bars in the editor.")
+      return
+    }
+    this.updateEntry(entry.id, text)
+    this.persistChart(entry.id, text)
+    this.install(saved.song, { stop: true, keepPosition: true })
+    this.set({ sync: { ...sync, taps: sync.words.map(() => null), recording: false } })
+    this.notify("Lyrics saved in the chart", { duration: 2200 })
   }
 
   // ---- arrangement settings ----
@@ -464,6 +598,11 @@ export class AppController {
   }
 
   // ---- sound and practice settings ----
+
+  /** Shows or hides the lyrics on the play screen. */
+  setLyricsShown(on: boolean): void {
+    this.updateSettings({ lyrics: on })
+  }
 
   setMix(patch: Partial<Mix>): void {
     const mix = { ...this.state.settings.mix, ...patch }

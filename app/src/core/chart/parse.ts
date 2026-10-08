@@ -6,6 +6,7 @@ import {
   SONG_SCHEMA_VERSION,
   TICKS_PER_EIGHTH,
   type ChordSpan,
+  type LyricWord,
   type Section,
   type Song,
 } from "@/core/song/types"
@@ -116,6 +117,12 @@ export function parseChart(text: string, custom: readonly CustomPattern[]): Pars
   for (let d = 1; d <= spb; d++) if (spb % d === 0) splits.push(d)
   let sec: OpenSection | null = null
   let lastChord: string | null = null
+  // The bar line a ">" line gives words to: its first bar, how many bars it made, whether
+  // it had an error, and whether it already has words.
+  let barLine: { first: number; count: number; failed: boolean; worded: boolean } | null = null
+  // The first word of each ">" line, which starts a sung line when the chart has no "/".
+  const lyricLineStarts: LyricWord[] = []
+  let slashes = false
   // An empty section is only reported when no bar error inside it already explains why.
   const closeSection = () => {
     if (!sec) return
@@ -172,6 +179,53 @@ export function parseChart(text: string, custom: readonly CustomPattern[]): Pars
       }
       sec = opened
       song.sections.push(opened)
+      barLine = null
+      return
+    }
+    if (s.startsWith(">")) {
+      if (!barLine) {
+        err(ln, "Words go on a line starting with > right under a line of bars.")
+        return
+      }
+      if (barLine.failed) return
+      if (barLine.worded) {
+        err(ln, "The bars above already have words. Put all their words on one > line.")
+        return
+      }
+      barLine.worded = true
+      const parts = s.slice(1).split("|")
+      if (parts.length > barLine.count) {
+        err(ln, `This line has words for ${parts.length} bars, but the line of bars above has ${barLine.count}.`)
+        return
+      }
+      let first: LyricWord | null = null
+      parts.forEach((part, b) => {
+        const words: LyricWord[] = []
+        let slot = 0
+        let lineStart = false
+        for (let tok of part.trim().split(/\s+/).filter(Boolean)) {
+          if (tok.startsWith("/")) {
+            slashes = true
+            lineStart = true
+            tok = tok.slice(1)
+            if (!tok) continue
+          }
+          if (tok !== ".") {
+            const word = { slot, text: tok, lineStart }
+            words.push(word)
+            first ??= word
+            lineStart = false
+          }
+          slot++
+        }
+        if (slot > spb) {
+          const where = parts.length > 1 ? `Bar ${b + 1} on this line` : "This bar"
+          err(ln, `${where} has ${slot} words and dots, but a ${song.beatsPerBar}-beat bar has ${spb} eighth notes.`)
+          return
+        }
+        song.bars[barLine!.first + b].lyrics = words
+      })
+      if (first) lyricLineStarts.push(first)
       return
     }
     if (s.startsWith("[")) {
@@ -198,8 +252,12 @@ export function parseChart(text: string, custom: readonly CustomPattern[]): Pars
     parts.push(cur)
     if (quoted) {
       err(ln, 'A cue is missing its closing quote (").')
+      // Words under this line wait for the quote to be fixed, without an error of their own.
+      barLine = { first: song.bars.length, count: 0, failed: true, worded: false }
       return
     }
+    const firstBar = song.bars.length
+    const errorsBefore = errors.length
 
     let barNo = 0
     for (const part of parts) {
@@ -268,11 +326,15 @@ export function parseChart(text: string, custom: readonly CustomPattern[]): Pars
       if (bad) continue
       lastChord = spans[spans.length - 1].chord
       for (let r = 0; r < rep; r++) {
-        song.bars.push({ section: song.sections.length - 1, chords: spans, cue, line: ln })
+        song.bars.push({ section: song.sections.length - 1, chords: spans, cue, line: ln, lyrics: [] })
       }
     }
+    barLine = { first: firstBar, count: song.bars.length - firstBar, failed: errors.length > errorsBefore, worded: false }
   })
   closeSection()
+  // Without any "/", each ">" line is one sung line. The song's first word always starts one.
+  if (!slashes) for (const w of lyricLineStarts) w.lineStart = true
+  if (lyricLineStarts.length) lyricLineStarts[0].lineStart = true
 
   simplifyLines.forEach(({ line, from, to }) => {
     const f = resolveChord(from)

@@ -66,6 +66,8 @@ Interface text uses Tailwind's rem scale (`text-sm`, `text-lg` and so on). Play 
 | `text-stage-section` | `1.75rem` | The section name in the position line |
 | `text-stage-countdown` | `1.375rem` | "in 3 beats" on the Next card |
 | `text-stage-slot` | `1.125rem` | Beat numbers in the strum slots |
+| `text-stage-lyric`, `-sm` | `1.75rem`, `1.375rem` | The line being sung, in normal and short windows |
+| `text-stage-word` | `1.125rem` | The word under each strum slot |
 
 ## Spacing, radius and layout
 
@@ -77,8 +79,9 @@ Interface text uses Tailwind's rem scale (`text-sm`, `text-lg` and so on). Play 
 | `spacing-strum-symbol`, `-sm`, `-lg` | `2.75rem`, `2.25rem`, `3.5rem` | Strum arrow height in the same windows |
 | `spacing-diagram-now`, `-next`, `-column` | `min(34cqi, 18rem, …)` and similar | Chord diagram width, which follows the card like the chord name |
 | `spacing-stage`, `-stacked` | `12rem`, `24rem` | The chord cards' smallest height, side by side and stacked on a phone |
+| `spacing-stage-lyrics` | `8rem` | The chord cards' smallest height while lyrics show ([0021](../decisions/0021-lyrics-on-the-strum-grid.md)) |
 | `spacing-map` | `1.25rem` | Bar height in the song map |
-| `spacing-editor` | `min(36rem, 94vw)` | Chart editor width |
+| `spacing-editor` | `min(36rem, 94vw)` | Chart editor width, and the Sync lyrics panel's |
 | `container-app` | `112rem` | The widest the app gets on a large monitor |
 
 The play screen fills the window, like a desktop app ([0011](../decisions/0011-play-screen-fits-the-window.md)). Its rows keep their sizes and the chord cards take the height that's left. The app shell's height (`h-dvh`) and the editor's width cap (`94vw`, so it fits a phone) are the only viewport units. Three window-height variants set the layout, in rem so zoom moves them too:
@@ -120,18 +123,23 @@ React Aria handles focus, keyboard and press behavior. Hover styles apply only t
 
 ## The play screen
 
-The play screen has six rows, from top to bottom:
+The play screen has six rows, from top to bottom, and a seventh for songs with lyrics:
 
 1. Header: the song's title, which opens the library, About this song, the key and capo button, Edit chart and the menu.
 2. Position line: the section name, the bar within the section and a progress bar for the section. During the count-in it shows the count, with the current beat filled with emphasis. While playing, it shows the bar's cue when the chart has one.
 3. Chord cards. The Now card is white and largest, with the chord name and its diagram. The Next card sits on `--tint` with no border, and counts down to the change.
-4. Strum card: the pattern's name, what's coming next, Level and Change pattern. Below them is one slot per eighth note. Arrows strum down or up, a dot is a missed strum, B picks the bass note, and 1 to 6 pick a string. The slot being played is filled with emphasis.
-5. Song map: one block per bar, grouped under section names. Bars already played are `--dim`, the current bar is emphasis, and a looped section's name sits on `--tint`.
-6. Transport bar: the previous and next section buttons, Play, the loop button, and speed with its share of the record, in the unit the player types in. While a section loops with speed-up on, speed-up's progress bar follows. The Speed popover holds the typed speed, the slider, the quick picks, the record's speed and the speed-up switch ([0020](../decisions/0020-loop-button-and-typed-speed.md)).
+4. Lyric card, for songs with lyrics ([0021](../decisions/0021-lyrics-on-the-strum-grid.md)): the line being sung in `text-stage-lyric`, with each chord change above the first word sung on it in `text-sm` `--muted-foreground`, and the next line below in `--muted-foreground`. The word being sung has the emphasis fill, like the strum slot it falls on. Short windows hide the chord names and the next line. Screen readers get each line as plain text.
+5. Strum card: the pattern's name, what's coming next, the Lyrics switch (for songs with lyrics), Level and Change pattern. Below them is one slot per eighth note. Arrows strum down or up, a dot is a missed strum, B picks the bass note, and 1 to 6 pick a string. The slot being played is filled with emphasis. With lyrics showing, the word sung on each eighth note sits under its slot in `text-stage-word`, the slots take their compact size below roomy windows, and the chord cards' smallest height drops to `spacing-stage-lyrics`. Laptop windows at least 39rem tall still show everything.
+6. Song map: one block per bar, grouped under section names. Bars already played are `--dim`, the current bar is emphasis, and a looped section's name sits on `--tint`.
+7. Transport bar: the previous and next section buttons, Play, the loop button, and speed with its share of the record, in the unit the player types in. While a section loops with speed-up on, speed-up's progress bar follows. The Speed popover holds the typed speed, the slider, the quick picks, the record's speed and the speed-up switch ([0020](../decisions/0020-loop-button-and-typed-speed.md)).
 
 The chart editor opens as a panel beside the play screen, so the chords stay in view while editing. Lines with an error get the `--error-line` background and a message in `--destructive`.
 
 ![The chart editor open beside the play screen, showing the Amazing Grace chart with line numbers and the chart check below it.](images/chart-editor.png)
+
+The Sync lyrics panel opens in the same place, and only one of the two is open at a time. It has the pasted words, the words as a list with the next one to tap in the emphasis fill and tapped ones in `--foreground`, Start (or Tap and Stop while playing), Undo tap, and Save lyrics.
+
+![The play screen with lyrics: the lyric card shows a line of made-up words with chord names above it and the current word filled black, and the strum strip has a word under some of its slots.](images/lyrics.png)
 
 ## The key and capo picker
 
@@ -194,3 +202,4 @@ Enter in the search with nothing found, or Add "name", opens the panel ([0017](.
 | [0014](../decisions/0014-library-page.md) | The library page, opened from the song's title | Current |
 | [0017](../decisions/0017-ai-chord-drafts.md) | The Add a song panel beside the library's list | Current |
 | [0020](../decisions/0020-loop-button-and-typed-speed.md) | The loop button and the Speed popover in place of the practice modes | Current |
+| [0021](../decisions/0021-lyrics-on-the-strum-grid.md) | The lyric card, the words under the strum slots and the Sync lyrics panel | Current |

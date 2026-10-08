@@ -118,3 +118,48 @@ describe("parseChart", () => {
     ])
   })
 })
+
+// Made-up words, so no song's lyrics are in the repo (decision 0021).
+describe("lyrics lines", () => {
+  const words = (text: string) => parse(text).song.bars.map((b) => b.lyrics.map((w) => `${w.slot}:${w.lineStart ? "/" : ""}${w.text}`).join(" "))
+
+  it("puts each word on the next eighth note, with dots for eighth notes without one", () => {
+    const text = "time: 3/4\n[Verse] pattern=A\nG | G7 | C\n> . . . . /La- . | li- . . . lo . | sun . . . on"
+    expect(parse(text).errors).toEqual([])
+    expect(words(text)).toEqual(["4:/La-", "0:li- 4:lo", "0:sun 4:on"])
+  })
+
+  it("gives words to the bars a repeat makes, and leaves bars without words empty", () => {
+    const text = "[V]\nA*3 | D\n> zo | . . ba"
+    expect(words(text)).toEqual(["0:/zo", "2:ba", "", ""])
+  })
+
+  it("starts a sung line at each > line when the chart has no /", () => {
+    const text = "[V]\nA | D\n> mo ri\nE | A\n> . . ta | ve"
+    expect(words(text)).toEqual(["0:/mo 1:ri", "", "2:/ta", "0:ve"])
+  })
+
+  it("starts sung lines only at / when the chart has one, even mid-bar", () => {
+    const text = "[V]\nA | D\n> mo ri\nE | A\n> . . ta / ve | ko"
+    expect(words(text)).toEqual(["0:/mo 1:ri", "", "2:ta 3:/ve", "0:ko"])
+  })
+
+  it("keeps working when old charts have no lyrics", () => {
+    expect(parse(builtinChart(DEFAULT_SONG_ID)!).song.bars.every((b) => b.lyrics.length === 0)).toBe(true)
+  })
+
+  it("reports words that don't fit, with the line", () => {
+    expect(messages("[V]\n> la")).toEqual(["2: Words go on a line starting with > right under a line of bars."])
+    expect(messages("[V]\nA\n> la | lo")).toEqual(["3: This line has words for 2 bars, but the line of bars above has 1."])
+    expect(messages("time: 2/4\n[V]\nA | D\n> . | a b c d e")).toEqual([
+      "4: Bar 2 on this line has 5 words and dots, but a 2-beat bar has 4 eighth notes.",
+    ])
+    expect(messages("[V]\nA\n> la\n> lo")).toEqual(["4: The bars above already have words. Put all their words on one > line."])
+    expect(messages("[V]\nA\n[W]\n> la\nD")).toEqual(["4: Words go on a line starting with > right under a line of bars."])
+  })
+
+  it("ignores words under a line of bars with an error, which is reported already", () => {
+    expect(messages("[V]\nA | Hm\n> la | lo")).toHaveLength(1)
+    expect(messages('[V]\nA "open cue\n> la')).toHaveLength(1)
+  })
+})

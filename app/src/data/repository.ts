@@ -28,6 +28,8 @@ export interface Settings {
   speedUnit: SpeedUnit
   /** Where speeding up starts, per song id. */
   start: Record<string, number>
+  /** Lyrics show on the play screen, for songs that have them (decision 0021). */
+  lyrics: boolean
   /** The key and capo each song is played in, when it isn't the chart's own (decision 0016). */
   key: Record<string, KeyChoice>
   /** The chord family the library filters by, as its major key's home note, or null for any (decision 0018). */
@@ -47,6 +49,7 @@ export const DEFAULT_SETTINGS: Settings = {
   target: {},
   speedUnit: "bpm",
   start: {},
+  lyrics: true,
   key: {},
   family: null,
   mix: { clickVolume: 70, clickMuted: false, guitarVolume: 85, guitarMuted: false },
@@ -113,6 +116,7 @@ export function cleanSettings(v: unknown): Settings {
     target: numberMap(s.target),
     speedUnit: s.speedUnit === "percent" ? "percent" : "bpm",
     start: numberMap(s.start),
+    lyrics: s.lyrics !== false,
     key: keyMap(s.key),
     family: typeof s.family === "number" && FAMILIES.includes(s.family) ? s.family : null,
     mix: {

@@ -134,8 +134,8 @@ Play mode
 Lyrics
 
 - You paste or type the lyrics. The app does not fetch them.
-- Tap to sync: play the song and tap a key as each line starts. The app snaps each tap to the nearest beat. You can then move a word onto a different beat by hand.
-- In play mode, the current line is shown large with chord names above the words where the chords change, and the next line below. The part being sung lights up in time.
+- Tap to sync: play the song and tap a key as each word starts. The app snaps each tap to the nearest eighth note. You can then move a word onto a different beat in the chart text. Built 2026-10-08 (see [decision 0021](../decisions/0021-lyrics-on-the-strum-grid.md)).
+- In play mode, each word shows under the strum it's sung on, and the current line is shown large with chord names above the words where the chords change, and the next line below. The word being sung lights up in time. Built 2026-10-08.
 - The sing layout shows lyrics and chord names only, at full size.
 
 Practice tools
@@ -247,7 +247,7 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 
 0. Prototype. Done 2026-10-04. The single-file player in `index.html`, built around Let Down, with Amazing Grace as the public built-in demo.
 1. Foundation. Project setup, the modules above, and the current player rebuilt on them, with Amazing Grace built in and my songs imported. Done when it matches the current player, timing test included. Built 2026-10-04 and in its week of practice. The milestone 1 review closes it.
-2. Library, capo and lyrics. Multiple songs, song setup (capo, tuning, guitar, amp notes, source links), import and export, resume where you stopped. Lyrics entry with tap to sync, lyrics in play mode, and the sing layout. Add my next songs.
+2. Library, capo and lyrics. Multiple songs, song setup (capo, tuning, guitar, amp notes, source links), import and export, resume where you stopped. Lyrics entry with tap to sync, lyrics in play mode, and the sing layout. Add my next songs. The library, the capo, and lyrics with tap to sync were built early, on 2026-10-08.
 3. Levels and progress. Per-part ladders, marking passes clean, the trainer stepping up on clean passes, the session log and song page.
 4. Rhythm technique. Chord change drill, gap click, faint arrows for missed strums, sixteenth and triplet grid, pattern grid editor.
 5. Lead parts. Parts and the mixer, tab view and tab grid editor, technique marks, lead levels, electric and overdrive tones.
@@ -258,7 +258,7 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 1. Which songs come after Let Down, and which of them have lead parts I want? They decide what milestones 2 and 5 need.
 2. Should the speed trainer step up only after passes marked clean? Recommended: yes.
 3. Do I have, or want, a Bluetooth foot pedal? It would let me start, stop and mark passes without taking a hand off the guitar.
-4. Is a line's start time enough for lyric sync, or does each word need its own beat? Recommended: tap line starts, spread the words across the line's bars, and fix single words by hand where the timing matters.
+4. Is a line's start time enough for lyric sync, or does each word need its own beat? Answered 2026-10-08: each word gets its own eighth note, tapped as it's sung ([decision 0021](../decisions/0021-lyrics-on-the-strum-grid.md)).
 5. A name for the app. The repo is LearnGuitar, so the demo URL is `brijrajpatil.github.io/LearnGuitar/`. The app still calls itself Song Practice, the prototype's window title says Strum Practice, and the local folder says song-practice.
 6. When to add a license. Without one, people can read the code but not reuse it. Worth deciding before inviting other people to contribute.
 
@@ -286,3 +286,4 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 - 2026-10-08: A player can add a song by name. The AI drafts the chords with the player's own free Gemini key, or the app converts a chord sheet they paste. Drafts are chords only and stay on the player's device, and I pay nothing for the AI. This partly supersedes decision 0003. See [decision 0017](../decisions/0017-ai-chord-drafts.md).
 - 2026-10-08: The library can filter by chord family, so I can learn one family and see every song I can play with it. The family is remembered between visits, which changes decision 0014's rule that filters reset. See [decision 0018](../decisions/0018-library-family-filter.md).
 - 2026-10-08: The three practice modes give way to a loop button beside Play and a speed-up switch in Speed, since the modes only set those two things. Speed can be typed in BPM or %, and the record's speed set from the play screen. See [decision 0020](../decisions/0020-loop-button-and-typed-speed.md).
+- 2026-10-08: Lyrics sit under the strum beats, one word per eighth note, in `>` lines of the chart. Tap to sync places each word as it's sung, which answers open question 4. Built ahead of milestone 2 at my request. See [decision 0021](../decisions/0021-lyrics-on-the-strum-grid.md).
