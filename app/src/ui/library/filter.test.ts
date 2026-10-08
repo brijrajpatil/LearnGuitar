@@ -12,6 +12,7 @@ const song = (p: Partial<SongEntry> & Pick<SongEntry, "id">): SongEntry => ({
   chords: [],
   collection: "traditional",
   difficulty: "easy",
+  aiDraft: false,
   ...p,
 })
 

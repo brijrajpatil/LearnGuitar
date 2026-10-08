@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { AppController } from "@/app/controller"
+import { answer, fakeGemini } from "@/ai/fake-gemini"
 import { MemoryStore } from "@/data/kv"
 
 async function app() {
@@ -83,5 +84,57 @@ describe("key and capo", () => {
     c.resetKey()
     expect(c.getState().arrangement).toMatchObject({ shapes: 0, capo: 0 })
     expect(c.getState().settings.key).toEqual({})
+  })
+})
+
+describe("adding songs", () => {
+  const chart = "title: Drunken Sailor\nartist: Traditional\ntime: 4/4\nnote: AI draft from Gemini's memory.\n\n[Verse] pattern=C\nDm | C | Dm | C Dm\n"
+
+  it("adds a song from a chart, opens it, marks an AI draft, and keeps it after a reload", async () => {
+    const store = new MemoryStore()
+    const c = new AppController({ notify: () => {}, store })
+    await c.init()
+    const id = c.addSong(chart, { openEditor: false })
+    const entry = c.getState().songs.find((s) => s.id === id)
+    expect(entry).toMatchObject({ title: "Drunken Sailor", collection: "yours", aiDraft: true, builtin: false })
+    expect(c.getState()).toMatchObject({ songId: id, editorOpen: false })
+    // Removing the note marks the song as checked.
+    c.applyChart(chart.replace(/note: .*\n/, ""))
+    expect(c.getState().songs.find((s) => s.id === id)?.aiDraft).toBe(false)
+    await new Promise((r) => setTimeout(r, 0))
+    const again = new AppController({ notify: () => {}, store })
+    await again.init()
+    expect(again.getState().songs.some((s) => s.id === id)).toBe(true)
+  })
+
+  it("keeps the Gemini key out of the state, drafts with it, and forgets it", async () => {
+    const api = fakeGemini(
+      answer({
+        found: true,
+        title: "Drunken Sailor",
+        artist: "Traditional",
+        key: "Dm",
+        capo: 0,
+        beatsPerBar: 4,
+        tempo: 100,
+        sections: [{ name: "Verse", pattern: "C", bars: ["Dm", "C", "Dm", "C Dm"] }],
+        shapes: [],
+      })
+    )
+    const store = new MemoryStore()
+    const c = new AppController({ notify: () => {}, store, fetch: api.fetch })
+    await c.init()
+    expect(c.getState().hasAiKey).toBe(false)
+    await c.saveAiKey("test-key-not-real")
+    expect(c.getState().hasAiKey).toBe(true)
+    expect(JSON.stringify(c.getState())).not.toContain("test-key-not-real")
+    const out = await c.draftSong({ song: "Drunken Sailor", from: "memory" })
+    expect(api.sent[0].headers["x-goog-api-key"]).toBe("test-key-not-real")
+    expect(out.problems).toEqual([])
+    const reloaded = new AppController({ notify: () => {}, store })
+    await reloaded.init()
+    expect(reloaded.getState().hasAiKey).toBe(true)
+    await reloaded.forgetAiKey()
+    expect(reloaded.getState().hasAiKey).toBe(false)
   })
 })

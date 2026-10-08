@@ -64,6 +64,8 @@ const K = {
   userSongs: "userSongs",
   patterns: "patterns",
   meta: "meta",
+  /** The player's Gemini key, on its own so settings and backups never carry it. */
+  aiKey: "ai/key",
   chart: (id: string) => `chart/${id}`,
   overrides: (id: string) => `overrides/${id}`,
 }
@@ -173,6 +175,19 @@ export class Repository {
 
   saveCustomPatterns(list: CustomPattern[]): Promise<void> {
     return this.kv.set(K.patterns, list)
+  }
+
+  async loadAiKey(): Promise<string | null> {
+    const key = await this.kv.get<unknown>(K.aiKey)
+    return typeof key === "string" && key.trim() ? key.trim() : null
+  }
+
+  saveAiKey(key: string): Promise<void> {
+    return this.kv.set(K.aiKey, key.trim())
+  }
+
+  forgetAiKey(): Promise<void> {
+    return this.kv.delete(K.aiKey)
   }
 
   markPrototypeImported(): Promise<void> {

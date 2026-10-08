@@ -61,6 +61,18 @@ describe("Repository", () => {
     })
   }
 
+  it("keeps the Gemini key on its own, outside the settings and the loaded data", async () => {
+    const store = new MemoryStore()
+    const repo = new Repository(store)
+    expect(await repo.loadAiKey()).toBeNull()
+    await repo.saveAiKey("  test-key-not-real \n")
+    expect(await repo.loadAiKey()).toBe("test-key-not-real")
+    expect(JSON.stringify(await repo.load())).not.toContain("test-key-not-real")
+    await repo.forgetAiKey()
+    expect(await repo.loadAiKey()).toBeNull()
+    expect((await store.entries()).map(([k]) => k)).not.toContain("ai/key")
+  })
+
   it("repairs malformed settings instead of failing", async () => {
     const kv = new MemoryStore()
     await kv.set("settings", {

@@ -2,6 +2,9 @@
 // current song and settings into an arrangement for the transport, and saves changes.
 // The UI reads state from here and calls these methods. It holds no React code.
 
+import { draftSong as runDraft, type DraftOutcome, type DraftRequest, type Step } from "@/ai/agent"
+import { THEORY_SHAPES } from "@/ai/shape-tools"
+import { AI_DRAFT_NOTE } from "@/ai/to-chart"
 import { AudioEngine, type Mix } from "@/audio/engine"
 import { parseChart, type ChartError, type ParsedChart } from "@/core/chart/parse"
 import { isValidSteps, normalizeSteps, type CustomPattern, type PatternId } from "@/core/pattern/patterns"
@@ -40,6 +43,8 @@ export interface SongEntry {
   collection: SongCollection
   /** Library songs only. */
   difficulty: Difficulty | null
+  /** An AI draft the player hasn't checked yet: its chart still has the AI draft note. */
+  aiDraft: boolean
 }
 
 export interface AppState {
@@ -60,6 +65,8 @@ export interface AppState {
   draft: { id: string; text: string } | null
   /** Bumped to ask the editor to move its cursor to a bar's line. */
   editorFocus: { line: number; seq: number }
+  /** The player has saved a Gemini key. The key itself stays inside the controller. */
+  hasAiKey: boolean
 }
 
 export type Notify = (message: string, opts?: { duration?: number }) => void
@@ -69,7 +76,8 @@ const namesOf = (chart: string, custom: CustomPattern[]) => {
   const { song } = parseChart(chart, custom)
   const title = song.title || "Untitled"
   const chords = [...new Set(song.bars.flatMap((b) => b.chords.map((c) => c.chord)))]
-  return { title, artist: song.artist, label: title, chords }
+  const aiDraft = song.notes.some((n) => n.startsWith(AI_DRAFT_NOTE))
+  return { title, artist: song.artist, label: title, chords, aiDraft }
 }
 
 const LIBRARY_BY_ID = new Map(BUILTIN_SONGS.map((s) => [s.id, s]))
@@ -102,9 +110,13 @@ export class AppController {
   private saveTimer: ReturnType<typeof setTimeout> | undefined
   private readonly repo: Repository
   private readonly notify: Notify
+  private readonly fetch: typeof fetch | undefined
+  private aiKey: string | null = null
+  private askedToPersist = false
 
-  constructor(opts: { notify: Notify; store?: KeyValueStore }) {
+  constructor(opts: { notify: Notify; store?: KeyValueStore; fetch?: typeof fetch }) {
     this.notify = opts.notify
+    this.fetch = opts.fetch
     this.repo = new Repository(opts.store ?? new IndexedDbStore())
     this.transport = new Transport({
       createOutput: () => {
@@ -128,6 +140,7 @@ export class AppController {
       keyPickerOpen: false,
       draft: null,
       editorFocus: { line: 1, seq: 0 },
+      hasAiKey: false,
     }
     this.transport.onEvent((e) => {
       if (e.type === "tempo") this.saveTempo(e.tempo)
@@ -159,6 +172,7 @@ export class AppController {
       }
     }
     const personal = await loadPersonalSongs(BUILTIN_SONGS.map((s) => s.id))
+    this.aiKey = await this.repo.loadAiKey()
     this.data = data
     const builtin = [...BUILTIN_SONGS, ...personal]
     const custom = data.customPatterns
@@ -167,7 +181,7 @@ export class AppController {
       const chart = data.charts[id]
       if (typeof chart === "string") songs.push(makeEntry(id, chart, null, custom))
     }
-    this.set({ songs, settings: data.settings, customPatterns: custom })
+    this.set({ songs, settings: data.settings, customPatterns: custom, hasAiKey: this.aiKey !== null })
     const t = this.transport
     t.setTrainerStep(data.settings.trainerStep)
     this.selectSong(data.settings.songId)
@@ -239,13 +253,42 @@ export class AppController {
   }
 
   newSong(): void {
-    const id = "song-" + Date.now().toString(36)
-    const entry = makeEntry(id, NEW_SONG_TEMPLATE, null, [])
+    this.addSong(NEW_SONG_TEMPLATE, { openEditor: true })
+  }
+
+  /** Adds a song of the player's own from a chart, opens it and saves it. Returns its id. */
+  addSong(chart: string, opts: { openEditor: boolean }): string {
+    let id = "song-" + Date.now().toString(36)
+    while (this.state.songs.some((s) => s.id === id)) id += "x"
+    const entry = makeEntry(id, chart, null, this.state.customPatterns)
     this.set({ songs: [...this.state.songs, entry] })
-    this.persistChart(id, NEW_SONG_TEMPLATE)
+    this.persistChart(id, chart)
     this.persistUserSongIds()
+    this.keepStorage()
     this.selectSong(id)
-    this.setEditorOpen(true)
+    if (opts.openEditor) this.setEditorOpen(true)
+    return id
+  }
+
+  // ---- adding a song with AI (decision 0017) ----
+
+  /** Drafts a chart with the player's key, or converts a pasted sheet. Saves nothing. */
+  draftSong(req: DraftRequest, opts: { signal?: AbortSignal; onSteps?: (steps: Step[]) => void } = {}): Promise<DraftOutcome> {
+    return runDraft(req, { key: this.aiKey, shapes: THEORY_SHAPES, fetch: this.fetch, ...opts })
+  }
+
+  async saveAiKey(key: string): Promise<void> {
+    const k = key.trim()
+    if (!k) return
+    this.aiKey = k
+    this.set({ hasAiKey: true })
+    await this.repo.saveAiKey(k)
+  }
+
+  async forgetAiKey(): Promise<void> {
+    this.aiKey = null
+    this.set({ hasAiKey: false })
+    await this.repo.forgetAiKey()
   }
 
   /** Checks chart text without applying it. */
@@ -506,6 +549,13 @@ export class AppController {
     this.repo.saveChart(id, text).catch(() =>
       this.notify("This browser blocked saving the chart. It will reset when you close the page.", { duration: 5000 })
     )
+  }
+
+  /** Asks the browser once to keep this site's storage, so it doesn't clear the player's songs. */
+  private keepStorage(): void {
+    if (this.askedToPersist) return
+    this.askedToPersist = true
+    void globalThis.navigator?.storage?.persist?.().catch(() => false)
   }
 
   private persistUserSongIds(): void {
