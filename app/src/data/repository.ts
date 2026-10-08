@@ -3,7 +3,7 @@
 
 import type { Mix } from "@/audio/engine"
 import { isValidSteps, type CustomPattern, type PatternId } from "@/core/pattern/patterns"
-import { LEVELS, type Level } from "@/core/timeline/arrangement"
+import { LEVELS, type KeyChoice, type Level } from "@/core/timeline/arrangement"
 import { DEFAULT_SONG_ID } from "@/data/builtin-songs"
 import type { KeyValueStore } from "@/data/kv"
 
@@ -27,6 +27,8 @@ export interface Settings {
   target: Record<string, number>
   /** Where Build speed starts, per song id. */
   start: Record<string, number>
+  /** The key and capo each song is played in, when it isn't the chart's own (decision 0016). */
+  key: Record<string, KeyChoice>
   mix: Mix
   trainerStep: number
 }
@@ -40,6 +42,7 @@ export const DEFAULT_SETTINGS: Settings = {
   tempo: {},
   target: {},
   start: {},
+  key: {},
   mix: { clickVolume: 70, clickMuted: false, guitarVolume: 85, guitarMuted: false },
   trainerStep: 3,
 }
@@ -73,6 +76,17 @@ const numberMap = (v: unknown): Record<string, number> =>
     ? Object.fromEntries(Object.entries(v).filter((e): e is [string, number] => typeof e[1] === "number"))
     : {}
 
+const whole = (x: unknown, max: number): x is number => Number.isInteger(x) && (x as number) >= 0 && (x as number) <= max
+
+const keyMap = (v: unknown): Record<string, KeyChoice> =>
+  isRecord(v)
+    ? Object.fromEntries(
+        Object.entries(v).flatMap(([id, c]) =>
+          isRecord(c) && whole(c.shapes, 11) && whole(c.capo, 12) ? [[id, { shapes: c.shapes, capo: c.capo }]] : []
+        )
+      )
+    : {}
+
 /** Fills in anything missing or malformed, so old or hand-edited data still loads. */
 export function cleanSettings(v: unknown): Settings {
   const s = isRecord(v) ? v : {}
@@ -87,6 +101,7 @@ export function cleanSettings(v: unknown): Settings {
     tempo: numberMap(s.tempo),
     target: numberMap(s.target),
     start: numberMap(s.start),
+    key: keyMap(s.key),
     mix: {
       clickVolume: num(mix.clickVolume, d.mix.clickVolume),
       clickMuted: mix.clickMuted === true,

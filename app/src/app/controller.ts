@@ -6,7 +6,7 @@ import { AudioEngine, type Mix } from "@/audio/engine"
 import { parseChart, type ChartError, type ParsedChart } from "@/core/chart/parse"
 import { isValidSteps, normalizeSteps, type CustomPattern, type PatternId } from "@/core/pattern/patterns"
 import type { Song } from "@/core/song/types"
-import { arrange, sectionKey, type Arrangement, type Level } from "@/core/timeline/arrangement"
+import { arrange, sectionKey, writtenChoice, type Arrangement, type KeyChoice, type Level } from "@/core/timeline/arrangement"
 import { BUILTIN_SONGS, NEW_SONG_TEMPLATE } from "@/data/builtin-songs"
 import { IndexedDbStore, type KeyValueStore } from "@/data/kv"
 import type { Collection, Difficulty } from "@/data/library/catalog"
@@ -337,6 +337,24 @@ export class AppController {
     this.rearrange()
   }
 
+  /**
+   * Plays the current song with its chords moved and a capo (decision 0016). The chart's
+   * own key and capo clear the saved choice.
+   */
+  setKey(choice: KeyChoice): void {
+    const key = { ...this.state.settings.key }
+    const written = writtenChoice(this.state.song)
+    if (choice.shapes === written.shapes && choice.capo === written.capo) delete key[this.state.songId]
+    else key[this.state.songId] = choice
+    this.updateSettings({ key })
+    this.rearrange()
+  }
+
+  /** Back to the chords and capo the chart gives. */
+  resetKey(): void {
+    this.setKey(writtenChoice(this.state.song))
+  }
+
   /** Sets or clears (null) a section's pattern override. */
   setOverride(section: number, id: PatternId | null): void {
     const key = sectionKey(this.state.song, section)
@@ -459,6 +477,7 @@ export class AppController {
       simplify: s.settings.simplify,
       overrides: s.overrides,
       customPatterns: s.customPatterns,
+      key: s.settings.key[s.songId],
     })
   }
 

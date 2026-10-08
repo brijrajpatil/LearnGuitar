@@ -68,3 +68,20 @@ describe("practice modes", () => {
     expect(c.transport.getView().loop).toEqual({ section: 0 })
   })
 })
+
+describe("key and capo", () => {
+  it("plays the song in the chosen key, per song, and clears the choice back at the chart's key", async () => {
+    const c = await app()
+    c.setKey({ shapes: 9, capo: 3 })
+    expect(c.getState().arrangement).toMatchObject({ shapes: 9, capo: 3 })
+    expect(c.getState().arrangement.barChords[0][0].chord).toBe("E")
+    expect(c.getState().settings.key).toEqual({ "amazing-grace": { shapes: 9, capo: 3 } })
+    c.newSong()
+    expect(c.getState().arrangement).toMatchObject({ shapes: 0, capo: 0 })
+    c.selectSong("amazing-grace")
+    expect(c.getState().arrangement).toMatchObject({ shapes: 9, capo: 3 })
+    c.resetKey()
+    expect(c.getState().arrangement).toMatchObject({ shapes: 0, capo: 0 })
+    expect(c.getState().settings.key).toEqual({})
+  })
+})

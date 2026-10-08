@@ -41,13 +41,14 @@ describe("Repository", () => {
     it(`saves and loads everything (${name})`, async () => {
       const repo = new Repository(make())
       expect((await repo.load()).settings).toEqual(DEFAULT_SETTINGS)
-      await repo.saveSettings({ ...DEFAULT_SETTINGS, level: "record", mode: "speed", tempo: { a: 90 }, start: { a: 60 } })
+      const key = { a: { shapes: 10, capo: 2 } }
+      await repo.saveSettings({ ...DEFAULT_SETTINGS, level: "record", mode: "speed", tempo: { a: 90 }, start: { a: 60 }, key })
       await repo.saveChart("a", "title: A")
       await repo.saveUserSongIds(["a"])
       await repo.saveOverrides("a", { "0:Verse": "B" })
       await repo.saveCustomPatterns([{ name: "Five", steps: "D.DUD" }])
       const data = await repo.load()
-      expect(data.settings).toMatchObject({ level: "record", mode: "speed", tempo: { a: 90 }, start: { a: 60 } })
+      expect(data.settings).toMatchObject({ level: "record", mode: "speed", tempo: { a: 90 }, start: { a: 60 }, key })
       expect(data.charts).toEqual({ a: "title: A" })
       expect(data.userSongIds).toEqual(["a"])
       expect(data.overrides).toEqual({ a: { "0:Verse": "B" } })
@@ -62,12 +63,19 @@ describe("Repository", () => {
 
   it("repairs malformed settings instead of failing", async () => {
     const kv = new MemoryStore()
-    await kv.set("settings", { level: "expert", mode: "jam", tempo: { a: "fast", b: 80 }, mix: null })
+    await kv.set("settings", {
+      level: "expert",
+      mode: "jam",
+      tempo: { a: "fast", b: 80 },
+      mix: null,
+      key: { a: { shapes: 10, capo: 2 }, b: { shapes: 12, capo: 0 }, c: { shapes: 1.5, capo: 0 }, d: "G" },
+    })
     const { settings } = await new Repository(kv).load()
     expect(settings.level).toBe("arranged")
     expect(settings.mode).toBe("song")
     expect(settings.tempo).toEqual({ b: 80 })
     expect(settings.mix).toEqual(DEFAULT_SETTINGS.mix)
+    expect(settings.key).toEqual({ a: { shapes: 10, capo: 2 } })
   })
 })
 

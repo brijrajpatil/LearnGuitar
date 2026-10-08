@@ -12,10 +12,20 @@ import {
 } from "@/core/pattern/patterns"
 import { TICKS_PER_EIGHTH, type ChordSpan, type Song, type Voicing } from "@/core/song/types"
 import { capoFret, findVoicing, pickString, simplifiedName, withCapo } from "@/core/theory/chords"
+import { moveKey, usesFlats, writtenKey } from "@/core/theory/keys"
+import { mod12, transposeChord } from "@/core/theory/names"
 
 /** A song's levels, from easy to the recorded version. */
 export type Level = "beginner" | "arranged" | "record"
 export const LEVELS: readonly Level[] = ["beginner", "arranged", "record"]
+
+/** The key you play a song in: the shapes you finger and the capo (decision 0016). */
+export interface KeyChoice {
+  /** Semitones the chord names move from the chart, 0 to 11. */
+  shapes: number
+  /** The capo's fret, 0 for none. */
+  capo: number
+}
 
 export interface ArrangementSettings {
   level: Level
@@ -23,6 +33,8 @@ export interface ArrangementSettings {
   /** Pattern overrides by section key (see sectionKey). */
   overrides: Readonly<Record<string, PatternId>>
   customPatterns: readonly CustomPattern[]
+  /** The song as the chart writes it, with the chart's capo, when left out. */
+  key?: KeyChoice
 }
 
 export interface Arrangement {
@@ -36,8 +48,24 @@ export interface Arrangement {
   autoPatterns: Pattern[]
   /** The pattern each section actually plays. */
   patterns: Pattern[]
+  /** Semitones the chord names moved from the chart. 0 plays them as written. */
+  shapes: number
   /** The capo's fret, 0 for none. Sounds play this many semitones above the shapes. */
   capo: number
+}
+
+/** The chart's own key choice: its chords as written, with its capo. */
+export const writtenChoice = (song: Pick<Song, "capo">): KeyChoice => ({ shapes: 0, capo: capoFret(song.capo) })
+
+/**
+ * Moves chord names by some semitones, spelled with sharps or flats to suit the new key.
+ * A name that doesn't start with a note stays as it is.
+ */
+export function chordMover(song: Pick<Song, "key" | "bars">, shapes: number): (name: string) => string {
+  if (!mod12(shapes)) return (name) => name
+  const from = writtenKey(song)?.key ?? { tonic: 0, minor: false }
+  const flats = usesFlats(moveKey(from, shapes))
+  return (name) => transposeChord(name, shapes, flats) ?? name
 }
 
 /**
@@ -55,10 +83,14 @@ function autoPatternId(song: Song, section: number, level: Level): PatternId {
 }
 
 export function arrange(song: Song, settings: ArrangementSettings): Arrangement {
+  const { shapes, capo } = settings.key ?? writtenChoice(song)
+  // Chord names move to the new key first. The chart's simplify rules move with them.
+  const move = chordMover(song, shapes)
+  const rules = { simplify: Object.fromEntries(Object.entries(song.simplify).map(([a, b]) => [move(a), move(b)])) }
   const barChords = song.bars.map((bar) => {
     const out: ChordSpan[] = []
     for (const span of bar.chords) {
-      const chord = settings.simplify ? simplifiedName(song, span.chord) : span.chord
+      const chord = settings.simplify ? simplifiedName(rules, move(span.chord)) : move(span.chord)
       const last = out[out.length - 1]
       if (last && last.chord === chord) last.length += span.length
       else out.push({ chord, start: span.start, length: span.length })
@@ -79,7 +111,8 @@ export function arrange(song: Song, settings: ArrangementSettings): Arrangement 
     barChords,
     autoPatterns,
     patterns,
-    capo: capoFret(song.capo),
+    shapes: mod12(shapes),
+    capo,
   }
 }
 
@@ -88,8 +121,15 @@ export const sectionOf = (arr: Arrangement, bar: number): number => arr.song.bar
 export const hasOverride = (arr: Arrangement, section: number): boolean =>
   Boolean(arr.settings.overrides[sectionKey(arr.song, section)])
 
+const NO_CHART_SHAPES = { chords: {} }
+
+/**
+ * The shape for a chord. The chart's own shapes are fingered for its key, so a moved
+ * song uses them only for names that couldn't move.
+ */
 export function voicingOf(arr: Arrangement, chord: string): Voicing | null {
-  return findVoicing(arr.song, chord)
+  if (!arr.shapes) return findVoicing(arr.song, chord)
+  return findVoicing(NO_CHART_SHAPES, chord) ?? findVoicing(arr.song, chord)
 }
 
 export function chordAt(arr: Arrangement, bar: number, slot: number): string {
