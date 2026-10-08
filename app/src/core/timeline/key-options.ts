@@ -19,7 +19,9 @@ export interface KeyOption {
   family: boolean
   /** The song's chords in this key, in order of first use, after Simplify chords. */
   chords: string[]
-  /** How many of those chords need a barre across four strings or more. */
+  /** The chords that need a barre across four strings or more. */
+  barreChords: string[]
+  /** How many chords need a barre. */
   barres: number
   /** The capo that keeps the record's sound, or null when it would need a higher fret. */
   capo: number | null
@@ -30,8 +32,33 @@ export interface KeyOption {
 /** True for a barre across four strings or more, the kind people mean by a barre chord. */
 export const isBarreChord = (v: Voicing | null): boolean => v?.barre != null && v.barre.to - v.barre.from >= 3
 
-// The open-chord families, as major keys, in the order the picker lists them.
-const FAMILIES = [0, 7, 2, 9, 4]
+/** The five open-chord families, C, G, D, A and E, as their major key's home note. */
+export const FAMILIES: readonly number[] = [0, 7, 2, 9, 4]
+
+/** The home note of a key's family. A minor key belongs to its relative major's: Em is in the G family. */
+export const familyHome = (k: Key): number => (k.minor ? mod12(k.tonic + 3) : k.tonic)
+
+/** The song in one key: the chart's key (`written`) moved by `shapes` semitones. */
+export function optionFor(song: Song, settings: ArrangementSettings, written: Key, shapes: number): KeyOption {
+  const chartCapo = capoFret(song.capo)
+  const unmovable = [...new Set(song.bars.flatMap((b) => b.chords.map((c) => c.chord)))].filter((c) => !parseChord(c))
+  const key = moveKey(written, shapes)
+  const capo = shapes === 0 ? chartCapo : mod12(chartCapo - shapes)
+  const arr = arrange(song, { ...settings, key: { shapes, capo } })
+  const chords = [...new Set(arr.barChords.flatMap((spans) => spans.map((s) => s.chord)))]
+  const voicings = chords.map((c) => voicingOf(arr, c))
+  const barreChords = chords.filter((_, i) => isBarreChord(voicings[i]))
+  return {
+    shapes,
+    key,
+    family: FAMILIES.includes(familyHome(key)),
+    chords,
+    barreChords,
+    barres: barreChords.length,
+    capo: shapes === 0 || capo <= MAX_MATCHING_CAPO ? capo : null,
+    missing: shapes === 0 ? [] : [...unmovable, ...chords.filter((_, i) => !voicings[i])],
+  }
+}
 
 /**
  * Every key the song can be played in: the five open-chord families first, then the
@@ -40,27 +67,8 @@ const FAMILIES = [0, 7, 2, 9, 4]
 export function keyOptions(song: Song, settings: ArrangementSettings): KeyOption[] | null {
   const written = writtenKey(song)?.key
   if (!written) return null
-  const chartCapo = capoFret(song.capo)
-  const unmovable = [...new Set(song.bars.flatMap((b) => b.chords.map((c) => c.chord)))].filter((c) => !parseChord(c))
-  // A minor key belongs to the family of its relative major: Em is in the G family.
-  const family = (k: Key) => FAMILIES.indexOf(k.minor ? mod12(k.tonic + 3) : k.tonic)
-  const options = Array.from({ length: 12 }, (_, shapes): KeyOption => {
-    const key = moveKey(written, shapes)
-    const capo = shapes === 0 ? chartCapo : mod12(chartCapo - shapes)
-    const arr = arrange(song, { ...settings, key: { shapes, capo } })
-    const chords = [...new Set(arr.barChords.flatMap((spans) => spans.map((s) => s.chord)))]
-    const voicings = chords.map((c) => voicingOf(arr, c))
-    return {
-      shapes,
-      key,
-      family: family(key) >= 0,
-      chords,
-      barres: voicings.filter(isBarreChord).length,
-      capo: shapes === 0 || capo <= MAX_MATCHING_CAPO ? capo : null,
-      missing: shapes === 0 ? [] : [...unmovable, ...chords.filter((_, i) => !voicings[i])],
-    }
-  })
-  const rank = (o: KeyOption) => (o.family ? family(o.key) : FAMILIES.length + o.key.tonic)
+  const options = Array.from({ length: 12 }, (_, shapes) => optionFor(song, settings, written, shapes))
+  const rank = (o: KeyOption) => (o.family ? FAMILIES.indexOf(familyHome(o.key)) : FAMILIES.length + o.key.tonic)
   return options.sort((a, b) => rank(a) - rank(b))
 }
 

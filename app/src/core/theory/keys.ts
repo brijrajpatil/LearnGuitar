@@ -2,7 +2,7 @@
 // and spelling a key's chords with sharps or flats.
 
 import type { Song } from "@/core/song/types"
-import { mod12, noteName, parseChord, pitchClass } from "@/core/theory/names"
+import { mod12, noteName, parseChord, pitchClass, type ChordParts } from "@/core/theory/names"
 
 export interface Key {
   /** Pitch class of the key's home note, 0 = C. */
@@ -59,6 +59,18 @@ const MAJOR_KEY_CHORDS: ReadonlyMap<number, Triad> = new Map([
 ])
 
 /**
+ * How a chord sits in the major key whose home note is `home`: "yes" when it's one of the
+ * key's chords (a 7th, sus or slash version counts), "root" when only its root note is
+ * in the key, and "no" otherwise.
+ */
+export function chordInKey(c: Pick<ChordParts, "root" | "quality">, home: number): "yes" | "root" | "no" {
+  const fits = MAJOR_KEY_CHORDS.get(mod12(c.root - home))
+  if (!fits) return "no"
+  const triad = triadOf(c.quality)
+  return fits === triad || triad === "other" ? "yes" : "root"
+}
+
+/**
  * The key that fits the chords best. Each chord scores 1 when it belongs to the key and
  * a half when only its root note does. A song that starts or ends on the key's home
  * chord scores 2 more for each, which tells a major key from its relative minor. A tie
@@ -75,10 +87,8 @@ export function guessKey(chords: readonly string[]): Key | null {
       const home = relativeMajor(key)
       let score = 0
       for (const c of parsed) {
-        const fits = MAJOR_KEY_CHORDS.get(mod12(c.root - home))
-        const triad = triadOf(c.quality)
-        if (fits && (fits === triad || triad === "other")) score += 1
-        else if (fits) score += 0.5
+        const fit = chordInKey(c, home)
+        score += fit === "yes" ? 1 : fit === "root" ? 0.5 : 0
       }
       const isHome = (c: (typeof parsed)[number]) =>
         c.root === tonic && (triadOf(c.quality) === (minor ? "minor" : "major") || triadOf(c.quality) === "other")
