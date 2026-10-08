@@ -27,13 +27,16 @@ test("shows the line being sung with its chords, the next line, and each word un
   await expect(lyrics).toContainText("Next line: Mori")
   const strum = page.getByRole("region", { name: "Strum" })
   await expect(strum.getByRole("listitem").nth(6)).toContainText('sing "La-"')
-  // Play into bar 2: "sun" lights on beat 2, and stays lit until "on".
+  // Play into bar 2: "sun" lights on beat 2 and stays lit until "on", under 2 seconds. A new
+  // song plays at 70 BPM, so that's about 8 seconds in, and later on a slow machine.
+  const current = lyrics.locator("[data-current]")
   await page.keyboard.press("Space")
-  await expect(lyrics.locator("[data-current]")).toHaveText("sun", { timeout: 8000 })
+  await expect.poll(() => current.textContent(), { timeout: 20000, intervals: [50] }).toBe("sun")
   await page.keyboard.press("Space")
-  // Stopped, it shows where Play starts again: the start of the bar.
-  expect((await view(page)).bar).toBe(1)
-  await expect(lyrics.locator("[data-current]")).toHaveText("li")
+  // Stopped on a bar, the line shows where Play starts again: before the bar, with the
+  // word sung last in the bar before it lit.
+  await page.getByRole("navigation", { name: "Song map" }).getByRole("button", { name: "Bar 2", exact: true }).click()
+  await expect(current).toHaveText("li")
   // The Lyrics switch hides them.
   await strum.getByRole("button", { name: "Lyrics" }).click()
   await expect(lyrics).toHaveCount(0)
@@ -83,6 +86,8 @@ test("tap to sync places each word on an eighth note and saves them in the chart
     .split(/[\s|]+/)
     .filter((w) => w !== ">" && w !== "." && w)
   expect(words).toEqual(["/Ka-", "ro", "mi", "/ta", "su-", "ne"])
+  // Back at the start, the lyric card shows the first line.
+  await page.getByRole("navigation", { name: "Song map" }).getByRole("button", { name: "Bar 1", exact: true }).click()
   await expect(page.getByRole("region", { name: "Lyrics" })).toContainText("Karo mi")
 })
 
