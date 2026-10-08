@@ -50,19 +50,14 @@ describe("the library", () => {
     }
   })
 
-  it("explains every song in a note, and names the writers of popular songs", () => {
+  it("gives every song a title, a tempo and a note, and every folk song its writers", () => {
     for (const { entry, song } of parsed) {
       expect(song.title, named(entry)).not.toBe("")
+      expect(song.tempo, named(entry)).not.toBeNull()
       expect(song.notes.length, named(entry)).toBeGreaterThan(0)
-      if (entry.collection === "popular") {
-        expect(song.artist, named(entry)).not.toBe("")
-        expect(song.notes.some((n) => n.startsWith("Written by ")), named(entry)).toBe(true)
-        expect(song.tempo, named(entry)).not.toBeNull()
-        expect(song.sections.some((s) => s.record), `${named(entry)} has a record figure`).toBe(true)
-        expect(typeof entry.checked, named(entry)).toBe("boolean")
-      } else {
-        expect(entry.checked, named(entry)).toBeUndefined()
-      }
+      // "Traditional", or the writers by name, so the public domain claim can be checked.
+      if (entry.collection === "traditional") expect(song.artist, named(entry)).not.toBe("")
+      else expect(song.artist, named(entry)).toBe("")
     }
   })
 })

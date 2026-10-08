@@ -10,7 +10,6 @@ export type DifficultyFilter = "any" | Difficulty
 export const COLLECTION_NAMES: Record<SongCollection, string> = {
   study: "Studies",
   traditional: "Folk and traditional",
-  popular: "Popular",
   yours: "Your songs",
 }
 
@@ -27,7 +26,7 @@ export interface LibraryFilter {
   difficulty: DifficultyFilter
 }
 
-/** Lower case, without apostrophes and punctuation, so "knockin heavens" finds "Knockin' on Heaven's Door". */
+/** Lower case, without apostrophes and punctuation, so "shell round" finds "She'll Be Coming 'Round the Mountain". */
 const fold = (s: string): string =>
   s
     .toLowerCase()
@@ -37,7 +36,7 @@ const fold = (s: string): string =>
 
 /**
  * True when every word of the search is in the title or artist, or is one of the
- * song's chords. "Cm" finds songs with a C minor chord, "heav" finds Heaven's Door.
+ * song's chords. "Cm" finds songs with a C minor chord, "sail" finds Drunken Sailor.
  */
 export function matchesQuery(song: SongEntry, query: string): boolean {
   const words = fold(query).split(" ").filter(Boolean)

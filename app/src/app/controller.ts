@@ -40,8 +40,6 @@ export interface SongEntry {
   collection: SongCollection
   /** Library songs only. */
   difficulty: Difficulty | null
-  /** False for a popular song not yet checked against the record. */
-  checked: boolean
 }
 
 export interface AppState {
@@ -90,7 +88,6 @@ function makeEntry(
     ...namesOf(chart, custom),
     collection: lib?.collection ?? "yours",
     difficulty: lib?.difficulty ?? null,
-    checked: lib?.checked ?? true,
   }
 }
 

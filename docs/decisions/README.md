@@ -9,7 +9,7 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0003](0003-lyrics-and-tabs-are-user-entered.md) | Lyrics and tabs are only what the player enters | Product | Accepted, 2026-10-04 |
 | [0004](0004-public-repo-and-future-users.md) | Public repo, built for future users too | Product | Accepted, 2026-10-04 |
 | [0005](0005-typescript-pwa.md) | Rebuild as a TypeScript PWA | Tech | Accepted, 2026-10-04 |
-| [0006](0006-public-domain-demo-song.md) | A public domain demo song, and personal songs outside the repo | Product | Accepted, 2026-10-04 |
+| [0006](0006-public-domain-demo-song.md) | A public domain demo song, and personal songs outside the repo | Product | Accepted, 2026-10-04. The single demo song is superseded by 0015 |
 | [0007](0007-luma-style-and-inter.md) | shadcn's Luma style, with Inter as the font | Design | Superseded by 0009 |
 | [0008](0008-prototype-folder-and-data-import.md) | The prototype moves to its own folder, and its data is imported | Tech | Accepted, 2026-10-04. Where the app lives is superseded by 0012 |
 | [0009](0009-birch-light-theme-and-session-modes.md) | Birch: a light theme, session modes, and a layout that scales | Design, product | Accepted, 2026-10-04. Color and type superseded by 0010, layout by 0011 |
@@ -18,6 +18,7 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0012](0012-repo-layout.md) | Repo layout: the app in app/, the docs grouped by product and design | Tech | Accepted, 2026-10-04 |
 | [0013](0013-github-pages-hosting.md) | Host the app on GitHub Pages, from the LearnGuitar repo | Tech | Accepted, 2026-10-04 |
 | [0014](0014-library-page.md) | The library is a page of its own | Design | Accepted, 2026-10-04 |
+| [0015](0015-built-in-library-contents.md) | The built-in library: progression studies and public domain songs | Product | Accepted, 2026-10-08 |
 
 ## Writing a note
 

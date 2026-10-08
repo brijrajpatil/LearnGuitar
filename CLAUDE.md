@@ -31,7 +31,7 @@ Never rewrite an accepted decision note. Write a new one that supersedes it, and
 
 - Lyrics, tabs and record figures are only what the owner types into the app. Never fetch, generate or copy them from websites into the app, the repo or the docs.
 - Song files with lyrics, tabs or record figures stay out of the repo. They go in `songs/`, which is git-ignored. The owner's charts, starting with Let Down, are in `songs/personal.js`.
-- Songs built into the app ship to everyone, so they are public domain songs with chords only, with no lyrics or tabs (see `docs/decisions/0006-public-domain-demo-song.md`).
+- Songs built into the app ship to everyone, so they are progression studies or public domain songs, with chords only and no lyrics or tabs. The public domain rule and what else is left out are in `docs/decisions/0015-built-in-library-contents.md`. The library is in `app/src/data/library/`.
 - No personal data in the repo beyond what the owner chose to put in the brief.
 
 ## Code

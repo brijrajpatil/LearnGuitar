@@ -1,6 +1,6 @@
 # 0006. A public domain demo song, and personal songs outside the repo
 
-Status: Accepted
+Status: Accepted. The single demo song is superseded by [0015](0015-built-in-library-contents.md), which adds a library of studies and public domain songs.
 Date: 2026-10-04
 
 ## Context

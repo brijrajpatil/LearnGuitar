@@ -23,7 +23,6 @@ const COLLECTIONS: { id: CollectionFilter; name: string; short: string }[] = [
   { id: "all", name: "All", short: "All" },
   { id: "study", name: COLLECTION_NAMES.study, short: "Studies" },
   { id: "traditional", name: COLLECTION_NAMES.traditional, short: "Folk" },
-  { id: "popular", name: COLLECTION_NAMES.popular, short: "Popular" },
   { id: "yours", name: COLLECTION_NAMES.yours, short: "Yours" },
 ]
 
