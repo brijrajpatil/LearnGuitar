@@ -12,7 +12,7 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0006](0006-public-domain-demo-song.md) | A public domain demo song, and personal songs outside the repo | Product | Accepted, 2026-10-04. The single demo song is superseded by 0015 |
 | [0007](0007-luma-style-and-inter.md) | shadcn's Luma style, with Inter as the font | Design | Superseded by 0009 |
 | [0008](0008-prototype-folder-and-data-import.md) | The prototype moves to its own folder, and its data is imported | Tech | Accepted, 2026-10-04. Where the app lives is superseded by 0012 |
-| [0009](0009-birch-light-theme-and-session-modes.md) | Birch: a light theme, session modes, and a layout that scales | Design, product | Accepted, 2026-10-04. Color and type superseded by 0010, layout by 0011 |
+| [0009](0009-birch-light-theme-and-session-modes.md) | Birch: a light theme, session modes, and a layout that scales | Design, product | Accepted, 2026-10-04. Color and type superseded by 0010, layout by 0011, session modes by 0020 |
 | [0010](0010-monochrome-theme-and-geist.md) | A monochrome theme, with Geist | Design | Accepted, 2026-10-04 |
 | [0011](0011-play-screen-fits-the-window.md) | The play screen fits the window | Design | Accepted, 2026-10-04 |
 | [0012](0012-repo-layout.md) | Repo layout: the app in app/, the docs grouped by product and design | Tech | Accepted, 2026-10-04 |
@@ -22,6 +22,7 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0016](0016-key-and-capo.md) | Play a song in another key, with a capo to keep the record's sound | Product, design, tech | Accepted, 2026-10-08 |
 | [0017](0017-ai-chord-drafts.md) | Draft chords with the player's own AI key | Product, tech | Accepted, 2026-10-08 |
 | [0018](0018-library-family-filter.md) | Filter the library by chord family | Product, design | Accepted, 2026-10-08 |
+| [0020](0020-loop-button-and-typed-speed.md) | A loop button and a speed-up switch, and speed typed in BPM or % | Product, design | Accepted, 2026-10-08 |
 
 ## Writing a note
 

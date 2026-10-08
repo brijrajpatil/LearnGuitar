@@ -24,6 +24,10 @@ export interface ParsedChart {
 
 const MAX_ERRORS = 60
 
+/** The record tempos a chart's tempo line accepts, in BPM. */
+export const CHART_TEMPO_MIN = 20
+export const CHART_TEMPO_MAX = 300
+
 interface OpenSection extends Section {
   errorsAtStart: number
 }
@@ -86,8 +90,8 @@ export function parseChart(text: string, custom: readonly CustomPattern[]): Pars
         if (v) song.notes.push(v)
       } else if (k === "tempo" || k === "bpm") {
         const n = parseFloat(v)
-        if (!(n >= 20 && n <= 300)) err(ln, "Tempo must be a number of BPM between 20 and 300.")
-        else song.tempo = Math.round(n)
+        if (n >= CHART_TEMPO_MIN && n <= CHART_TEMPO_MAX) song.tempo = Math.round(n)
+        else err(ln, `Tempo must be a number of BPM between ${CHART_TEMPO_MIN} and ${CHART_TEMPO_MAX}.`)
       } else if (k === "time") {
         const t = v.match(/^(\d+)\s*\/\s*4$/)
         if (!t || +t[1] < 2 || +t[1] > 7) err(ln, "Time must be 2/4 to 7/4, like time: 4/4.")

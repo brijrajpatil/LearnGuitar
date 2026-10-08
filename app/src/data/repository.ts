@@ -10,23 +10,23 @@ import type { KeyValueStore } from "@/data/kv"
 
 export const DATA_VERSION = 1
 
-/**
- * What the player is practising, which decides the controls shown and whether a
- * section loops (decision 0009).
- */
-export type PracticeMode = "learn" | "speed" | "song"
-export const PRACTICE_MODES: readonly PracticeMode[] = ["learn", "speed", "song"]
+/** How the player reads and types the speed: beats per minute, or a share of the record's. */
+export type SpeedUnit = "bpm" | "percent"
 
 export interface Settings {
   songId: string
-  mode: PracticeMode
+  /** A section loops (decision 0020). */
+  loop: boolean
+  /** While a section loops, the speed goes up each time through, up to the goal. */
+  speedUp: boolean
   level: Level
   simplify: boolean
   /** The player's tempo per song id. */
   tempo: Record<string, number>
   /** The speed trainer's target per song id. */
   target: Record<string, number>
-  /** Where Build speed starts, per song id. */
+  speedUnit: SpeedUnit
+  /** Where speeding up starts, per song id. */
   start: Record<string, number>
   /** The key and capo each song is played in, when it isn't the chart's own (decision 0016). */
   key: Record<string, KeyChoice>
@@ -39,11 +39,13 @@ export interface Settings {
 export const DEFAULT_SETTINGS: Settings = {
   songId: DEFAULT_SONG_ID,
   // A first-time player presses Play and hears the whole song.
-  mode: "song",
+  loop: false,
+  speedUp: false,
   level: "arranged",
   simplify: false,
   tempo: {},
   target: {},
+  speedUnit: "bpm",
   start: {},
   key: {},
   family: null,
@@ -99,13 +101,17 @@ export function cleanSettings(v: unknown): Settings {
   const mix = isRecord(s.mix) ? s.mix : {}
   const d = DEFAULT_SETTINGS
   const num = (x: unknown, fallback: number) => (typeof x === "number" && Number.isFinite(x) ? x : fallback)
+  // Settings saved before decision 0020 have a practice mode instead of the two switches.
+  const mode = s.mode
   return {
     songId: typeof s.songId === "string" ? s.songId : d.songId,
-    mode: PRACTICE_MODES.includes(s.mode as PracticeMode) ? (s.mode as PracticeMode) : d.mode,
+    loop: typeof s.loop === "boolean" ? s.loop : mode === "learn" || mode === "speed",
+    speedUp: typeof s.speedUp === "boolean" ? s.speedUp : mode === "speed",
     level: LEVELS.includes(s.level as Level) ? (s.level as Level) : d.level,
     simplify: s.simplify === true,
     tempo: numberMap(s.tempo),
     target: numberMap(s.target),
+    speedUnit: s.speedUnit === "percent" ? "percent" : "bpm",
     start: numberMap(s.start),
     key: keyMap(s.key),
     family: typeof s.family === "number" && FAMILIES.includes(s.family) ? s.family : null,

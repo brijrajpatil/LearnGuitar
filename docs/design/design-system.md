@@ -10,7 +10,7 @@ This doc changes in the same commit as the tokens or components it describes. A 
 
 1. Each visual signal has one meaning. A black fill (emphasis) means "now" or "progress". Red means an error or a destructive action. Nothing else on screen has a fill color or a hue.
 2. The chord to play now reads first. It's the largest thing on screen, and the next chord is smaller and sits on a quieter card. Play mode is read from about 1.5 m away.
-3. The screen shows what the practice session needs. Each practice mode shows its own controls, and settings used now and then live in Practice settings.
+3. The screen shows what the practice session needs. The loop and the speed sit beside Play, and settings used now and then live in Practice settings.
 4. Everything follows browser zoom. Sizes are in rem, stage type also follows its card's size, and the play screen fills the window.
 5. Components use tokens only, with no raw hex values or one-off sizes.
 
@@ -22,7 +22,7 @@ The theme is monochrome: neutral greys with no hue, black for emphasis and red f
 |---|---|---|
 | `--background` | `#FAFAFA` | The page |
 | `--card`, `--popover` | `#FFFFFF` | Cards, menus and dialogs |
-| `--secondary`, `--muted`, `--tint`, `--slot`, `--editor-gutter` | `#F5F5F5` | Quiet surfaces: the Next card, strum slots, the looped section, the mode switch, the editor's line numbers |
+| `--secondary`, `--muted`, `--tint`, `--slot`, `--editor-gutter` | `#F5F5F5` | Quiet surfaces: the Next card, strum slots, the looped section and the loop button, segmented switches, the editor's line numbers |
 | `--accent` | `#F0F0F0` | Hovered and focused items in menus |
 | `--border`, `--input` | `#E5E5E5` | Borders, and bars not yet played in the song map. Decoration only |
 | `--foreground` | `#0A0A0A` | Text and strum arrows |
@@ -110,9 +110,9 @@ The app's own variants live in the copied component files:
 | Button | `outline` | Section skips, speed steps and the menu button |
 | Button | `ghost` | Small icon buttons such as About this song, How to practise and Close the editor |
 | Button | `destructive` | Delete song, deleting a custom pattern, confirming a chart reset, and the Line buttons that jump to a chart error |
-| Toggle | `outline` | Edit chart, which opens and closes the editor |
-| Toggle group | `segment` | The practice mode switch: Learn a section, Build speed, Play the song |
-| Progress | default | Build speed's progress, in the emphasis fill |
+| Toggle | `outline` | Edit chart, which opens and closes the editor. The loop button, which is on `--tint` with a dark border while a section loops |
+| Toggle group | `segment` | The library's collection filter, and the speed unit (BPM or % of record) |
+| Progress | default | Speed-up's progress, in the emphasis fill |
 
 An input group draws the focus outline around the whole group, icon included, instead of around the bare input inside it.
 
@@ -122,12 +122,12 @@ React Aria handles focus, keyboard and press behavior. Hover styles apply only t
 
 The play screen has six rows, from top to bottom:
 
-1. Header: the song's title, which opens the library, About this song, the key and capo button, the practice mode switch, How to practise, Edit chart and the menu. The header lays out by its own width (a CSS container): when it's narrower than 64rem, as on a tablet or with the chart editor open, the mode switch moves to a row of its own below the rest.
+1. Header: the song's title, which opens the library, About this song, the key and capo button, Edit chart and the menu.
 2. Position line: the section name, the bar within the section and a progress bar for the section. During the count-in it shows the count, with the current beat filled with emphasis. While playing, it shows the bar's cue when the chart has one.
 3. Chord cards. The Now card is white and largest, with the chord name and its diagram. The Next card sits on `--tint` with no border, and counts down to the change.
 4. Strum card: the pattern's name, what's coming next, Level and Change pattern. Below them is one slot per eighth note. Arrows strum down or up, a dot is a missed strum, B picks the bass note, and 1 to 6 pick a string. The slot being played is filled with emphasis.
 5. Song map: one block per bar, grouped under section names. Bars already played are `--dim`, the current bar is emphasis, and a looped section's name sits on `--tint`.
-6. Transport bar: the previous and next section buttons, Play, and speed in BPM with its share of the record.
+6. Transport bar: the previous and next section buttons, Play, the loop button, and speed with its share of the record, in the unit the player types in. While a section loops with speed-up on, speed-up's progress bar follows. The Speed popover holds the typed speed, the slider, the quick picks, the record's speed and the speed-up switch ([0020](../decisions/0020-loop-button-and-typed-speed.md)).
 
 The chart editor opens as a panel beside the play screen, so the chords stay in view while editing. Lines with an error get the `--error-line` background and a message in `--destructive`.
 
@@ -188,8 +188,9 @@ Enter in the search with nothing found, or Add "name", opens the panel ([0017](.
 |---|---|---|
 | [0001](../decisions/0001-design-system.md) | shadcn/ui on React Aria with Tailwind CSS v4, tokens only, React Aria hooks for custom views | Component choices stand |
 | [0007](../decisions/0007-luma-style-and-inter.md) | shadcn's Luma style and Inter | Superseded by 0009 |
-| [0009](../decisions/0009-birch-light-theme-and-session-modes.md) | A light theme, the contrast rules, rem sizing and the practice modes | Contrast, sizing and modes stand |
+| [0009](../decisions/0009-birch-light-theme-and-session-modes.md) | A light theme, the contrast rules, rem sizing and the practice modes | Contrast and sizing stand. The modes are superseded by 0020 |
 | [0010](../decisions/0010-monochrome-theme-and-geist.md) | Monochrome colors, the emphasis tokens and Geist | Current |
 | [0011](../decisions/0011-play-screen-fits-the-window.md) | The play screen fills the window, with window-height variants | Current |
 | [0014](../decisions/0014-library-page.md) | The library page, opened from the song's title | Current |
 | [0017](../decisions/0017-ai-chord-drafts.md) | The Add a song panel beside the library's list | Current |
+| [0020](../decisions/0020-loop-button-and-typed-speed.md) | The loop button and the Speed popover in place of the practice modes | Current |

@@ -11,8 +11,8 @@ const isTyping = (t: EventTarget | null): boolean => {
 const inOverlay = (t: EventTarget | null): boolean =>
   t instanceof Element && !!t.closest('[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"]')
 
-// A slider or the mode switch reached with the keyboard keeps its arrow keys. One that was
-// clicked doesn't, so a pedal's arrow keys still move between sections.
+// A slider or a segmented switch reached with the keyboard keeps its arrow keys. One that
+// was clicked doesn't, so a pedal's arrow keys still move between sections.
 const keyboardWidget = (t: EventTarget | null): boolean =>
   t instanceof Element && !!t.closest('[role="radiogroup"] [data-focus-visible], [role="slider"]:focus-visible, [data-focus-visible] [role="slider"]')
 

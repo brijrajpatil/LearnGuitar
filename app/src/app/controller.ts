@@ -6,7 +6,8 @@ import { draftSong as runDraft, type DraftOutcome, type DraftRequest, type Step 
 import { THEORY_SHAPES } from "@/ai/shape-tools"
 import { AI_DRAFT_NOTE } from "@/ai/to-chart"
 import { AudioEngine, type Mix } from "@/audio/engine"
-import { parseChart, type ChartError, type ParsedChart } from "@/core/chart/parse"
+import { setChartTempo } from "@/core/chart/edit"
+import { CHART_TEMPO_MAX, CHART_TEMPO_MIN, parseChart, type ChartError, type ParsedChart } from "@/core/chart/parse"
 import { isValidSteps, normalizeSteps, type CustomPattern, type PatternId } from "@/core/pattern/patterns"
 import type { Song } from "@/core/song/types"
 import { arrange, sectionKey, writtenChoice, type Arrangement, type KeyChoice, type Level } from "@/core/timeline/arrangement"
@@ -22,7 +23,7 @@ import {
   prototypeEntriesFrom,
   readPrototype,
 } from "@/data/prototype-import"
-import { DEFAULT_SETTINGS, Repository, type PracticeMode, type Settings, type StoredData } from "@/data/repository"
+import { DEFAULT_SETTINGS, Repository, type Settings, type SpeedUnit, type StoredData } from "@/data/repository"
 import { clampTempo } from "@/practice/trainer"
 import { Transport } from "@/practice/transport"
 
@@ -249,7 +250,7 @@ export class AppController {
     this.install(parsed.song, { stop: true, keepPosition: false })
     const song = parsed.song
     this.transport.setTempos(settings.tempo[entry.id] ?? 70, settings.target[entry.id] ?? song.tempo ?? 100)
-    this.applyMode()
+    this.applyLoop()
     this.saveSettingsSoon()
   }
 
@@ -470,48 +471,75 @@ export class AppController {
     this.engine?.setMix(mix)
   }
 
-  // ---- practice modes ----
+  // ---- speed, loop and speed-up (decision 0020) ----
 
-  /** Learn a section and Build speed loop the current section. Play the song plays through. */
-  setMode(mode: PracticeMode): void {
-    const settings = this.state.settings
-    const start = { ...settings.start }
-    // Build speed starts from the speed you're at now.
-    if (mode === "speed" && settings.mode !== "speed") start[this.state.songId] = this.transport.getView().tempo
-    this.updateSettings({ mode, start })
-    this.applyMode()
+  setSpeedUnit(unit: SpeedUnit): void {
+    this.updateSettings({ speedUnit: unit })
   }
 
-  /** The L key and the song map: loop a section, or go back to playing the whole song. */
-  toggleLoop(): void {
-    this.setMode(this.state.settings.mode === "song" ? "learn" : "song")
-  }
-
-  /** Loops a section from its first bar. Clicking the looped section again plays the song through. */
-  loopSection(section: number): void {
-    const t = this.transport
-    if (this.state.settings.mode !== "song" && t.getView().loop?.section === section) {
-      this.setMode("song")
+  /**
+   * Sets the record's speed in the chart's tempo line, and saves the chart. Playback goes
+   * on. An editor draft gets the same change, so applying it later keeps the new speed.
+   */
+  setRecordTempo(bpm: number): void {
+    const entry = this.currentEntry()
+    if (!entry) return
+    const tempo = Math.round(Math.max(CHART_TEMPO_MIN, Math.min(CHART_TEMPO_MAX, bpm)))
+    const text = setChartTempo(entry.chart, tempo)
+    const parsed = this.validate(text)
+    if (parsed.errors.length) {
+      this.notify("Fix the errors in the chart first, then set the record's speed.")
       return
     }
-    if (this.state.settings.mode === "song") this.updateSettings({ mode: "learn" })
-    t.setTrainer(this.state.settings.mode === "speed")
+    this.updateEntry(entry.id, text)
+    this.persistChart(entry.id, text)
+    const draft = this.state.draft
+    if (draft?.id === entry.id) this.set({ draft: { id: entry.id, text: setChartTempo(draft.text, tempo) } })
+    this.install(parsed.song, { stop: false, keepPosition: true })
+    if (this.state.settings.target[entry.id] === undefined) this.transport.setTarget(tempo)
+  }
+
+  /** Loops the current section, or plays the whole song. */
+  setLoop(on: boolean): void {
+    this.updateSettings({ loop: on })
+    this.applyLoop()
+  }
+
+  /** The L key: loop this section, or play the whole song again. */
+  toggleLoop(): void {
+    this.setLoop(!this.state.settings.loop)
+  }
+
+  /** The song map: loops a section from its first bar. Clicking the looped section again plays the song through. */
+  loopSection(section: number): void {
+    const t = this.transport
+    if (this.state.settings.loop && t.getView().loop?.section === section) {
+      this.setLoop(false)
+      return
+    }
+    if (!this.state.settings.loop) this.updateSettings({ loop: true })
     t.loopSection(section)
   }
 
-  /** Where Build speed starts. Also sets the speed there, ready to play. */
+  /** Speeds up each time through the loop, starting from the speed you're at now. */
+  setSpeedUp(on: boolean): void {
+    const start = { ...this.state.settings.start }
+    if (on && !this.state.settings.speedUp) start[this.state.songId] = this.transport.getView().tempo
+    this.updateSettings({ speedUp: on, start })
+    this.transport.setTrainer(on)
+  }
+
+  /** Where speeding up starts. Also sets the speed there, ready to play. */
   setTrainerStart(bpm: number): void {
     const start = clampTempo(bpm)
     this.updateSettings({ start: { ...this.state.settings.start, [this.state.songId]: start } })
     this.transport.setTempo(start)
   }
 
-  private applyMode(): void {
+  private applyLoop(): void {
     const t = this.transport
-    const mode = this.state.settings.mode
-    const looping = t.getView().loop !== null
-    t.setTrainer(mode === "speed")
-    if (mode === "song" ? looping : !looping) t.toggleLoop()
+    t.setTrainer(this.state.settings.speedUp)
+    if (this.state.settings.loop !== (t.getView().loop !== null)) t.toggleLoop()
   }
 
   setTrainerStep(n: number): void {

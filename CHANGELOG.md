@@ -4,7 +4,14 @@ Changes to the app and the project, newest first. Each change goes under Unrelea
 
 ## Unreleased
 
+### Changed
+
+- The practice mode switch is gone. A loop button beside Play loops the section you're in and names it ("Looping Verse 1"), and its x plays the whole song again. Speeding up each time through the loop is a switch in the Speed popover, with the same start, goal and step ([decision 0020](docs/decisions/0020-loop-button-and-typed-speed.md)).
+
 ### Added
+
+- Type the speed in BPM or as a % of the record in the Speed popover. The readout shows the unit you type in first, and the app remembers it ([decision 0020](docs/decisions/0020-loop-button-and-typed-speed.md)).
+- Set the record's speed in the Speed popover. It writes the chart's `tempo:` line, so a chart without one can show your speed as a share of the record's.
 
 - A chord family filter in the library. Pick a family, such as G (G, C, D, Em, Am and Bm7), to list the songs you can play with its chords, shown as you'd play them in that family with the capo each needs. 37 of the 51 built-in songs fit the G family. A song opened from the list plays in the family, and the library remembers the family you picked ([decision 0018](docs/decisions/0018-library-family-filter.md)).
 - Add a song by name from the library: type it in the search and press Enter. The AI drafts the chords with your own free Gemini key, or the app converts chords you paste from a page, with the lyrics left out. Drafts are marked until you check them ([decision 0017](docs/decisions/0017-ai-chord-drafts.md)).

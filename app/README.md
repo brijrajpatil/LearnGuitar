@@ -23,7 +23,7 @@ Then open <http://localhost:8642>. It opens on Amazing Grace, a public domain hy
 | `npm run dev` | Runs the app with live reload |
 | `npm run build` | Type-checks and builds the installable app into `dist/` |
 | `npm run preview` | Serves the built app, offline support included |
-| `npm test` | Unit tests for the chart format, theory, timeline, transport, storage, the song library, adding songs with AI, practice modes and theme contrast |
+| `npm test` | Unit tests for the chart format, theory, timeline, transport, storage, the song library, adding songs with AI, the loop and speed-up, and theme contrast |
 | `npm run test:e2e` | Browser tests in Chrome: the main flows, layout at zoom levels from 100% to 400%, and a 20-second timing check |
 | `npm run test:timing` | The full two-minute timing check |
 | `npm run lint` | ESLint |
@@ -112,7 +112,7 @@ Data flows one way: song, then timeline, then audio and screen. The music and au
 
 | Folder | What it holds |
 |---|---|
-| `src/core/` | The chart format, chords and voicings, patterns, and the timeline that turns a song and your settings into timed events |
+| `src/core/` | The chart format and the edits the app makes to it, chords and voicings, patterns, and the timeline that turns a song and your settings into timed events |
 | `src/audio/` | The Web Audio engine: a synthesized acoustic guitar, the click, and a lookahead scheduler |
 | `src/practice/` | The transport: count-in, playback, loops and the speed trainer |
 | `src/data/` | Storage, the built-in song library, personal songs and the import from the prototype |

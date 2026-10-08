@@ -68,7 +68,7 @@ export function SongMap() {
       </nav>
       <p className="shrink-0 text-sm text-muted-foreground tabular-nums">
         {formatTime(elapsed)} of {formatTime(songSeconds(song, view.tempo))}
-        <span className="sr-only">{settings.mode === "song" ? ", playing the whole song" : ""}</span>
+        <span className="sr-only">{settings.loop ? "" : ", playing the whole song"}</span>
       </p>
     </div>
   )

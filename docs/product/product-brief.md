@@ -140,8 +140,8 @@ Lyrics
 
 Practice tools
 
-- Three modes on the play screen, each showing only its controls: Learn a section (loop it), Build speed (loop it and speed up each time through), and Play the song. Built in milestone 1 (see [decision 0009](../decisions/0009-birch-light-theme-and-session-modes.md)).
-- Speed shown against the record's speed, with quick picks and a note on how to use it.
+- A loop button beside Play that names the section it loops, and a switch in Speed that speeds up each time through the loop. Built 2026-10-08, in place of milestone 1's three practice modes (see [decision 0020](../decisions/0020-loop-button-and-typed-speed.md)).
+- Speed shown against the record's speed, with quick picks and a note on how to use it. Speed can be typed in BPM or as a % of the record, and the record's speed can be set from the same place.
 - Section loop with a speed trainer that steps up after clean passes.
 - Chord change drill. The app lists every change in the song (A to E, E to F#m and so on), most frequent first. You pick one, loop it in time, and count clean changes per minute.
 - Gap click. The click plays for a few bars, then drops out for a few, to check that you hold the tempo yourself.
@@ -285,3 +285,4 @@ Each milestone ends with a week of practice and a review: what I used, what got 
 - 2026-10-08: Each song can be played with the chords of another key, saved per song, with a capo that keeps the record's sound where one fits. The header shows the record's key. See [decision 0016](../decisions/0016-key-and-capo.md).
 - 2026-10-08: A player can add a song by name. The AI drafts the chords with the player's own free Gemini key, or the app converts a chord sheet they paste. Drafts are chords only and stay on the player's device, and I pay nothing for the AI. This partly supersedes decision 0003. See [decision 0017](../decisions/0017-ai-chord-drafts.md).
 - 2026-10-08: The library can filter by chord family, so I can learn one family and see every song I can play with it. The family is remembered between visits, which changes decision 0014's rule that filters reset. See [decision 0018](../decisions/0018-library-family-filter.md).
+- 2026-10-08: The three practice modes give way to a loop button beside Play and a speed-up switch in Speed, since the modes only set those two things. Speed can be typed in BPM or %, and the record's speed set from the play screen. See [decision 0020](../decisions/0020-loop-button-and-typed-speed.md).

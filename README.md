@@ -18,14 +18,14 @@ The [product brief](docs/product/product-brief.md) has the full problem, goals, 
 
 ## What it does now
 
-- Asks what you're practising and shows only what that needs. Learn a section loops one part. Build speed loops it and speeds up a little each time through, up to your goal. Play the song plays it start to end.
+- Loops the section you're working on with one click, and can speed up a little each time through the loop, up to your goal. Or it plays the song start to end.
 - Plays a synthesized acoustic guitar part and a click in time, with a one-bar count-in.
 - Shows the current and next chord with diagrams, and counts down the beats to the next change.
 - A strum strip shows each down, up and missed strum as it plays, and warns a bar before the pattern changes.
 - Three levels for every song. Beginner strums one downstroke per beat. Arranged uses each section's own pattern. Record plays the figure from the record where the chart has one.
 - Simplify chords swaps hard shapes for easier ones, for example F#m for a four-string version.
 - Shows the key the record is in, and plays any song with the chords of another key, so you can stick to one chord family while you learn it. It sets the capo that keeps the record's sound, for example G shapes with a capo on fret 2 for a song in A.
-- Speed shows the BPM and how it compares with the record ("88% of the record"), with quick picks from 60% to the record's speed.
+- Speed shows the BPM and how it compares with the record ("88% of the record"). Type it in BPM or as a % of the record, or use quick picks from 60% to the record's speed. You can set the record's speed there too.
 - A song map along the bottom: click a bar to jump to it, or a section name to loop it.
 - A built-in library of 17 progression studies and 34 public domain folk songs, with chords only. The library page lists each one with its chords and difficulty. Search it by title, artist or chord, and filter it by collection and difficulty, or by the chord family you're learning, which lists the songs you can play with it.
 - Add any other song by name: type it in the library's search and press Enter. The AI drafts its chords with your own free Gemini key, or the app converts chords you paste from a chord page and leaves the lyrics out. A draft says it's unchecked until you've checked it against the record.

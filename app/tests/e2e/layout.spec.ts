@@ -46,7 +46,7 @@ for (const size of SIZES) {
       const pb = play?.getBoundingClientRect()
       const checks = {
         song: inside(document.querySelector('[data-slot="song-button"]')),
-        modes: inside(document.querySelector('[aria-label="What are you practising?"]')),
+        loop: inside([...document.querySelectorAll("button")].find((b) => b.textContent?.trim() === "Loop section") ?? null),
         now: inside(document.querySelector('[aria-label="Now"]')),
         next: inside(document.querySelector('[aria-label="Next"]')),
         strum: inside(document.querySelector('[aria-label="Strum"]')),

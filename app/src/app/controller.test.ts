@@ -9,64 +9,104 @@ async function app() {
   return c
 }
 
-describe("practice modes", () => {
-  it("starts new players in Play the song, with nothing looping", async () => {
+describe("loop and speed-up", () => {
+  it("starts new players playing the whole song, with nothing looping", async () => {
     const c = await app()
-    expect(c.getState().settings.mode).toBe("song")
+    expect(c.getState().settings).toMatchObject({ loop: false, speedUp: false })
     expect(c.transport.getView()).toMatchObject({ loop: null, trainer: { on: false } })
   })
 
-  it("Learn a section loops the current section, and the loop follows the arrow keys", async () => {
+  it("loops the current section, and the loop follows the arrow keys", async () => {
     const c = await app()
-    c.setMode("learn")
+    c.setLoop(true)
     expect(c.transport.getView().loop).toEqual({ section: 0 })
     c.transport.nextSection()
     expect(c.transport.getView().loop).toEqual({ section: 1 })
     expect(c.transport.getView().trainer.on).toBe(false)
   })
 
-  it("Build speed loops, turns the trainer on and starts from the current speed", async () => {
+  it("speed-up turns the trainer on and starts from the current speed", async () => {
     const c = await app()
     c.transport.setTempo(66)
-    c.setMode("speed")
-    expect(c.transport.getView()).toMatchObject({ loop: { section: 0 }, trainer: { on: true } })
+    c.setSpeedUp(true)
+    expect(c.transport.getView().trainer.on).toBe(true)
     expect(c.getState().settings.start["amazing-grace"]).toBe(66)
     c.setTrainerStart(60)
     expect(c.transport.getView().tempo).toBe(60)
     expect(c.getState().settings.start["amazing-grace"]).toBe(60)
+    c.setSpeedUp(false)
+    expect(c.transport.getView().trainer.on).toBe(false)
   })
 
-  it("Play the song stops looping and the trainer", async () => {
+  it("speed-up and the loop are separate switches", async () => {
     const c = await app()
-    c.setMode("speed")
-    c.setMode("song")
-    expect(c.transport.getView()).toMatchObject({ loop: null, trainer: { on: false } })
+    c.setSpeedUp(true)
+    c.setLoop(true)
+    c.setLoop(false)
+    expect(c.transport.getView()).toMatchObject({ loop: null, trainer: { on: true } })
+    expect(c.getState().settings.speedUp).toBe(true)
   })
 
   it("clicking a section in the map loops it, and clicking it again plays the song", async () => {
     const c = await app()
     c.loopSection(2)
-    expect(c.getState().settings.mode).toBe("learn")
+    expect(c.getState().settings.loop).toBe(true)
     expect(c.transport.getView()).toMatchObject({ loop: { section: 2 }, bar: 18 })
     c.loopSection(2)
-    expect(c.getState().settings.mode).toBe("song")
+    expect(c.getState().settings.loop).toBe(false)
     expect(c.transport.getView().loop).toBeNull()
   })
 
-  it("L switches between Learn a section and Play the song", async () => {
+  it("L loops this section, or plays the whole song again", async () => {
     const c = await app()
     c.toggleLoop()
-    expect(c.getState().settings.mode).toBe("learn")
+    expect(c.getState().settings.loop).toBe(true)
     c.toggleLoop()
-    expect(c.getState().settings.mode).toBe("song")
+    expect(c.getState().settings.loop).toBe(false)
   })
 
-  it("keeps the mode's loop when the song changes", async () => {
+  it("keeps looping when the song changes", async () => {
     const c = await app()
     c.newSong()
-    c.setMode("learn")
+    c.setLoop(true)
     c.selectSong("amazing-grace")
     expect(c.transport.getView().loop).toEqual({ section: 0 })
+  })
+})
+
+describe("speed", () => {
+  it("sets the record's speed in the chart and keeps playing position", async () => {
+    const c = await app()
+    c.transport.jumpTo(5)
+    c.setRecordTempo(96)
+    expect(c.getState().song.tempo).toBe(96)
+    expect(c.currentEntry()?.chart).toMatch(/^tempo: 96$/m)
+    expect(c.transport.getView().bar).toBe(5)
+  })
+
+  it("adds a tempo line to a chart without one, and the speed-up goal follows it", async () => {
+    const c = await app()
+    c.addSong("title: No tempo\n[V] pattern=A\nG | C", { openEditor: false })
+    expect(c.getState().song.tempo).toBeNull()
+    c.setRecordTempo(88.4)
+    expect(c.getState().song.tempo).toBe(88)
+    expect(c.currentEntry()?.chart).toBe("title: No tempo\ntempo: 88\n[V] pattern=A\nG | C")
+    expect(c.transport.getView().target).toBe(88)
+  })
+
+  it("gives an editor draft the same change", async () => {
+    const c = await app()
+    c.setDraft(c.currentEntry()!.chart + "\n# a note")
+    c.setRecordTempo(72)
+    expect(c.getState().draft?.text).toMatch(/^tempo: 72$/m)
+    expect(c.getState().draft?.text).toContain("# a note")
+  })
+
+  it("remembers the speed unit", async () => {
+    const c = await app()
+    expect(c.getState().settings.speedUnit).toBe("bpm")
+    c.setSpeedUnit("percent")
+    expect(c.getState().settings.speedUnit).toBe("percent")
   })
 })
 

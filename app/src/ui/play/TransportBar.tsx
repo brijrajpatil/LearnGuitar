@@ -1,21 +1,20 @@
 import { PauseIcon, PlayIcon, SkipBackIcon, SkipForwardIcon } from "lucide-react"
 import { Button } from "@/ui/components/button"
 import { Tooltip, TooltipTrigger } from "@/ui/components/tooltip"
-import { useAppState, useController, useTransport } from "@/ui/hooks/use-app"
+import { useController, useTransport } from "@/ui/hooks/use-app"
+import { LoopButton } from "@/ui/play/LoopButton"
 import { SpeedControl } from "@/ui/play/SpeedControl"
-import { TrainerControl } from "@/ui/play/TrainerControl"
+import { SpeedUpProgress } from "@/ui/play/SpeedUp"
 
 /**
- * Play and the controls for the current mode. It's the last row of the window, so Play
- * and Speed are always in reach.
+ * Play, the loop and the speed. It's the last row of the window, so Play and Speed are
+ * always in reach.
  */
 export function TransportBar() {
   const app = useController()
   const t = app.transport
-  const { settings, song } = useAppState()
   const view = useTransport()
   const playing = view.state !== "stopped"
-  const looped = view.loop ? song.sections[view.loop.section]?.name : null
 
   return (
     // In windows under 22rem tall (a phone sideways, or 400% zoom), the whole page scrolls
@@ -41,10 +40,9 @@ export function TransportBar() {
           </TooltipTrigger>
         </div>
 
-        {settings.mode === "speed" ? <TrainerControl /> : <SpeedControl />}
-        {settings.mode === "learn" && looped && (
-          <p className="text-sm text-muted-foreground max-lg:hidden">Looping {looped}. Pick another section in the song map.</p>
-        )}
+        <LoopButton />
+        <SpeedControl />
+        <SpeedUpProgress />
       </div>
     </section>
   )

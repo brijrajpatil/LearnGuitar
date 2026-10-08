@@ -42,13 +42,13 @@ describe("Repository", () => {
       const repo = new Repository(make())
       expect((await repo.load()).settings).toEqual(DEFAULT_SETTINGS)
       const key = { a: { shapes: 10, capo: 2 } }
-      await repo.saveSettings({ ...DEFAULT_SETTINGS, level: "record", mode: "speed", tempo: { a: 90 }, start: { a: 60 }, key })
+      await repo.saveSettings({ ...DEFAULT_SETTINGS, level: "record", loop: true, speedUp: true, tempo: { a: 90 }, start: { a: 60 }, key })
       await repo.saveChart("a", "title: A")
       await repo.saveUserSongIds(["a"])
       await repo.saveOverrides("a", { "0:Verse": "B" })
       await repo.saveCustomPatterns([{ name: "Five", steps: "D.DUD" }])
       const data = await repo.load()
-      expect(data.settings).toMatchObject({ level: "record", mode: "speed", tempo: { a: 90 }, start: { a: 60 }, key })
+      expect(data.settings).toMatchObject({ level: "record", loop: true, speedUp: true, tempo: { a: 90 }, start: { a: 60 }, key })
       expect(data.charts).toEqual({ a: "title: A" })
       expect(data.userSongIds).toEqual(["a"])
       expect(data.overrides).toEqual({ a: { "0:Verse": "B" } })
@@ -84,11 +84,23 @@ describe("Repository", () => {
     })
     const { settings } = await new Repository(kv).load()
     expect(settings.level).toBe("arranged")
-    expect(settings.mode).toBe("song")
+    expect(settings).toMatchObject({ loop: false, speedUp: false })
     expect(settings.tempo).toEqual({ b: 80 })
     expect(settings.mix).toEqual(DEFAULT_SETTINGS.mix)
     expect(settings.key).toEqual({ a: { shapes: 10, capo: 2 } })
     expect(settings.family).toBeNull()
+  })
+
+  it("turns a saved practice mode into the loop and speed-up switches", async () => {
+    const kv = new MemoryStore()
+    const load = async (mode: string) => {
+      await kv.set("settings", { mode })
+      const { loop, speedUp } = (await new Repository(kv).load()).settings
+      return { loop, speedUp }
+    }
+    expect(await load("learn")).toEqual({ loop: true, speedUp: false })
+    expect(await load("speed")).toEqual({ loop: true, speedUp: true })
+    expect(await load("song")).toEqual({ loop: false, speedUp: false })
   })
 
   it("keeps a chord family, and drops a key that isn't one of the five", async () => {
@@ -109,7 +121,7 @@ describe("prototype import", () => {
       simplify: true,
       tempo: { "let-down": 88, "amazing-grace": 72 },
       mix: { clickVolume: 40, clickMuted: false, guitarVolume: 90, guitarMuted: true },
-      mode: "song",
+      loop: false,
       trainerStep: 2,
     })
     expect(d.userSongIds).toEqual(["song-abc"])
