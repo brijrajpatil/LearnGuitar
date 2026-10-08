@@ -53,6 +53,14 @@ const LIBRARY_SOURCE: Record<string, string> = {
   D5: "xx023x xx013x",
   G5: "355xxx 134xxx",
   C5: "x355xx x134xx",
+  // Open shapes for the chord families a song can move into (decision 0016).
+  Csus2: "x30013 x20013",
+  Csus4: "x33011 x34011",
+  "C/E": "032010 032010",
+  "C/G": "332010 342010",
+  Gsus4: "330013 230014",
+  Dm7: "xx0211 xx0211",
+  Emaj7: "021100 031200",
 }
 
 /** Easier chords used when Simplify chords is on, unless the chart sets its own. */

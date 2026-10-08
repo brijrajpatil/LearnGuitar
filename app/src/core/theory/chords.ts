@@ -1,9 +1,14 @@
 import type { Song, Voicing } from "@/core/song/types"
+import { withSharps } from "@/core/theory/names"
+import { generateVoicing } from "@/core/theory/shapes"
 import { DEFAULT_SIMPLIFY, STANDARD_TUNING, VOICINGS } from "@/core/theory/voicings"
 
-/** The shape for a chord name: the chart's own definition first, then the built-in one. */
+/**
+ * The shape for a chord name: the chart's own definition first, then the built-in one
+ * (named with sharps), then a generated one.
+ */
 export function findVoicing(song: Pick<Song, "chords">, name: string): Voicing | null {
-  return song.chords[name] ?? VOICINGS[name] ?? null
+  return song.chords[name] ?? VOICINGS[name] ?? VOICINGS[withSharps(name)] ?? generateVoicing(name)
 }
 
 export function simplifiedName(song: Pick<Song, "simplify">, name: string): string {
