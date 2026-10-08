@@ -1,0 +1,36 @@
+# Scans the React code with React Doctor (https://github.com/millionco/react-doctor).
+# On a pull request it reports only the issues the change adds, in a summary comment and
+# inline comments. Pushes to main scan the whole app. It never fails the check.
+name: React Doctor
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  statuses: write
+
+concurrency:
+  group: react-doctor-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  react-doctor:
+    runs-on: ubuntu-latest
+    env:
+      # Sends no usage data to React Doctor's makers.
+      REACT_DOCTOR_NO_TELEMETRY: "1"
+    steps:
+      # The full history lets React Doctor compare a pull request with its base branch.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      # Pinned to a commit because this action can write to pull requests.
+      - uses: millionco/react-doctor@673ce802a375eeb4c3c5cb9a96d21eaeb7eafd93 # v2.3.1
+        with:
+          directory: app

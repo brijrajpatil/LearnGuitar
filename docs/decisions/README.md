@@ -22,6 +22,7 @@ One note per decision that had alternatives worth remembering. Each note says wh
 | [0016](0016-key-and-capo.md) | Play a song in another key, with a capo to keep the record's sound | Product, design, tech | Accepted, 2026-10-08 |
 | [0017](0017-ai-chord-drafts.md) | Draft chords with the player's own AI key | Product, tech | Accepted, 2026-10-08 |
 | [0018](0018-library-family-filter.md) | Filter the library by chord family | Product, design | Accepted, 2026-10-08 |
+| [0019](0019-react-doctor-in-ci.md) | Scan the React code with React Doctor in CI | Tech | Accepted, 2026-10-08 |
 | [0020](0020-loop-button-and-typed-speed.md) | A loop button and a speed-up switch, and speed typed in BPM or % | Product, design | Accepted, 2026-10-08 |
 | [0021](0021-lyrics-on-the-strum-grid.md) | Lyrics on the strum grid, synced by tapping each word | Product, design, tech | Accepted, 2026-10-08 |
 | [0022](0022-one-instruction-file-for-ai-tools.md) | One instruction file for every AI coding tool | Tech | Accepted, 2026-10-08 |
