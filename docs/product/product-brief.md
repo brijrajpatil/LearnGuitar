@@ -106,7 +106,7 @@ Song library
 - Each song has title, artist, key, tempo, time signature, tuning, capo fret, and which guitar it's for. Electric songs get a notes field for amp settings.
 - Each song can link to its sources: the tab you learn from, and a tutorial video with a timestamp for each section.
 - Cue text is only what you type.
-- Add a song by name. The AI drafts its chords with your own free Gemini key, or the app converts a chord sheet you paste. Chords only, kept on your device (see [decision 0017](../decisions/0017-ai-chord-drafts.md)).
+- Add a song by name. The AI drafts its chords with your own free Gemini key, or the app converts a chord sheet you paste. Chords only, kept on your device. Built 2026-10-08 (see [decision 0017](../decisions/0017-ai-chord-drafts.md)).
 - The app ships with a library of progression studies and public domain folk and traditional songs, so it's playable on first open. Built-in songs have chords only, with no lyrics or tabs. Built 2026-10-08 with 17 studies and 34 songs (see [decision 0015](../decisions/0015-built-in-library-contents.md)).
 
 Parts and levels

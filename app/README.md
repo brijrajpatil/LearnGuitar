@@ -67,6 +67,39 @@ To add one:
 2. Add a line for it to the catalog.
 3. Run `npm test`. The library test checks that the chart parses, every chord has a shape, the catalog and the files match, and the difficulty fits the chords.
 
+## Adding a song with AI
+
+The code is in `src/ai/`, with no React in it ([decision 0017](../docs/decisions/0017-ai-chord-drafts.md)).
+
+| File | What it does |
+|---|---|
+| `schema.ts` | The song draft the model must return, as a type and a JSON schema. It has no field for words |
+| `to-chart.ts` | Writes a chart from a draft: chords, sections, tempo and strum presets, plus a note saying where it came from. It evens out bars, respells chords and gives unknown chords a shape |
+| `paste.ts` | Reads a pasted chord sheet (chords over lyrics, ChordPro or bar lines) and drops the lyrics |
+| `gemini.ts` | Calls the Gemini API from the browser with the player's key, and names each kind of failure |
+| `prompts.ts` | What the app asks the model |
+| `agent.ts` | The steps: draft or read a page, write the chart, check it with the parser, and send problems back at most twice |
+| `shape-tools.ts` | Checks a shape from the model against the chord's notes, and makes shapes with the theory module |
+| `fake-gemini.ts` | A stand-in API for the unit tests |
+
+```mermaid
+sequenceDiagram
+  participant P as Panel
+  participant A as agent.ts
+  participant G as Gemini
+  participant C as to-chart.ts and the parser
+  P->>A: song name, page address or pasted chords
+  A->>G: prompt and the draft schema
+  G-->>A: draft as JSON
+  A->>C: write the chart and check it
+  C-->>A: problems
+  A->>G: the problems, at most twice
+  G-->>A: a fixed draft
+  A-->>P: chart, source, warnings and the steps
+```
+
+The browser tests in `tests/e2e/add-song.spec.ts` answer every request to Google with a canned reply and use a made-up key. To try the real thing, run `npm run dev`, open the library, type a song and press Enter, then add your own key from [Google AI Studio](https://aistudio.google.com/apikey). The key stays in that browser's IndexedDB under `ai/key`, and Practice settings can forget it.
+
 ## The prototype
 
 The single-file prototype in [`../prototype/`](../prototype/) works without any of this: open its `index.html` in a browser. `npm run dev` also serves it at <http://localhost:8642/prototype/>.

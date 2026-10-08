@@ -28,12 +28,13 @@ The [product brief](docs/product/product-brief.md) has the full problem, goals, 
 - Speed shows the BPM and how it compares with the record ("88% of the record"), with quick picks from 60% to the record's speed.
 - A song map along the bottom: click a bar to jump to it, or a section name to loop it.
 - A built-in library of 17 progression studies and 34 public domain folk songs, with chords only. The library page lists each one with its chords and difficulty. Search it by title, artist or chord, and filter it by collection and difficulty.
+- Add any other song by name: type it in the library's search and press Enter. The AI drafts its chords with your own free Gemini key, or the app converts chords you paste from a chord page and leaves the lyrics out. A draft says it's unchecked until you've checked it against the record.
 - Songs are text charts you write in the built-in editor, with errors marked by line. Custom strum and pick patterns can be any length and run on across bar lines.
 - Works from the keyboard: Space plays and pauses, the arrow keys change section and speed, L loops the section, / opens the library, and K picks the key and capo. A foot pedal that sends these keys works too.
 - A light, monochrome theme. The play screen fits in the window like a desktop app, follows browser zoom, and is laid out for screens from a phone to a large monitor.
 - Installs as an app from Chrome or Safari and works offline.
 
-Songs and settings are saved in your browser on this device. Nothing is sent anywhere.
+Songs and settings are saved in your browser on this device. The app sends something only when you add a song with AI: the song's name, a page's address or the chord lines you pasted go to Google, with your own key.
 
 ## Run it
 
@@ -75,13 +76,39 @@ C | G | D | Em*2
 
 The full reference is in the app: Edit chart, then Chart format.
 
-The app never fetches lyrics or tabs. Anything like that in a chart is what you typed from your own sources ([why](docs/decisions/0003-lyrics-and-tabs-are-user-entered.md)).
+The app never fetches lyrics or tabs. Anything like that in a chart is what you typed from your own sources ([why](docs/decisions/0003-lyrics-and-tabs-are-user-entered.md)). Adding a song with AI drafts chords only ([decision 0017](docs/decisions/0017-ai-chord-drafts.md)).
 
 ## How it's built
 
 A TypeScript web app built with Vite and React, installable as a PWA. The interface uses [shadcn/ui](https://ui.shadcn.com) on React Aria Components with Tailwind CSS v4 ([decision 0001](docs/decisions/0001-design-system.md)). The look is a light, monochrome theme with the Geist typeface. Its colors, type sizes and spacing come from one token file, and a test checks their contrast. The [design system](docs/design/design-system.md) describes the tokens, the components and the play screen. Songs and settings are stored in IndexedDB.
 
 Data flows one way: song, then timeline, then audio and screen. The music and audio code has no React in it, so it can be tested on its own. The [app's README](app/README.md#code-map) maps the code, and the [product brief's architecture section](docs/product/product-brief.md#architecture) has the reasoning.
+
+## How adding a song with AI works
+
+Each player brings their own free Gemini key, so the browser calls Gemini directly. There's no server, and the AI costs me nothing ([decision 0017](docs/decisions/0017-ai-chord-drafts.md)).
+
+```mermaid
+flowchart TD
+  A[Type a song in the library search] --> B{In the library?}
+  B -- yes --> O[Open it]
+  B -- no --> C[Add a song panel]
+  C --> D[Gemini drafts from what it knows]
+  C --> E[Gemini reads a chord page you picked]
+  C --> F[Pasted chords, converted on the device]
+  D --> G[The app writes the chart]
+  E --> G
+  F --> G
+  G --> H{Does the app's parser find problems?}
+  H -- yes, at most twice --> I[Send the problems back to Gemini]
+  I --> G
+  H -- no --> J[Preview, then Save and play]
+```
+
+- Gemini answers in a fixed format with no field for words, and the app writes the chart from it. Lyrics can't get into a chart, and only the chord lines of a pasted sheet are sent.
+- Free keys can't search the web, so the first draft comes from what the model knows and says so. Reading a chord page makes it better.
+- When the free quota for Gemini 3.8 Flash runs out, the app moves to 3.5 Flash-Lite.
+- The tests use a fake Gemini, so they run with no key and no network.
 
 ## Where it's going
 

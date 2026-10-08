@@ -96,6 +96,7 @@ Below 22rem (400% zoom, or a phone held sideways) the whole page scrolls instead
 | Token | Timing | Use |
 |---|---|---|
 | `animate-soon` | 0.5 s, ease-out | A ring pulses out from the Next card one beat before the chord changes, and from the "New pattern next bar" badge a bar before the pattern changes |
+| `animate-pulse` | Tailwind's default | The dot on the step in progress in the Add a song panel. It stays still when the system asks for reduced motion |
 
 ## Components
 
@@ -151,12 +152,24 @@ The song's title in the header opens the library in place of the play screen ([0
 ![The library page on a 13-inch MacBook Air at 100% zoom: the search field, the collection and difficulty filters with "51 songs", and the list starting with the First chords studies and songs.](images/library.png)
 
 1. Top row: the "Library" heading, the search field (an input group with a search icon and a `/` key hint) and Back to the current song.
-2. Filters: the collection filter in the `segment` toggle group, the difficulty select, and the number of songs listed. With Your songs chosen, New song sits at the end of the row.
+2. Filters: the collection filter in the `segment` toggle group, the difficulty select, and the number of songs listed. With Your songs chosen, Add a song sits at the end of the row.
 3. The list: a card with column labels (Song, Chords, Difficulty) and one row per song. A row has the title with the artist or "Study" under it in `--muted-foreground`, the chords drawn with `ChordName`, and the difficulty. The focused or hovered row is `--accent`, and keyboard focus draws the 2 px outline inside the row. The current song has a small dot in the emphasis fill.
 
 Below the `sm` breakpoint the column labels hide, the chords move under the title, and the collection names shorten (Folk, Yours).
 
-When nothing matches, the list says so and offers Clear filters. Your songs, when there are none yet, explains what goes there and offers New song.
+When nothing matches, the list says so and offers Clear filters, and Add "name" when a search is typed. Your songs, when there are none yet, explains what goes there and offers Add a song. With results showing, Add "name" sits under the list. A song that's still an AI draft has an outline "AI draft" badge beside its artist.
+
+## The Add a song panel
+
+Enter in the search with nothing found, or Add "name", opens the panel ([0017](../decisions/0017-ai-chord-drafts.md)). At `lg` and wider it sits beside the list, 26 rem wide, in a card like the list's. Narrower, it takes the list's place. Escape or the close button closes it, and the next Escape closes the library.
+
+![The Add a song panel beside an empty list, on a 13-inch MacBook Air at 100% zoom. Two done steps, then a preview of The Water Is Wide with an AI draft badge, its sections and chords, a note about a generated shape, and Save and play.](images/add-song.png)
+
+1. Start: the song field and Draft with AI, then "Or start from a chord page" with Find chord pages (a web search in a new tab), one box for a page address or pasted chords, and Write the chart yourself.
+2. Key: the first request that needs the AI asks for the player's Gemini key, with a link to get one and what happens to it.
+3. Steps: each step as it happens. A done step has a check in `--muted-foreground`. The step in progress has a dot in the emphasis fill, since it's what's happening now. A failed step is red. The list is an `aria-live` region.
+4. Preview: the title and artist, the key, time and tempo, an "AI draft" badge with where the chords came from, each section's chords, notes about chords the app swapped or made a shape for, and Save and play, Edit first and Use a chord page.
+5. Errors: the destructive alert says what went wrong and what to do, with a button for the next step.
 
 ## Changing the system
 
@@ -177,3 +190,4 @@ When nothing matches, the list says so and offers Clear filters. Your songs, whe
 | [0010](../decisions/0010-monochrome-theme-and-geist.md) | Monochrome colors, the emphasis tokens and Geist | Current |
 | [0011](../decisions/0011-play-screen-fits-the-window.md) | The play screen fills the window, with window-height variants | Current |
 | [0014](../decisions/0014-library-page.md) | The library page, opened from the song's title | Current |
+| [0017](../decisions/0017-ai-chord-drafts.md) | The Add a song panel beside the library's list | Current |
