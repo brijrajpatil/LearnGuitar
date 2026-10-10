@@ -1,6 +1,6 @@
 # 0019. Scan the React code with React Doctor in CI
 
-Status: Accepted
+Status: Accepted. Partly superseded by [0023](0023-react-doctor-score-off.md): the score is off, because React Doctor's servers compute it from the findings.
 Date: 2026-10-08
 
 ## Context

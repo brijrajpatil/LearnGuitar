@@ -37,7 +37,7 @@ The live app is at <https://brijrajpatil.github.io/LearnGuitar/>, on GitHub Page
 
 The workflow in [`../.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) runs on every pull request and every push to `main`. It runs lint, typecheck, the unit tests, the browser tests and the build. The timing test is left out, because shared CI machines are too uneven for it, so run it here before merging audio changes. Pushes to `main` then publish `dist/` to Pages, so anything merged goes live.
 
-The workflow in [`../.github/workflows/react-doctor.yml`](../.github/workflows/react-doctor.yml) runs [React Doctor](https://github.com/millionco/react-doctor) on every pull request and every push to `main` ([decision 0019](../docs/decisions/0019-react-doctor-in-ci.md)). On a pull request it comments on the issues the change adds. It never fails the check. To run the same scan here, run `npx react-doctor@latest --no-telemetry` in this folder.
+The workflow in [`../.github/workflows/react-doctor.yml`](../.github/workflows/react-doctor.yml) runs [React Doctor](https://github.com/millionco/react-doctor) on every pull request and every push to `main` ([decision 0019](../docs/decisions/0019-react-doctor-in-ci.md)). On a pull request it comments on the issues the change adds. It never fails the check. The score is off in [`doctor.config.jsonc`](doctor.config.jsonc), because React Doctor's servers compute it from the findings ([decision 0023](../docs/decisions/0023-react-doctor-score-off.md)). To run the same scan here, run `npx react-doctor@latest --no-telemetry` in this folder.
 
 The live app keeps its own songs and settings, apart from what you saved at `localhost:8642`. Personal songs from `songs/` load only on localhost.
 

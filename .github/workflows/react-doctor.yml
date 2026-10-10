@@ -23,7 +23,8 @@ jobs:
   react-doctor:
     runs-on: ubuntu-latest
     env:
-      # Sends no usage data to React Doctor's makers.
+      # Turns off React Doctor's usage data. The score is off in app/doctor.config.jsonc.
+      # Full scans still check the app's dependencies with Socket.dev (decision 0023).
       REACT_DOCTOR_NO_TELEMETRY: "1"
     steps:
       # The full history lets React Doctor compare a pull request with its base branch.

@@ -1,0 +1,6 @@
+// React Doctor settings (https://github.com/millionco/react-doctor).
+// The score stays off: React Doctor's servers compute it from the scan's findings, the
+// repo name and the commit. See docs/decisions/0023-react-doctor-score-off.md.
+{
+  "noScore": true
+}
